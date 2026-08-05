@@ -221,16 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveDataEnabled = () => Boolean(navigator.connection && navigator.connection.saveData);
 
   // Real background video lives at assets/videos/rafale-opening.mp4 (see
-  // assets/videos/README.txt). The small on-page notice (#hero-video-status)
-  // only ever appears on localhost/dev hosts, so a site that ships without
-  // ever adding a real video never shows a "not configured" message to real
-  // visitors — the coded opening movie is a complete design on its own.
-  const heroVideoStatus = document.getElementById('hero-video-status');
-  const isDevHost = ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
-
+  // assets/videos/README.txt). If it isn't present, no notice is ever shown —
+  // the coded opening movie / black-gold background is a complete design on its
+  // own and simply stays visible.
   if (heroEl && heroVideo && isDesktopViewport() && !prefersReducedMotion && !saveDataEnabled()) {
-    if (heroVideoStatus && isDevHost) heroVideoStatus.classList.add('is-visible');
-
     const sources = [
       { src: 'assets/videos/rafale-opening.webm', type: 'video/webm' },
       { src: 'assets/videos/rafale-opening.mp4', type: 'video/mp4' },
@@ -246,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
     heroVideo.addEventListener('canplaythrough', () => {
       heroEl.classList.add('has-video');
       heroVideo.classList.add('is-ready');
-      if (heroVideoStatus) heroVideoStatus.classList.remove('is-visible');
       heroVideo.play().catch(() => {
         // Autoplay blocked (e.g. low-power mode): fallback background stays visible.
       });

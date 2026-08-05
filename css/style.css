@@ -535,41 +535,6 @@ textarea:focus-visible {
   display: block;
 }
 
-/* 背景動画が未配置であることを示す控えめな案内。
-   本番ドメインでは常に非表示です。localhost等での開発時のみ、JSが
-   is-visible を付与して表示します（実動画が読み込まれれば自動的に消えます）。
-   これにより、実写動画を最後まで追加しない運用を選んだ場合でも、
-   本番サイトに開発用の注意書きが残ることはありません */
-.hero-video-status {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 1;
-  max-width: min(340px, calc(100vw - 32px));
-  margin: 0;
-  padding: 6px 10px;
-  font-size: 0.68rem;
-  line-height: 1.6;
-  letter-spacing: 0.02em;
-  color: var(--color-text-muted);
-  background: rgba(10, 10, 10, 0.45);
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
-  text-align: left;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.6s var(--ease);
-}
-
-.hero-video-status code {
-  color: var(--color-gold-light);
-  font-family: monospace;
-}
-
-.hero-video-status.is-visible {
-  opacity: 0.85;
-}
-
 /* サイト全体を覆う桜演出。position:fixedで常に画面いっぱいに重なり、
    ヘッダー(z-index:100)・スクロール進捗バー(z-index:200)より下、
    各セクションの内容より上のレイヤーで、控えめに舞います */
