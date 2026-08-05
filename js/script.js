@@ -123,18 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealTargets.forEach((el) => observer.observe(el));
 
-  const watchOptionalImage = (img, onReady) => {
-    if (!img) return;
-    if (img.complete && img.naturalWidth > 0) {
-      onReady();
-      return;
-    }
-    img.addEventListener('load', onReady, { once: true });
-    img.addEventListener('error', () => {
-
-    }, { once: true });
-  };
-
   const heroEl = document.querySelector('.hero');
   const heroVideo = document.getElementById('hero-video');
 
@@ -219,12 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
       resizeTimer = window.setTimeout(buildPetals, 300);
     });
   }
-
-  const heroImageEl = document.getElementById('hero-image');
-  watchOptionalImage(heroImageEl, () => {
-    heroEl.classList.add('has-image');
-    heroImageEl.classList.add('is-ready');
-  });
 
   const isDesktopViewport = () => window.matchMedia('(min-width: 769px)').matches;
   const saveDataEnabled = () => Boolean(navigator.connection && navigator.connection.saveData);
