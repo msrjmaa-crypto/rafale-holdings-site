@@ -15,16 +15,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   let ticking = false;
+  // レイアウトを誘発する値（総スクロール量・ビューポート高さ）はスクロール毎に読まず、
+  // リサイズ/読み込み時にだけ再計測してキャッシュする（スクロール中の強制リフロー=jankを回避）。
+  let docHeight = 0;
+  let winHeight = window.innerHeight;
+  let lastScrolled = null;
+
+  const measure = () => {
+    winHeight = window.innerHeight;
+    docHeight = document.documentElement.scrollHeight - winHeight;
+  };
 
   const onScroll = () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 20);
+    const y = window.scrollY;
 
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
-    if (scrollProgress) scrollProgress.style.width = progress + '%';
+    // ヘッダーの状態は「切り替わった瞬間だけ」書き込む（毎フレームのDOM書き込み/再計算を回避）
+    const scrolled = y > 20;
+    if (scrolled !== lastScrolled) {
+      header.classList.toggle('is-scrolled', scrolled);
+      lastScrolled = scrolled;
+    }
 
-    if (heroBg && !prefersReducedMotion && window.scrollY < window.innerHeight) {
-      heroBg.style.transform = 'translateY(' + window.scrollY * 0.15 + 'px)';
+    // 進捗バーは transform:scaleX のみで更新（width変更のようなレイアウトを起こさずGPU合成で完結）
+    if (scrollProgress) {
+      const p = docHeight > 0 ? y / docHeight : 0;
+      scrollProgress.style.transform = 'scaleX(' + (p < 0 ? 0 : p > 1 ? 1 : p) + ')';
+    }
+
+    // ヒーロー背景の視差も transform のみ。ヒーローが画面内にある間だけ更新する
+    if (heroBg && !prefersReducedMotion && y < winHeight) {
+      heroBg.style.transform = 'translateY(' + y * 0.15 + 'px)';
     }
 
     ticking = false;
@@ -37,7 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
+  // 初期化。docHeight/winHeight はレイアウトが変わり得るタイミング（resize/load）だけ再計測
+  measure();
   onScroll();
+  window.addEventListener('resize', measure, { passive: true });
+  window.addEventListener('load', measure);
 
   const closeMenu = () => {
     hamburger.classList.remove('is-open');
@@ -78,11 +102,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const revealTargets = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const delay = Number(entry.target.dataset.revealDelay || 0);
-        window.setTimeout(() => entry.target.classList.add('is-visible'), delay);
-        observer.unobserve(entry.target);
-      }
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      observer.unobserve(el); // 一度表示したら監視解除（以後のコールバックを発生させない）
+      const delay = Number(el.dataset.revealDelay || 0);
+      window.setTimeout(() => {
+        if (!prefersReducedMotion) {
+          // このフェードイン実行中だけGPU昇格のヒントを付け、完了時に必ず解除する
+          // （常時ではなく“アニメ中だけ”に限定し、多数要素の常時昇格を避ける）
+          el.style.willChange = 'opacity, transform';
+          el.addEventListener('transitionend', () => { el.style.willChange = ''; }, { once: true });
+        }
+        el.classList.add('is-visible');
+      }, delay);
     });
   }, { threshold: 0.15 });
 

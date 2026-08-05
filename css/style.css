@@ -92,15 +92,21 @@ textarea:focus-visible {
   outline-offset: 3px;
 }
 
+/* 進捗バーは幅100%で描画し、JSは transform:scaleX(0〜1) だけを更新する。
+   width変更はレイアウトを起こすが、scaleXはGPU合成のみで完結し見た目は同一。
+   常時アニメする単一要素なので will-change:transform の指定は妥当（乱発ではない） */
 .scroll-progress {
   position: fixed;
   top: 0;
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 2px;
   background: linear-gradient(90deg, var(--color-gold-deep), var(--color-gold-light));
   z-index: 200;
-  transition: width 0.1s linear;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.1s linear;
+  will-change: transform;
 }
 
 /* ---------- Header ----------
@@ -1320,15 +1326,15 @@ textarea:focus-visible {
 .reveal {
   opacity: 0;
   transform: translateY(24px);
-  /* ゆっくり・下から上へ。速すぎないよう1.1秒、柔らかなイージングで */
+  /* ゆっくり・下から上へ。速すぎないよう1.1秒、柔らかなイージングで。
+     will-changeは常時付けない — 多数の .reveal を一斉にGPU昇格させると逆に重く
+     なるため。トランジション実行中はブラウザが自動で opacity/transform を合成する */
   transition: opacity 1.1s var(--ease-soft), transform 1.1s var(--ease-soft);
-  will-change: opacity, transform;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
-  will-change: auto;
 }
 
 /* ---------- Responsive: tablet ---------- */
