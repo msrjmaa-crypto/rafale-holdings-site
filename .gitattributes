@@ -1,0 +1,11 @@
+# テキストは自動正規化（改行コードの差異を吸収）
+* text=auto eol=lf
+
+# 画像はバイナリとして扱う（差分・改行変換の対象外）
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.webp binary
+*.mp4 binary
+*.webm binary

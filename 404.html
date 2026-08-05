@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ページが見つかりません｜Rafale Holdings株式会社</title>
+<meta name="description" content="お探しのページが見つかりませんでした。Rafale Holdings株式会社の公式サイトです。">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="color-scheme" content="dark">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0a'/%3E%3Cpath d='M32 12 L46 32 L32 52 L18 32 Z' fill='none' stroke='%23c9a24b' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@700&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* このページ専用の最小限のスタイル。他ページと同じ黒×ゴールドの
+     トークン（css/style.css の :root）をそのまま利用しています */
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .error-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .error-main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(201, 162, 75, 0.1), transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #0d0c0a 100%);
+    z-index: -1;
+  }
+
+  .error-inner {
+    max-width: 520px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: errorFadeIn 0.9s var(--ease) 0.1s forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .error-inner { opacity: 1; transform: none; animation: none; }
+  }
+
+  @keyframes errorFadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .error-mark {
+    width: 34px;
+    height: 34px;
+    margin: 0 auto 28px;
+    fill: none;
+    stroke: var(--color-gold);
+    stroke-width: 1.3;
+  }
+
+  .error-code {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(3rem, 10vw, 4.5rem);
+    color: var(--color-gold-light);
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .error-title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin-bottom: 20px;
+  }
+
+  .error-lead {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.9;
+    margin-bottom: 40px;
+  }
+
+  .error-footer {
+    padding: 28px 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border);
+  }
+</style>
+</head>
+<body>
+
+<main class="error-main">
+  <div class="error-inner">
+    <a href="index.html" aria-label="Rafale Holdings ホームへ戻る">
+      <svg class="error-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 L20 12 L12 22 L4 12 Z"/></svg>
+    </a>
+    <p class="error-code" aria-hidden="true">404</p>
+    <h1 class="error-title">お探しのページが見つかりませんでした</h1>
+    <p class="error-lead">
+      URLが変更または削除されたか、入力に誤りがある可能性があります。<br class="only-pc">
+      お手数ですが、トップページからお探しの情報をご確認ください。
+    </p>
+    <a href="index.html" class="btn btn-gold">トップページへ戻る</a>
+  </div>
+</main>
+
+<footer class="error-footer">
+  <p>&copy; <span id="year"></span> Rafale Holdings Co., Ltd. All Rights Reserved.</p>
+</footer>
+
+<script>
+  var y = document.getElementById('year');
+  if (y) { y.textContent = new Date().getFullYear(); }
+</script>
+</body>
+</html>

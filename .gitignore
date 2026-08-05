@@ -1,0 +1,15 @@
+# ---- Local dev tooling (Claude Code) ----
+# ローカルのプレビュー用サーバー等。デプロイには不要なため公開リポジトリから除外
+.claude/
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+*.log
+
+# ---- 差し替え予定の大容量アセット（任意）----
+# ブランドムービーはリポジトリに含めず、Cloudflare側や別配信を使う場合はコメント解除
+# assets/videos/*.mp4
+# assets/videos/*.webm

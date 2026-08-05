@@ -1,0 +1,15 @@
+# Cloudflare Pages 用のHTTPヘッダ設定（このファイルはPagesが自動で読み込みます）
+# 参考: https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# 画像・アイコン類はほぼ変化しないため長期キャッシュ（1週間）
+/img/*
+  Cache-Control: public, max-age=604800
+
+/assets/*
+  Cache-Control: public, max-age=604800

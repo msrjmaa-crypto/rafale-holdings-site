@@ -1,0 +1,14 @@
+{
+  "name": "Rafale Holdings株式会社",
+  "short_name": "Rafale Holdings",
+  "description": "楽しさを原動力に。人を育て、事業を育てる。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "lang": "ja",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
