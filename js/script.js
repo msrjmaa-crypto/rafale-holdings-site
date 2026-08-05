@@ -412,7 +412,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const submitLabel = submitBtn ? submitBtn.textContent : '';
+
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       if (!contactForm.checkValidity()) {
@@ -421,9 +424,45 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      const payload = {
+        name: document.getElementById('name').value,
+        company: document.getElementById('company-name').value,
+        email: document.getElementById('email').value,
+        message: document.getElementById('inquiry').value,
+        hp_url: (contactForm.querySelector('[name="hp_url"]') || {}).value || ''
+      };
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '送信中…';
+      }
       formNote.style.color = '';
-      formNote.textContent = 'お問い合わせありがとうございます。担当者より折り返しご連絡いたします。';
-      contactForm.reset();
+      formNote.textContent = '送信中…';
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json().catch(() => null);
+
+        if (res.ok && result && result.ok === true) {
+          formNote.style.color = '';
+          formNote.textContent = 'お問い合わせありがとうございます。担当者より折り返しご連絡いたします。';
+          contactForm.reset();
+        } else {
+          throw new Error('send_failed');
+        }
+      } catch (err) {
+        formNote.style.color = '#e08a8a';
+        formNote.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、info@rafale-hd.jpまでご連絡ください。';
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitLabel;
+        }
+      }
     });
   }
 });
