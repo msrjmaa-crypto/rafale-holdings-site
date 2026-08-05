@@ -1151,6 +1151,12 @@ textarea:focus-visible {
   padding-bottom: 48px;
 }
 
+.footer-logo-img {
+  height: 88px;
+  width: auto;
+  display: block;
+}
+
 .footer-brand p:last-child {
   margin-top: 12px;
   color: var(--color-text-muted);
