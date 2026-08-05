@@ -15,34 +15,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   let ticking = false;
-  // レイアウトを誘発する値（総スクロール量・ビューポート高さ）はスクロール毎に読まず、
-  // リサイズ/読み込み時にだけ再計測してキャッシュする（スクロール中の強制リフロー=jankを回避）。
+
   let docHeight = 0;
   let winHeight = window.innerHeight;
+  let scrollHeightCache = 0;
+  let lastMeasureWidth = window.innerWidth;
   let lastScrolled = null;
 
   const measure = () => {
     winHeight = window.innerHeight;
-    docHeight = document.documentElement.scrollHeight - winHeight;
+    if (window.innerWidth !== lastMeasureWidth || scrollHeightCache === 0) {
+      lastMeasureWidth = window.innerWidth;
+      scrollHeightCache = document.documentElement.scrollHeight;
+    }
+    docHeight = scrollHeightCache - winHeight;
+  };
+
+  const remeasure = () => {
+    scrollHeightCache = document.documentElement.scrollHeight;
+    lastMeasureWidth = window.innerWidth;
+    winHeight = window.innerHeight;
+    docHeight = scrollHeightCache - winHeight;
   };
 
   const onScroll = () => {
     const y = window.scrollY;
 
-    // ヘッダーの状態は「切り替わった瞬間だけ」書き込む（毎フレームのDOM書き込み/再計算を回避）
     const scrolled = y > 20;
     if (scrolled !== lastScrolled) {
       header.classList.toggle('is-scrolled', scrolled);
       lastScrolled = scrolled;
     }
 
-    // 進捗バーは transform:scaleX のみで更新（width変更のようなレイアウトを起こさずGPU合成で完結）
     if (scrollProgress) {
       const p = docHeight > 0 ? y / docHeight : 0;
       scrollProgress.style.transform = 'scaleX(' + (p < 0 ? 0 : p > 1 ? 1 : p) + ')';
     }
 
-    // ヒーロー背景の視差も transform のみ。ヒーローが画面内にある間だけ更新する
     if (heroBg && !prefersReducedMotion && y < winHeight) {
       heroBg.style.transform = 'translateY(' + y * 0.15 + 'px)';
     }
@@ -57,11 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
-  // 初期化。docHeight/winHeight はレイアウトが変わり得るタイミング（resize/load）だけ再計測
   measure();
   onScroll();
   window.addEventListener('resize', measure, { passive: true });
-  window.addEventListener('load', measure);
+  window.addEventListener('load', remeasure);
 
   const closeMenu = () => {
     hamburger.classList.remove('is-open');
@@ -88,10 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Elements sharing a reveal group (business grid, contact info, each
-  // brand card) get a short staggered delay so they animate in sequence
-  // rather than at once. Each .brand-card is its own group, so if more
-  // brands are added later, every card cascades independently.
   const staggerGroups = document.querySelectorAll('.business-grid, .contact-info, .brand-card');
   staggerGroups.forEach((group) => {
     group.querySelectorAll('.reveal').forEach((el, index) => {
@@ -104,12 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       const el = entry.target;
-      observer.unobserve(el); // 一度表示したら監視解除（以後のコールバックを発生させない）
+      observer.unobserve(el);
       const delay = Number(el.dataset.revealDelay || 0);
       window.setTimeout(() => {
         if (!prefersReducedMotion) {
-          // このフェードイン実行中だけGPU昇格のヒントを付け、完了時に必ず解除する
-          // （常時ではなく“アニメ中だけ”に限定し、多数要素の常時昇格を避ける）
+
           el.style.willChange = 'opacity, transform';
           el.addEventListener('transitionend', () => { el.style.willChange = ''; }, { once: true });
         }
@@ -120,10 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealTargets.forEach((el) => observer.observe(el));
 
-  // Watches an <img> that may or may not have a real file behind its src
-  // (hero poster, representative photo, …). Calls onReady only once the
-  // image has actually decoded successfully; a missing/broken file is left
-  // alone so the CSS placeholder underneath keeps showing.
   const watchOptionalImage = (img, onReady) => {
     if (!img) return;
     if (img.complete && img.naturalWidth > 0) {
@@ -132,25 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     img.addEventListener('load', onReady, { once: true });
     img.addEventListener('error', () => {
-      // No file at this path yet, or it failed to load — the CSS
-      // placeholder (gradient background / icon) simply stays visible.
+
     }, { once: true });
   };
 
-  // ---------- Hero background video ----------
-  // Only attempts to load a video on desktop/tablet, when the user hasn't
-  // requested reduced motion, and when Data Saver isn't enabled. On phones
-  // (or if any of those checks fail) no video is ever requested — the
-  // hero image (if any) or black/gold CSS background stands in instead.
   const heroEl = document.querySelector('.hero');
   const heroVideo = document.getElementById('hero-video');
 
-  // ---------- Coded opening movie ----------
-  // The 12s loop itself is pure CSS (opacity/transform keyframes only, so it
-  // stays on the GPU-composited fast path). JS here only: (a) pauses it
-  // when the tab is hidden or once the visitor has scrolled well past the
-  // hero — no point animating off-screen — and (b) generates the sakura
-  // petals with fresh randomness on every loop.
   const heroMovie = document.querySelector('.hero-movie');
 
   if (heroMovie) {
@@ -174,12 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ---------- Coded opening movie: sakura petals ----------
-  // Petals enter from the left or right edge (never the full width) and
-  // drift diagonally as they fall, on three depth layers (far/mid/near) so
-  // the opening feels dimensional rather than flat. Every property is
-  // randomised per petal, and re-randomised again each time that petal's
-  // own loop restarts, so the motion never repeats identically.
   const petalContainer = document.getElementById('hero-movie-petals');
 
   if (petalContainer && !prefersReducedMotion) {
@@ -197,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const layer = LAYERS[layerName];
       const fromLeft = Math.random() < 0.5;
       const startX = fromLeft ? rand(-8, -2) : rand(102, 108);
-      const travel = rand(28, 55) * (fromLeft ? 1 : -1); // vw, crosses toward the opposite side
+      const travel = rand(28, 55) * (fromLeft ? 1 : -1);
       el.style.setProperty('--start-x', startX + 'vw');
       el.style.setProperty('--start-y', rand(15, 65) + '%');
       el.style.setProperty('--end-x', travel + 'vw');
@@ -221,9 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const el = document.createElement('span');
         el.className = 'hero-movie-petal hero-movie-petal--' + layerName;
         randomizePetal(el, layerName);
-        // Re-randomise each petal on its OWN animationiteration (not a
-        // shared timer) so the new values always land exactly on that
-        // petal's invisible 0%-opacity seam — never a mid-flight jump.
+
         el.addEventListener('animationiteration', () => randomizePetal(el, layerName));
         petalContainer.appendChild(el);
       }
@@ -231,18 +210,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     buildPetals();
 
+    let lastPetalWidth = window.innerWidth;
     let resizeTimer;
     window.addEventListener('resize', () => {
+      if (window.innerWidth === lastPetalWidth) return;
+      lastPetalWidth = window.innerWidth;
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(buildPetals, 300);
     });
   }
 
-  // ---------- Hero background image ----------
-  // Lightweight, so unlike the video it's attempted on every device —
-  // including phones and reduced-motion users, where it's the intended
-  // fallback. If a video also loads successfully, it sits above this
-  // image in the stacking order and takes over visually.
   const heroImageEl = document.getElementById('hero-image');
   watchOptionalImage(heroImageEl, () => {
     heroEl.classList.add('has-image');
@@ -252,10 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const isDesktopViewport = () => window.matchMedia('(min-width: 769px)').matches;
   const saveDataEnabled = () => Boolean(navigator.connection && navigator.connection.saveData);
 
-  // Real background video lives at assets/videos/rafale-opening.mp4 (see
-  // assets/videos/README.txt). If it isn't present, no notice is ever shown —
-  // the coded opening movie / black-gold background is a complete design on its
-  // own and simply stays visible.
   if (heroEl && heroVideo && isDesktopViewport() && !prefersReducedMotion && !saveDataEnabled()) {
     const sources = [
       { src: 'assets/videos/rafale-opening.webm', type: 'video/webm' },
@@ -273,26 +246,17 @@ document.addEventListener('DOMContentLoaded', () => {
       heroEl.classList.add('has-video');
       heroVideo.classList.add('is-ready');
       heroVideo.play().catch(() => {
-        // Autoplay blocked (e.g. low-power mode): fallback background stays visible.
+
       });
     }, { once: true });
 
     heroVideo.addEventListener('error', () => {
-      // No video file present yet, or it failed to load — the fallback
-      // black/gold background (.hero-bg / .hero-movie) simply remains visible.
+
     });
 
     heroVideo.load();
   }
 
-  // ---------- Sakura petals (site-wide, section-aware, lightweight canvas) ----------
-  // One canvas overlays the whole page. As the visitor scrolls, the section
-  // currently in view determines how many petals drift and how they move —
-  // a handful and barely-there in PHILOSOPHY/MESSAGE, a couple of petals
-  // "crossing" the screen in BUSINESS, a little livelier in BRANDS (the
-  // SAKURA-branded lounge), a single quiet petal in CONTACT, slightly more
-  // than before on TOP. Counts are halved on phones. Fully disabled when
-  // the visitor prefers reduced motion.
   const sakuraCanvas = document.getElementById('sakura-canvas');
 
   if (sakuraCanvas && !prefersReducedMotion) {
@@ -304,14 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches;
 
-    // 花びらは「大・中・小」の3サイズ、「遅・中・速」の3スピード、
-    // 「低・中・高」の3透明度から個別に選ばれ、落ちながら左右へゆるやかに揺れます。
-    const SIZE_TIERS    = [[4, 5.5], [6, 8], [8.5, 11]];          // 小 / 中 / 大
-    const SPEED_TIERS   = [[0.12, 0.22], [0.24, 0.4], [0.46, 0.7]]; // 遅 / 中 / 速
-    const OPACITY_TIERS = [0.12, 0.22, 0.34];                     // 低 / 中 / 高（基準値）
+    const SIZE_TIERS    = [[4, 5.5], [6, 8], [8.5, 11]];
+    const SPEED_TIERS   = [[0.12, 0.22], [0.24, 0.4], [0.46, 0.7]];
+    const OPACITY_TIERS = [0.12, 0.22, 0.34];
 
-    // セクションごとの「枚数」と「濃さ倍率」だけを持たせ、サイト全体でごく控えめに。
-    // 読ませたいPHILOSOPHY/MESSAGEでは気配だけ、TOP/BRANDSで少しだけ華やかに。
     const SAKURA_PROFILES = {
       top:        { count: 12, opacity: 1.0 },
       philosophy: { count: 3,  opacity: 0.42 },
@@ -342,27 +302,27 @@ document.addEventListener('DOMContentLoaded', () => {
       sakuraCanvas.height = window.innerHeight;
     };
 
-    const makePetal = (randomY) => {
+    const resetPetal = (p, randomY) => {
       const opacityScale = currentProfile().opacity;
       const sizeTier = pickTier(SIZE_TIERS);
       const speedTier = pickTier(SPEED_TIERS);
       const opacityBase = pickTier(OPACITY_TIERS);
-      return {
-        x: Math.random() * sakuraCanvas.width,
-        y: randomY ? Math.random() * sakuraCanvas.height : -12,
-        size: rand(sizeTier[0], sizeTier[1]),
-        aspect: rand(0.52, 0.72),
-        speedY: rand(speedTier[0], speedTier[1]),
-        vx: rand(0.04, 0.16) * (Math.random() < 0.5 ? -1 : 1), // ごく僅かな横流れ
-        swayAmp: rand(14, 34),         // 左右の揺れ幅(px)
-        swaySpeed: rand(0.006, 0.014), // 揺れの速さ
-        swayOffset: Math.random() * Math.PI * 2,
-        rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.02,
-        opacity: opacityBase * opacityScale,
-        color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
-      };
+      p.x = Math.random() * sakuraCanvas.width;
+      p.y = randomY ? Math.random() * sakuraCanvas.height : -12;
+      p.size = rand(sizeTier[0], sizeTier[1]);
+      p.aspect = rand(0.52, 0.72);
+      p.speedY = rand(speedTier[0], speedTier[1]);
+      p.vx = rand(0.04, 0.16) * (Math.random() < 0.5 ? -1 : 1);
+      p.swayAmp = rand(14, 34);
+      p.swaySpeed = rand(0.006, 0.014);
+      p.swayOffset = Math.random() * Math.PI * 2;
+      p.rotation = Math.random() * Math.PI * 2;
+      p.rotationSpeed = (Math.random() - 0.5) * 0.02;
+      p.opacity = opacityBase * opacityScale;
+      p.color = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
+      return p;
     };
+    const makePetal = (randomY) => resetPetal({}, randomY);
 
     const drawPetal = (p) => {
       ctx.save();
@@ -382,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = petals.length - 1; i >= 0; i--) {
         const p = petals[i];
         p.y += p.speedY;
-        // ごく僅かな横流れ(vx)に、左右へのゆるやかな揺れ(sway)を重ねる
+
         p.x += p.vx + Math.sin(p.y * p.swaySpeed + p.swayOffset) * (p.swayAmp * 0.02);
         p.rotation += p.rotationSpeed;
 
@@ -394,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
             petals.splice(i, 1);
             continue;
           }
-          Object.assign(p, makePetal(false));
+          resetPetal(p, false);
         }
 
         drawPetal(p);
@@ -419,12 +379,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (rafId) window.cancelAnimationFrame(rafId);
     };
 
+    let lastCanvasWidth = window.innerWidth;
     resizeCanvas();
     applyTargetCount();
     petals = Array.from({ length: targetCount }, () => makePetal(true));
 
     let resizeTimer;
     window.addEventListener('resize', () => {
+      if (window.innerWidth === lastCanvasWidth) return;
+      lastCanvasWidth = window.innerWidth;
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
         resizeCanvas();
@@ -436,11 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (document.hidden) stop(); else start();
     });
 
-    // Tracks which section currently has the most on-screen presence and
-    // switches the active petal profile accordingly. Existing petals keep
-    // falling with their own settings — only new spawns (and respawns once
-    // the target shrinks) pick up the new profile, so the transition
-    // between sections is always gradual, never an abrupt swap.
     const sectionIds = Object.keys(SAKURA_PROFILES);
     const sectionRatios = new Map();
     const sectionObserver = new IntersectionObserver((entries) => {
@@ -481,8 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // フォーム送信先は未接続です。Studio移植時はStudioのフォーム機能、
-      // または外部フォームサービス（Formspreeなど）と接続してください。
       formNote.style.color = '';
       formNote.textContent = 'お問い合わせありがとうございます。担当者より折り返しご連絡いたします。';
       contactForm.reset();
