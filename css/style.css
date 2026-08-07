@@ -1,30 +1,31 @@
 /* ============================================================
    Rafale Holdings ― Luxury × Future × Human
    ------------------------------------------------------------
-   ・未来感は「機械」ではなく「空間」で作る。
-     壁面照明のような光、奥から差す光、ガラス越しの反射、薄い霧。
-   ・線は情報整理の道具として最小限だけ残し、区切りは余白と光で行う。
-   ・動きはすべてゆっくり（出現 0.9〜1.2s／背景光 14〜26s）。
-     人の呼吸くらいの速さで、気づくが邪魔をしない。
-   ・ゴールドは Rafale のロゴと SAKURA の面だけ。
+   白い未来建築のロビーに朝の光が差している空間。
+   ・未来感は黒や機械ではなく、白・自然光・ガラス・透明感で作る。
+   ・線は情報を読む場所だけ。区切りは余白と光で行う。
+   ・動きはゆっくり（出現 0.7〜1.4s／背景光 15〜30s）。
+   ・ゴールドは Rafale のロゴと、BRANDS（SAKURA）の中だけ。
+   ・スクロールのドラマ: LIGHT → LIGHT → LIGHT → BLACK(SAKURA) → LIGHT
    ============================================================ */
 
 :root {
-  /* 空間の基調（青に寄せる。緑・茶には決して転ばせない） */
-  --graphite:  #0C1017;
-  --navy:      #0E1725;
-  --navy-deep: #0A1220;
+  /* paper */
+  --paper:    #F7F8FA;
+  --paper-2:  #F2F5F7;
+  --white:    #FFFFFF;
 
   /* ink */
-  --white:  #F3F5F7;
-  --silver: #B8C0C8;
-  --cool:   #DCE8F2;
-  --text:   #A2ADB9;
-  --muted:  #77828F;
+  --ink:   #111820;
+  --ink-2: #202832;
+  --sub:   #66717D;
 
-  /* 線は2種類だけ（これ以上増やさない） */
-  --line:     rgba(178, 200, 222, 0.10);
-  --line-lit: rgba(220, 236, 252, 0.34);
+  --line: rgba(30, 50, 70, 0.10);
+
+  /* accent ― 淡いブルー / ブルーグレー / シルバー（強い青は使わない） */
+  --sky:    #DCEAF2;
+  --sky-2:  #C7D7E2;
+  --silver: #AEBCC7;
 
   /* brand gold ― ロゴと SAKURA の面のみ */
   --gold:      #C9A24B;
@@ -49,8 +50,8 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--graphite);
-  color: var(--text);
+  background: var(--paper);
+  color: var(--ink-2);
   font-family: var(--font-jp);
   font-weight: 300;
   font-size: 1.02rem;
@@ -66,18 +67,18 @@ h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
 ul, ol { list-style: none; }
 a { color: inherit; text-decoration: none; }
 button, input, textarea { font: inherit; color: inherit; }
-::selection { background: rgba(220, 232, 242, 0.20); color: #fff; }
+::selection { background: rgba(150, 190, 220, 0.28); color: var(--ink); }
 
 .skip-link {
   position: fixed; top: -80px; left: 16px; z-index: 1000;
   padding: 12px 20px; border-radius: 2px;
-  background: var(--cool); color: var(--graphite);
+  background: var(--ink); color: var(--white);
   font-size: 0.86rem; font-weight: 500;
   transition: top 0.25s var(--ease);
 }
 .skip-link:focus { top: 16px; }
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
-  outline: 1px solid var(--cool); outline-offset: 3px;
+  outline: 1px solid #7FA6C4; outline-offset: 3px;
 }
 
 .only-pc { display: inline; }
@@ -86,86 +87,70 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .scroll-progress {
   position: fixed; top: 0; left: 0; z-index: 90;
   width: 100%; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--line-lit));
+  background: linear-gradient(90deg, rgba(120,160,195,0.25), #8FB2CC);
   transform: scaleX(0); transform-origin: 0 50%;
-  pointer-events: none; opacity: 0.7;
+  pointer-events: none;
 }
 
 /* ============================================================
-   FIELD ― 空間
+   FIELD ― 白い空間（固定背景）
    ============================================================ */
 .field {
   position: fixed; inset: 0; z-index: -2;
   overflow: hidden; pointer-events: none;
   contain: layout paint;
-  background: var(--graphite);
+  background: var(--paper);
 }
 
-/* 奥から差してくる光 */
+/* 朝の光が入るロビー ― 上と右奥から柔らかく差す */
 .field-sky {
   position: absolute; inset: 0;
   background:
-    radial-gradient(88% 62% at 50% -14%, #18293F 0%, transparent 64%),
-    radial-gradient(52% 40% at 78% 4%, #14243A 0%, transparent 70%),
-    linear-gradient(180deg, var(--navy) 0%, #0A0F17 62%, #080B11 100%);
+    radial-gradient(96% 68% at 62% -12%, #FFFFFF 0%, rgba(255,255,255,0) 58%),
+    radial-gradient(54% 44% at 12% 18%, rgba(220, 234, 242, 0.85) 0%, rgba(220,234,242,0) 70%),
+    linear-gradient(178deg, var(--white) 0%, var(--paper) 44%, var(--paper-2) 100%);
 }
 
-/* 壁面照明 ― 画面の左右端から、柱を照らすように立ち上がる光。
-   14〜26秒かけて明度がゆっくり呼吸する。 */
-.field-lamp {
-  position: absolute; top: -10%; width: min(46vw, 620px); height: 120%;
-  filter: blur(46px);
-  will-change: opacity;
+/* 自然光そのもの ― 20秒かけて非常にゆっくり動き、明度がわずかに呼吸する */
+.field-daylight {
+  position: absolute; left: 50%; top: -22%;
+  width: min(1500px, 130vw); height: min(1200px, 116vh);
+  transform: translateX(-50%);
+  background:
+    radial-gradient(closest-side, rgba(255, 255, 255, 0.95) 0%, rgba(255,255,255,0) 72%),
+    radial-gradient(closest-side at 58% 62%, rgba(214, 234, 246, 0.55) 0%, rgba(214,234,246,0) 74%);
+  animation: daylight 24s ease-in-out infinite;
+  will-change: transform, opacity;
 }
-.field-lamp--l {
-  left: -14%;
-  background: radial-gradient(closest-side at 60% 42%, rgba(150, 190, 234, 0.16), transparent 74%);
-  animation: lampBreath 22s ease-in-out infinite;
-}
-.field-lamp--r {
-  right: -16%;
-  background: radial-gradient(closest-side at 40% 58%, rgba(176, 206, 240, 0.13), transparent 76%);
-  animation: lampBreath 26s ease-in-out infinite reverse;
-}
-@keyframes lampBreath {
-  0%, 100% { opacity: 0.62; transform: translate3d(0, 0, 0) scale(1); }
-  50%      { opacity: 1;    transform: translate3d(0, -3%, 0) scale(1.06); }
+@keyframes daylight {
+  0%, 100% { transform: translateX(-50%) translate3d(0, 0, 0);        opacity: 0.86; }
+  50%      { transform: translateX(-50%) translate3d(-3%, 2.5%, 0);   opacity: 1; }
 }
 
-/* ガラス越しの反射 ― 輪郭を持たない、ぼかされた面 */
-.field-glass { position: absolute; inset: 0; }
-.glass {
-  position: absolute; display: block;
-  filter: blur(30px);
-  transform: translate3d(calc(var(--mx) * 12px), calc(var(--my) * 8px), 0);
+/* ガラス越しの反射 ― 面ではなく、淡いブルーの光の帯 */
+.field-reflect {
+  position: absolute; top: -8%; height: 116%; width: min(38vw, 520px);
+  filter: blur(40px);
   will-change: transform;
 }
-.glass--a {
-  left: 4%; top: 8%; width: 40vw; height: 74vh;
-  background: linear-gradient(128deg, rgba(214, 234, 252, 0.055) 0%, rgba(214, 234, 252, 0.012) 42%, transparent 72%);
-  animation: glassDrift 24s ease-in-out infinite;
+.field-reflect--l {
+  left: -8%;
+  background: linear-gradient(112deg, rgba(199, 215, 226, 0.42) 0%, rgba(199,215,226,0) 68%);
+  transform: translate3d(calc(var(--mx) * 10px), 0, 0);
+  animation: reflectBreath 26s ease-in-out infinite;
 }
-.glass--b {
-  right: 2%; top: 22%; width: 34vw; height: 62vh;
-  background: linear-gradient(200deg, rgba(198, 224, 248, 0.045) 0%, transparent 66%);
-  animation: glassDrift 30s ease-in-out infinite reverse;
+.field-reflect--r {
+  right: -10%;
+  background: linear-gradient(248deg, rgba(220, 234, 242, 0.5) 0%, rgba(220,234,242,0) 66%);
+  transform: translate3d(calc(var(--mx) * -10px), 0, 0);
+  animation: reflectBreath 30s ease-in-out infinite reverse;
 }
-@keyframes glassDrift {
-  0%, 100% { opacity: 0.72; }
-  50%      { opacity: 1; }
-}
+@keyframes reflectBreath { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
 
-/* 薄い霧 ― 空気の層 */
-.field-mist {
-  position: absolute; left: 0; right: 0; top: 26%; height: 62%;
-  background: linear-gradient(180deg, transparent, rgba(146, 178, 214, 0.045) 46%, transparent);
-  filter: blur(28px);
-}
-
-/* 床に溜まる光（線ではなく面で地平を作る） */
+/* 床に落ちる、ごく薄い影 */
 .field-floor {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 46vh;
-  background: linear-gradient(180deg, transparent, rgba(150, 186, 226, 0.07) 76%, rgba(164, 200, 238, 0.10) 100%);
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40vh;
+  background: linear-gradient(180deg, rgba(30, 50, 70, 0) 0%, rgba(30, 50, 70, 0.035) 72%, rgba(30, 50, 70, 0.06) 100%);
 }
 
 /* ============================================================
@@ -174,9 +159,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .site-header {
   position: fixed; top: 0; left: 0; z-index: 80; width: 100%;
   padding: 24px 0;
-  transition: background 0.7s var(--ease), padding 0.6s var(--ease);
+  transition: background 0.7s var(--ease), padding 0.6s var(--ease), box-shadow 0.7s var(--ease);
 }
-.site-header.is-scrolled { padding: 14px 0; background: rgba(9, 13, 19, 0.82); }
+.site-header.is-scrolled {
+  padding: 14px 0;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -34px rgba(30, 50, 70, 0.28);
+}
 .header-inner {
   width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
@@ -186,25 +175,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .logo { display: inline-flex; align-items: center; }
 .logo-img { height: 46px; width: auto; transition: height 0.6s var(--ease), opacity 0.5s var(--ease); }
 .site-header.is-scrolled .logo-img { height: 35px; }
-.logo:hover .logo-img { opacity: 0.85; }
+.logo:hover .logo-img { opacity: 0.82; }
 
 .main-nav ul { display: flex; align-items: center; gap: clamp(20px, 2.6vw, 38px); }
 .nav-link {
   position: relative; padding: 6px 0;
-  font-weight: 300; font-size: 0.86rem; letter-spacing: 0.1em; color: var(--silver);
+  font-weight: 300; font-size: 0.86rem; letter-spacing: 0.1em; color: var(--ink-2);
   transition: color 0.5s var(--ease);
 }
-.nav-link:hover { color: var(--white); }
+.nav-link:hover { color: var(--ink); }
 .nav-cta {
-  padding: 10px 24px; border-radius: 2px; color: var(--white);
-  background: rgba(214, 234, 252, 0.05);
-  transition: background 0.6s var(--ease), color 0.5s var(--ease);
+  padding: 10px 24px; border-radius: 2px; color: var(--ink);
+  background: rgba(150, 185, 214, 0.16);
+  transition: background 0.6s var(--ease);
 }
-.nav-cta:hover { background: rgba(214, 234, 252, 0.11); }
+.nav-cta:hover { background: rgba(150, 185, 214, 0.28); }
 
 .hamburger { display: none; width: 46px; height: 46px; padding: 0; background: none; border: none; cursor: pointer; }
 .hamburger span {
-  position: absolute; left: 12px; width: 22px; height: 1px; background: var(--white);
+  position: absolute; left: 12px; width: 22px; height: 1px; background: var(--ink);
   transition: transform 0.5s var(--ease), opacity 0.35s var(--ease);
 }
 .hamburger span:nth-child(1) { top: 17px; }
@@ -215,7 +204,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hamburger.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 /* ============================================================
-   HERO ― 1枚の建築ビジュアル
+   HERO ― 白い未来建築のロビー
    ============================================================ */
 .hero {
   position: relative; min-height: 100svh;
@@ -224,57 +213,56 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   overflow: hidden;
 }
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 2s var(--ease); }
-.hero-video.is-ready { opacity: 0.42; }
+.hero-video.is-ready { opacity: 0.4; }
 
 .hero-atmos { position: absolute; inset: 0; pointer-events: none; }
 
-/* 言葉の背後に置く、青白い大きな光。ゆっくり呼吸する。 */
+/* 言葉のまわりの空気 ― 白い光がゆっくり呼吸する */
 .hero-halo {
-  position: absolute; left: 4%; top: 46%;
-  width: min(1120px, 116vw); height: min(820px, 92vh);
-  transform: translate(-12%, -50%) translate3d(calc(var(--mx) * 16px), calc(var(--my) * 12px + var(--sy) * 52px), 0);
+  position: absolute; left: 2%; top: 48%;
+  width: min(1180px, 120vw); height: min(860px, 96vh);
+  transform: translate(-12%, -50%) translate3d(calc(var(--mx) * 14px), calc(var(--my) * 10px + var(--sy) * 48px), 0);
   background:
-    radial-gradient(closest-side, rgba(186, 216, 250, 0.135), transparent 70%),
-    radial-gradient(closest-side at 62% 58%, rgba(148, 184, 226, 0.07), transparent 74%);
-  filter: blur(12px);
+    radial-gradient(closest-side, rgba(255, 255, 255, 0.92), rgba(255,255,255,0) 68%),
+    radial-gradient(closest-side at 58% 60%, rgba(220, 236, 246, 0.6), rgba(220,236,246,0) 72%);
   opacity: 0;
-  animation: haloIn 3s var(--ease) 0.2s forwards, haloBreath 18s ease-in-out 3.2s infinite;
+  animation: haloIn 2.6s var(--ease) 0.15s forwards, haloBreath 20s ease-in-out 2.8s infinite;
   will-change: transform, opacity;
 }
 @keyframes haloIn { to { opacity: 1; } }
-@keyframes haloBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.78; } }
+@keyframes haloBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
 
-/* 一条の光が、20秒かけて画面をゆっくり横切る */
+/* 一条の光が 22 秒かけて空間を横切る */
 .hero-sweep {
-  position: absolute; top: -20%; left: -30%;
-  width: 34vw; height: 140%;
-  background: linear-gradient(104deg, transparent, rgba(214, 236, 255, 0.085) 46%, transparent 78%);
-  filter: blur(24px);
-  animation: sweep 20s linear 2.2s infinite;
+  position: absolute; top: -20%; left: -34%;
+  width: 30vw; height: 140%;
+  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 255, 255, 0.75) 46%, rgba(255,255,255,0) 80%);
+  filter: blur(30px);
+  animation: sweep 22s linear 2s infinite;
 }
 @keyframes sweep {
   0%   { transform: translateX(0); opacity: 0; }
-  12%  { opacity: 1; }
-  84%  { opacity: 1; }
-  100% { transform: translateX(360%); opacity: 0; }
+  14%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { transform: translateX(380%); opacity: 0; }
 }
 
 .hero-grid {
   position: relative; z-index: 2;
   width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
-  display: grid; grid-template-columns: minmax(0, 1fr) clamp(180px, 24vw, 380px);
+  display: grid; grid-template-columns: minmax(0, 1fr) clamp(190px, 26vw, 400px);
   align-items: center; gap: clamp(24px, 4vw, 72px);
 }
 .hero-main { min-width: 0; }
 
 .hero-logo-block { margin-bottom: clamp(32px, 5.5vh, 58px); }
 .hero-logo-img {
-  height: clamp(74px, 11vh, 120px); width: auto;
+  height: clamp(76px, 11.5vh, 124px); width: auto;
   opacity: 0;
-  animation: logoIn 1.9s var(--ease-out) 0.55s forwards;   /* 奥から現れる */
+  animation: logoIn 1.8s var(--ease-out) 0.5s forwards;   /* ぼかし＋奥行きから */
 }
 @keyframes logoIn {
-  from { opacity: 0; transform: translateZ(0) scale(0.94) translateY(18px); filter: blur(10px); }
+  from { opacity: 0; transform: scale(0.94) translateY(18px); filter: blur(11px); }
   to   { opacity: 1; transform: none; filter: blur(0); }
 }
 
@@ -282,45 +270,45 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-family: var(--font-en); font-weight: 200;
   font-size: clamp(2.5rem, 7.4vw, 6.2rem);
   line-height: 1.06; letter-spacing: -0.022em;
-  color: var(--white);
+  color: var(--ink);
   margin-bottom: clamp(36px, 6vh, 66px);
-  text-shadow: 0 0 60px rgba(120, 160, 210, 0.18);
 }
-.hero-title .mask-in { animation: maskUp 1.2s var(--ease-out) forwards; transform: translateY(104%); }
-.hero-title .mask:nth-child(1) .mask-in { animation-delay: 1.15s; }
-.hero-title .mask:nth-child(2) .mask-in { animation-delay: 1.45s; }
-.hero-title .mask:nth-child(3) .mask-in { animation-delay: 1.75s; color: var(--silver); }
+.hero-title .mask-in { animation: maskUp 1.15s var(--ease-out) forwards; transform: translateY(104%); }
+.hero-title .mask:nth-child(1) .mask-in { animation-delay: 1.05s; }
+.hero-title .mask:nth-child(2) .mask-in { animation-delay: 1.25s; }
+.hero-title .mask:nth-child(3) .mask-in { animation-delay: 1.45s; color: #46525F; }
 
 .hero-lead {
   font-size: clamp(1rem, 1.9vw, 1.2rem);
-  line-height: 2.1; letter-spacing: 0.14em; color: var(--silver);
-  opacity: 0; animation: fadeUp 1.2s var(--ease-out) 2.25s forwards;
+  line-height: 2.1; letter-spacing: 0.14em; color: var(--sub);
+  opacity: 0; animation: fadeUp 1.2s var(--ease-out) 1.85s forwards;
 }
-.hero-cta { margin-top: clamp(40px, 6vh, 66px); opacity: 0; animation: fadeUp 1.2s var(--ease-out) 2.55s forwards; }
+.hero-cta { margin-top: clamp(40px, 6vh, 66px); opacity: 0; animation: fadeUp 1.2s var(--ease-out) 2.1s forwards; }
 
-/* 右側 ― ガラス越しの光。文字ではなく空間を置く */
+/* 右側 ― 建築ガラスの面。反射と薄い影を持つ */
 .hero-side { position: relative; align-self: stretch; display: flex; align-items: flex-end; justify-content: flex-end; }
 .hero-glass {
-  position: absolute; right: -6%; top: 4%; width: 118%; height: 92%;
-  border-radius: 2px;
-  background: linear-gradient(146deg, rgba(216, 236, 254, 0.075) 0%, rgba(190, 218, 246, 0.022) 38%, transparent 74%);
-  filter: blur(2px);
+  position: absolute; right: -8%; top: 3%; width: 122%; height: 94%;
+  border-radius: 3px;
+  background: linear-gradient(146deg, rgba(255, 255, 255, 0.78) 0%, rgba(226, 240, 248, 0.34) 40%, rgba(255,255,255,0.06) 78%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 40px 90px -52px rgba(30, 50, 70, 0.35), inset 0 1px 0 rgba(255,255,255,0.9);
   opacity: 0;
-  transform: translate3d(calc(var(--mx) * -10px), calc(var(--my) * -6px), 0) scale(0.97);
-  animation: glassIn 2.4s var(--ease-out) 1.1s forwards;
+  transform: translate3d(calc(var(--mx) * -5px), calc(var(--my) * -3px), 0) scale(0.985);
+  animation: glassIn 2.2s var(--ease-out) 0.95s forwards;
   will-change: transform;
 }
-.hero-glass::after {                     /* ガラスの端が拾う、細い反射（1本だけ） */
-  content: ""; position: absolute; left: 0; top: 8%; width: 1px; height: 84%;
-  background: linear-gradient(180deg, transparent, rgba(224, 240, 255, 0.5), transparent);
+.hero-glass::after {                     /* ガラスの端が拾う反射 */
+  content: ""; position: absolute; left: 12%; top: 0; width: 1px; height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.95) 40%, transparent);
 }
 @keyframes glassIn { to { opacity: 1; } }
 
 .hero-vertical {
   position: relative; writing-mode: vertical-rl;
   font-family: var(--font-en); font-weight: 300;
-  font-size: 0.78rem; letter-spacing: 0.5em; color: var(--muted);
-  opacity: 0; animation: fadeIn 1.8s var(--ease-out) 2.8s forwards;
+  font-size: 0.78rem; letter-spacing: 0.5em; color: var(--sub);
+  opacity: 0; animation: fadeIn 1.6s var(--ease-out) 2.4s forwards;
 }
 
 @keyframes fadeIn { to { opacity: 1; } }
@@ -331,13 +319,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 12px;
   font-family: var(--font-en); font-size: 0.72rem; font-weight: 300;
-  letter-spacing: 0.28em; color: var(--muted);
-  opacity: 0; animation: fadeIn 1.4s var(--ease-out) 3.1s forwards;
+  letter-spacing: 0.28em; color: var(--sub);
+  opacity: 0; animation: fadeIn 1.4s var(--ease-out) 2.6s forwards;
 }
-.scroll-cue-rail { width: 1px; height: 58px; background: rgba(178, 200, 222, 0.18); position: relative; overflow: hidden; }
+.scroll-cue-rail { width: 1px; height: 58px; background: rgba(30, 50, 70, 0.14); position: relative; overflow: hidden; }
 .scroll-cue-rail::after {
   content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 42%;
-  background: linear-gradient(180deg, transparent, var(--cool));
+  background: linear-gradient(180deg, transparent, #7FA6C4);
   animation: cueSlide 3.4s ease-in-out infinite;
 }
 @keyframes cueSlide {
@@ -352,88 +340,83 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   min-height: 56px; padding: 16px 42px; border-radius: 2px;
-  border: 1px solid rgba(200, 222, 244, 0.20);
-  background: rgba(214, 234, 252, 0.035);
-  color: var(--white);
+  border: 1px solid rgba(30, 50, 70, 0.16);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--ink);
   font-family: var(--font-en); font-size: 0.86rem; font-weight: 300; letter-spacing: 0.13em;
   cursor: pointer;
-  transition: background 0.7s var(--ease), border-color 0.7s var(--ease), color 0.6s var(--ease);
+  transition: background 0.7s var(--ease), border-color 0.7s var(--ease),
+              box-shadow 0.7s var(--ease), color 0.6s var(--ease);
   -webkit-tap-highlight-color: transparent;
 }
-.btn:hover { background: rgba(214, 234, 252, 0.10); border-color: rgba(216, 236, 255, 0.42); color: var(--cool); }
+.btn:hover {
+  background: var(--white); border-color: rgba(120, 160, 195, 0.5);
+  box-shadow: 0 20px 40px -28px rgba(30, 50, 70, 0.4);
+}
 .btn:disabled { opacity: 0.5; cursor: default; }
 .btn-block { width: 100%; }
 
 /* ============================================================
-   SECTION ― セクションごとに空気（光の色と温度）を変える
+   SECTION ― セクションごとに空気を変える（すべて明るい側）
    ============================================================ */
 .section { position: relative; padding: clamp(120px, 17vh, 220px) 0; }
 .section-inner { position: relative; z-index: 1; width: var(--shell); margin: 0 auto; padding: 0 var(--gutter); }
+.section::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 
-/* 各セクションが自分の光を持つ（線で区切らない） */
-.section::before {
-  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-}
-
-#philosophy::before {        /* Deep Blue + Soft White ― 最も柔らかい光 */
+#philosophy::before {        /* 白 〜 ごく薄いブルー */
   background:
-    radial-gradient(58% 42% at 22% 24%, rgba(168, 202, 244, 0.10), transparent 70%),
-    radial-gradient(46% 38% at 82% 76%, rgba(190, 214, 246, 0.055), transparent 72%);
+    radial-gradient(60% 46% at 20% 22%, rgba(220, 234, 242, 0.85), rgba(220,234,242,0) 72%),
+    radial-gradient(46% 38% at 84% 78%, rgba(238, 244, 248, 0.9), rgba(238,244,248,0) 74%);
 }
-#business::before {          /* Graphite + Silver ― 落ち着いた、明度低め */
-  background:
-    radial-gradient(70% 46% at 78% 12%, rgba(150, 172, 196, 0.055), transparent 72%),
-    linear-gradient(180deg, rgba(8, 11, 16, 0.34), transparent 34%);
+#business::before {          /* 白 〜 薄いグレー */
+  background: linear-gradient(180deg, rgba(242, 245, 247, 0) 0%, rgba(238, 241, 244, 0.9) 40%, rgba(242, 245, 247, 0) 100%);
 }
-#message::before {           /* Midnight Navy + Soft Light */
-  background:
-    radial-gradient(62% 44% at 16% 62%, rgba(128, 172, 224, 0.085), transparent 72%),
-    linear-gradient(180deg, rgba(11, 20, 34, 0.42), transparent 46%);
+#message::before {           /* 白 ＋ 大きな余白 */
+  background: radial-gradient(56% 42% at 78% 24%, rgba(224, 238, 246, 0.6), rgba(224,238,246,0) 74%);
 }
-#company::before, #contact::before {   /* Dark Graphite ― 最小限 */
-  background: linear-gradient(180deg, rgba(8, 11, 16, 0.30), transparent 40%);
+#company::before, #contact::before {
+  background: linear-gradient(180deg, rgba(240, 243, 246, 0.7) 0%, rgba(247, 248, 250, 0) 46%);
 }
 
 .section-head { margin-bottom: clamp(30px, 4.5vh, 52px); }
 .section-tag {
-  font-family: var(--font-en); font-weight: 300;
-  font-size: 0.8rem; letter-spacing: 0.36em; color: var(--silver);
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.8rem; letter-spacing: 0.36em; color: var(--sub);
 }
 .section-title {
   font-family: var(--font-jp); font-weight: 300;
   font-size: clamp(1.7rem, 3.6vw, 2.6rem);
-  line-height: 1.5; letter-spacing: 0.08em; color: var(--white);
+  line-height: 1.5; letter-spacing: 0.08em; color: var(--ink);
   margin-bottom: clamp(24px, 3vh, 36px);
 }
 .section-lead {
   font-size: clamp(0.98rem, 1.7vw, 1.06rem);
-  line-height: 2.2; color: var(--text); max-width: 780px;
+  line-height: 2.2; color: var(--sub); max-width: 780px;
   margin-bottom: clamp(60px, 9vh, 116px);
 }
 
-/* reveal ― ゆっくり浮き上がる */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity 1.15s var(--ease-out), transform 1.15s var(--ease-out); }
+/* reveal */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out); }
 .reveal.is-visible { opacity: 1; transform: none; }
 
 .mask { display: block; overflow: hidden; }
 .mask-in { display: block; transform: translateY(104%); }
 .reveal.mask { opacity: 1; transform: none; }
-.reveal.mask .mask-in { transition: transform 1.3s var(--ease-out); }
+.reveal.mask .mask-in { transition: transform 1.25s var(--ease-out); }
 .reveal.mask.is-visible .mask-in { transform: none; }
 
 /* ============================================================
    PHILOSOPHY
    ============================================================ */
 .philo-title {
-  position: relative;
   font-family: var(--font-jp); font-weight: 200;
   font-size: clamp(2rem, 6.4vw, 5rem);
-  line-height: 1.36; letter-spacing: 0.02em; color: var(--white);
+  line-height: 1.36; letter-spacing: 0.02em; color: var(--ink);
   margin-bottom: clamp(72px, 10vh, 148px);
-  text-shadow: 0 0 70px rgba(130, 170, 220, 0.16);
 }
 .philo-title .mask-in { padding-bottom: 0.1em; }
-.philo-title .mask:nth-child(2) .mask-in { color: var(--silver); padding-left: clamp(0px, 7vw, 148px); }
+.philo-title .mask:nth-child(2) .mask-in { padding-left: clamp(0px, 5vw, 108px); }
+.philo-title .mask:nth-child(3) .mask-in { padding-left: clamp(0px, 10vw, 216px); color: #46525F; }
 
 .philo-body {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -442,90 +425,99 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .philo-col p {
   font-size: clamp(0.98rem, 1.7vw, 1.06rem);
-  line-height: 2.45; color: var(--text);
+  line-height: 2.45; color: var(--sub);
   margin-bottom: clamp(32px, 4.4vh, 50px);
 }
 .philo-col p:last-child { margin-bottom: 0; }
 
-/* 線ではなく、背後の光で一文を持ち上げる */
 .philo-accent {
   position: relative; z-index: 0;
-  color: var(--white) !important;
+  color: var(--ink) !important;
   font-size: clamp(1.16rem, 2.3vw, 1.46rem) !important;
   letter-spacing: 0.1em; line-height: 2 !important;
-  padding: 22px 26px; margin-left: -26px;
+  padding: 24px 28px; margin-left: -28px;
 }
 .philo-accent::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 2px;
-  background: radial-gradient(72% 100% at 12% 50%, rgba(176, 208, 246, 0.12), transparent 72%);
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 3px;
+  background: linear-gradient(100deg, rgba(255,255,255,0.95), rgba(220, 236, 246, 0.55));
+  box-shadow: 0 24px 50px -40px rgba(30, 50, 70, 0.5);
 }
 
 /* ============================================================
-   BUSINESS ― 罫線をやめ、余白と光で区切る
+   BUSINESS ― 余白で分ける。カードにしない。
    ============================================================ */
-.biz-list { display: grid; gap: clamp(6px, 1vh, 14px); }
+.biz-list { display: grid; gap: clamp(4px, 0.8vh, 10px); }
 .biz-row {
-  position: relative; z-index: 0;      /* ::before の光を行の中に閉じる */
-  display: grid; grid-template-columns: clamp(52px, 5.6vw, 82px) minmax(0, 1fr);
+  position: relative; z-index: 0;
+  display: grid; grid-template-columns: clamp(48px, 5vw, 72px) minmax(0, 1fr);
   align-items: start; gap: clamp(18px, 3vw, 44px);
   padding: clamp(26px, 3.4vh, 40px) clamp(20px, 2.4vw, 34px);
   margin-left: clamp(-20px, -2.4vw, -34px);
   border-radius: 3px;
-  transition: transform 0.9s var(--ease-out);
 }
-/* ホバーで背後に柔らかい光が灯る（四角い面ではなく、にじむ光） */
 .biz-row::before {
   content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 3px;
-  background: radial-gradient(58% 130% at 8% 50%, rgba(176, 206, 240, 0.10), transparent 74%);
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.9), rgba(220, 236, 246, 0.5) 62%, rgba(220,236,246,0));
+  box-shadow: 0 26px 50px -44px rgba(30, 50, 70, 0.5);
   opacity: 0; transition: opacity 0.9s var(--ease);
 }
 .biz-row:hover::before { opacity: 1; }
 
 .biz-num {
-  font-family: var(--font-en); font-weight: 200;
-  font-size: clamp(1.06rem, 1.8vw, 1.34rem);
-  line-height: 1.9; letter-spacing: 0.08em; color: var(--muted);
-  opacity: 0.62;
-  transition: opacity 0.8s var(--ease), color 0.8s var(--ease);
+  font-family: var(--font-en); font-weight: 300;
+  font-size: clamp(0.94rem, 1.5vw, 1.12rem);
+  line-height: 2.1; letter-spacing: 0.1em; color: var(--silver);
+  opacity: 0.72; transition: opacity 0.8s var(--ease), color 0.8s var(--ease);
 }
-.biz-row:hover .biz-num { opacity: 1; color: var(--cool); }
+.biz-row:hover .biz-num { opacity: 1; color: #7FA6C4; }
 
-.biz-body { padding-top: clamp(2px, 0.5vw, 8px); }
-
+.biz-body { padding-top: clamp(0px, 0.3vw, 4px); }
 .biz-name {
-  font-family: var(--font-jp); font-weight: 300;
+  font-family: var(--font-jp); font-weight: 400;
   font-size: clamp(1.14rem, 2.3vw, 1.52rem);
-  line-height: 1.6; letter-spacing: 0.06em; color: var(--white);
+  line-height: 1.6; letter-spacing: 0.06em; color: var(--ink);
   transition: transform 0.9s var(--ease-out);
 }
 .biz-row:hover .biz-name { transform: translateX(6px); }
 .biz-en {
   display: block; margin-top: 10px;
   font-family: var(--font-en); font-weight: 300;
-  font-size: 0.8rem; letter-spacing: 0.14em; color: var(--muted);
+  font-size: 0.8rem; letter-spacing: 0.14em; color: var(--silver);
 }
 .biz-desc {
   margin-top: clamp(12px, 1.6vh, 18px); max-width: 740px;
-  font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.15; color: var(--text);
-  transition: transform 0.9s var(--ease-out), color 0.7s var(--ease);
+  font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.15; color: var(--sub);
+  transition: transform 0.9s var(--ease-out);
 }
-.biz-row:hover .biz-desc { transform: translateX(6px); color: var(--silver); }
+.biz-row:hover .biz-desc { transform: translateX(6px); }
 
 /* ============================================================
-   BRANDS ― 空間ごと黒へ切り替わり、ブランドだけが残る
+   BRANDS ― 白 → グレー → グラファイト → 黒 → 白へ戻る
    ============================================================ */
 .section--brand {
-  min-height: 100svh;
+  min-height: 132svh;
   display: flex; align-items: center;
+  padding: clamp(150px, 22vh, 280px) 0;
   overflow: hidden;
 }
+.section--brand::before { display: none; }
 .brand-shift {
   position: absolute; inset: -1px 0; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(64% 46% at 50% 48%, rgba(200, 169, 106, 0.075), transparent 70%),
-    linear-gradient(180deg, transparent 0%, #06070A 22%, #050609 78%, transparent 100%);
+    radial-gradient(58% 40% at 50% 50%, rgba(200, 169, 106, 0.10), rgba(200,169,106,0) 70%),
+    linear-gradient(180deg,
+      rgba(247, 248, 250, 0) 0%,
+      #C8CDD3 12%,
+      #6E757D 22%,
+      #2A2E34 32%,
+      #0B0C0E 42%,
+      #08090B 58%,
+      #2A2E34 70%,
+      #6E757D 80%,
+      #C8CDD3 90%,
+      rgba(247, 248, 250, 0) 100%);
 }
-.section--brand .section-tag  { color: var(--gold-soft); }
+.section--brand .section-tag   { color: var(--gold-soft); }
 .section--brand .section-title { color: #F4EFE6; }
 .section--brand .section-lead  { color: #9C9286; }
 
@@ -535,14 +527,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-size: 0.76rem; letter-spacing: 0.4em; color: rgba(200, 169, 106, 0.66);
   margin-bottom: clamp(38px, 5.5vh, 66px);
 }
-
-/* ロゴが中央から静かに現れる */
 .brand-logo {
   width: min(600px, 84vw); height: clamp(126px, 21vw, 228px);
   margin: 0 auto clamp(34px, 5vh, 58px);
-  transition: transform 1.4s var(--ease-out), opacity 1.4s var(--ease-out), filter 1.4s var(--ease-out);
+  transition: transform 1.5s var(--ease-out), opacity 1.5s var(--ease-out), filter 1.5s var(--ease-out);
 }
-.brand-logo.reveal { opacity: 0; transform: scale(0.965); filter: blur(6px); }
+.brand-logo.reveal { opacity: 0; transform: scale(0.96); filter: blur(10px); }
 .brand-logo.reveal.is-visible { opacity: 1; transform: none; filter: blur(0); }
 .brand-logo img { width: 100%; height: 100%; object-fit: contain; }
 .brand:hover .brand-logo { transform: translateY(-5px); }
@@ -574,7 +564,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ============================================================
-   MESSAGE
+   MESSAGE ― 白へ戻る
    ============================================================ */
 .message-layout {
   display: grid; grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
@@ -583,20 +573,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .message-head .section-title { margin-bottom: 18px; }
 .message-en {
   font-family: var(--font-en); font-weight: 200;
-  font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.3; color: var(--muted);
+  font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.3; color: var(--silver);
 }
 .message-quote {
   font-family: var(--font-jp); font-weight: 300;
   font-size: clamp(1.3rem, 3vw, 1.95rem);
-  line-height: 1.9; letter-spacing: 0.06em; color: var(--white);
+  line-height: 1.9; letter-spacing: 0.06em; color: var(--ink);
   margin-bottom: clamp(34px, 4.6vh, 52px);
-  text-shadow: 0 0 60px rgba(130, 170, 220, 0.14);
 }
-.message-body p { font-size: clamp(0.96rem, 1.7vw, 1.04rem); line-height: 2.4; color: var(--text); margin-bottom: clamp(24px, 3vh, 34px); }
-.message-sign { margin-top: clamp(36px, 5vh, 54px); text-align: right; color: var(--silver); letter-spacing: 0.12em; }
+.message-body p { font-size: clamp(0.96rem, 1.7vw, 1.04rem); line-height: 2.4; color: var(--sub); margin-bottom: clamp(24px, 3vh, 34px); }
+.message-sign { margin-top: clamp(36px, 5vh, 54px); text-align: right; color: var(--ink-2); letter-spacing: 0.12em; }
 
 /* ============================================================
-   COMPANY ― 線は「情報を読む」ためだけに残す（最も薄く）
+   COMPANY
    ============================================================ */
 .info-list { border-top: 1px solid var(--line); }
 .info-row {
@@ -605,10 +594,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   padding: clamp(24px, 3.2vh, 34px) 4px;
   border-bottom: 1px solid var(--line);
 }
-.info-row dt { font-size: 0.88rem; font-weight: 300; letter-spacing: 0.16em; color: var(--muted); }
-.info-row dd { font-size: clamp(0.96rem, 1.7vw, 1.04rem); color: var(--white); font-weight: 300; }
+.info-row dt { font-size: 0.88rem; font-weight: 400; letter-spacing: 0.16em; color: var(--sub); }
+.info-row dd { font-size: clamp(0.96rem, 1.7vw, 1.04rem); color: var(--ink); font-weight: 300; }
 .info-list-inline { display: flex; flex-wrap: wrap; gap: 10px 30px; }
-.info-list-inline li { color: var(--text); }
+.info-list-inline li { color: var(--ink-2); }
 
 /* ============================================================
    CONTACT
@@ -619,33 +608,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .contact-info-row { padding: 26px 0; display: flex; flex-direction: column; gap: 10px; }
 .contact-info-row + .contact-info-row { border-top: 1px solid var(--line); }
-.contact-label { font-family: var(--font-en); font-weight: 300; font-size: 0.78rem; letter-spacing: 0.22em; color: var(--muted); }
-.contact-info-row span:not(.contact-label) { font-size: 1rem; color: var(--white); font-weight: 300; line-height: 1.95; }
-.contact-info-row a { border-bottom: 1px solid rgba(178, 200, 222, 0.24); transition: border-color 0.5s var(--ease), color 0.5s var(--ease); }
-.contact-info-row a:hover { color: var(--cool); border-color: var(--cool); }
+.contact-label { font-family: var(--font-en); font-weight: 400; font-size: 0.78rem; letter-spacing: 0.22em; color: var(--sub); }
+.contact-info-row span:not(.contact-label) { font-size: 1rem; color: var(--ink); font-weight: 300; line-height: 1.95; }
+.contact-info-row a { border-bottom: 1px solid rgba(30, 50, 70, 0.2); transition: border-color 0.5s var(--ease), color 0.5s var(--ease); }
+.contact-info-row a:hover { color: #4E7FA4; border-color: #4E7FA4; }
 
 .form-row { position: relative; margin-bottom: clamp(26px, 3.4vh, 36px); }
-.form-row label { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.88rem; letter-spacing: 0.12em; color: var(--silver); }
-.required { font-size: 0.7rem; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 2px; color: var(--muted); background: rgba(178, 200, 222, 0.08); }
+.form-row label { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.88rem; letter-spacing: 0.12em; color: var(--ink-2); }
+.required { font-size: 0.7rem; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 2px; color: var(--sub); background: rgba(150, 185, 214, 0.18); }
 .contact-form input, .contact-form textarea {
   width: 100%; padding: 15px 2px;
-  background: transparent; color: var(--white);
-  border: none; border-bottom: 1px solid rgba(178, 200, 222, 0.20); border-radius: 0;
+  background: transparent; color: var(--ink);
+  border: none; border-bottom: 1px solid rgba(30, 50, 70, 0.16); border-radius: 0;
   font-size: 1rem; letter-spacing: 0.04em;
   transition: border-color 0.6s var(--ease);
   -webkit-appearance: none; appearance: none;
 }
 .contact-form textarea { resize: vertical; min-height: 144px; line-height: 2; }
-.contact-form input:focus, .contact-form textarea:focus { outline: none; border-bottom-color: rgba(220, 236, 252, 0.4); }
+.contact-form input:focus, .contact-form textarea:focus { outline: none; border-bottom-color: rgba(127, 166, 196, 0.6); }
 .form-row::after {
   content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
-  background: linear-gradient(90deg, var(--cool), rgba(184, 204, 224, 0.2));
+  background: linear-gradient(90deg, #7FA6C4, rgba(199, 215, 226, 0.4));
   transform: scaleX(0); transform-origin: 0 50%;
   transition: transform 0.9s var(--ease-out); pointer-events: none;
 }
 .form-row:focus-within::after { transform: scaleX(1); }
 .contact-form .btn { margin-top: 12px; }
-.form-note { margin-top: 22px; font-size: 0.92rem; line-height: 1.95; color: var(--silver); }
+.form-note { margin-top: 22px; font-size: 0.92rem; line-height: 1.95; color: var(--ink-2); }
 
 /* ============================================================
    FOOTER
@@ -660,12 +649,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   display: flex; justify-content: space-between; align-items: flex-start; gap: 46px; flex-wrap: wrap;
 }
 .footer-logo-img { height: 64px; width: auto; margin-bottom: 24px; }
-.footer-brand p { font-family: var(--font-en); font-weight: 300; font-size: 0.84rem; line-height: 2; letter-spacing: 0.08em; color: var(--muted); }
+.footer-brand p { font-family: var(--font-en); font-weight: 300; font-size: 0.84rem; line-height: 2; letter-spacing: 0.08em; color: var(--sub); }
 .footer-nav { display: flex; flex-wrap: wrap; gap: 14px 32px; }
-.footer-nav a { font-size: 0.88rem; color: var(--silver); letter-spacing: 0.08em; transition: color 0.5s var(--ease); }
-.footer-nav a:hover { color: var(--white); }
+.footer-nav a { font-size: 0.88rem; color: var(--ink-2); letter-spacing: 0.08em; transition: color 0.5s var(--ease); }
+.footer-nav a:hover { color: #4E7FA4; }
 .footer-bottom { width: var(--shell); margin: clamp(50px, 6vh, 80px) auto 0; padding: 26px var(--gutter) 0; }
-.footer-bottom p { font-family: var(--font-en); font-size: 0.76rem; letter-spacing: 0.08em; color: var(--muted); }
+.footer-bottom p { font-family: var(--font-en); font-size: 0.76rem; letter-spacing: 0.08em; color: var(--silver); }
 
 /* ============================================================
    RESPONSIVE
@@ -688,38 +677,40 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .main-nav {
     position: fixed; top: 0; left: 0; right: 0;
     padding: 104px var(--gutter) 46px;
-    background: rgba(8, 11, 16, 0.98);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 20px 40px -30px rgba(30, 50, 70, 0.4);
     transform: translateY(-101%);
     transition: transform 0.7s var(--ease-out);
   }
   .main-nav.is-open { transform: translateY(0); }
   .main-nav ul { flex-direction: column; align-items: flex-start; gap: 2px; }
   .main-nav li { width: 100%; }
-  .nav-link { display: block; width: 100%; padding: 18px 0; font-size: 1rem; }
-  .nav-cta { margin-top: 24px; text-align: center; }
+  .nav-link { display: block; width: 100%; padding: 18px 0; font-size: 1rem; border-bottom: 1px solid var(--line); }
+  .nav-cta { margin-top: 24px; text-align: center; border-bottom: none; }
 
   .info-row { grid-template-columns: 1fr; gap: 8px; }
   .info-row dt { font-size: 0.8rem; }
   .message-sign { text-align: left; }
+  .section--brand { min-height: 118svh; }
 
-  /* スマホ: 重い層（blur を伴う面）を落とし、光だけ残す */
-  .field-glass { display: none; }
-  .field-lamp { filter: blur(30px); animation: none; opacity: 0.8; }
-  .field-mist { filter: none; }
+  /* スマホ: blur を伴う重い層を落とし、光だけ残す */
+  .field-reflect { display: none; }
+  .field-daylight { animation: none; opacity: 0.95; }
   .hero-sweep { display: none; }
-  .hero-halo { filter: none; transform: translate(-12%, -50%); animation: haloIn 2.4s var(--ease) 0.2s forwards; }
+  .hero-halo { animation: haloIn 2.2s var(--ease) 0.15s forwards; transform: translate(-12%, -50%); }
   .hero-glass { display: none; }
 }
 
 @media (max-width: 480px) {
   body { font-size: 1rem; }
   .hero { padding-top: 136px; padding-bottom: 116px; }
-  .hero-logo-img { height: clamp(64px, 17vw, 88px); }
+  .hero-logo-img { height: clamp(66px, 18vw, 92px); }
   .hero-title { font-size: clamp(2.15rem, 10.4vw, 3rem); line-height: 1.14; }
-  .biz-row { grid-template-columns: 42px minmax(0, 1fr); gap: 14px; padding-left: 16px; padding-right: 16px; margin-left: -16px; }
+  .biz-row { grid-template-columns: 38px minmax(0, 1fr); gap: 14px; padding-left: 16px; padding-right: 16px; margin-left: -16px; }
   .philo-title { font-size: clamp(1.72rem, 8.4vw, 2.4rem); }
-  .philo-title .mask:nth-child(2) .mask-in { padding-left: 0; }
-  .philo-accent { margin-left: 0; padding: 18px 20px; }
+  .philo-title .mask:nth-child(2) .mask-in,
+  .philo-title .mask:nth-child(3) .mask-in { padding-left: 0; }
+  .philo-accent { margin-left: 0; padding: 20px 22px; }
   .brand-logo { height: clamp(100px, 27vw, 138px); }
   .brand-origin { letter-spacing: 0.26em; font-size: 0.7rem; }
   .footer-inner { flex-direction: column; gap: 36px; }
