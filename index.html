@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=8">
+<link rel="stylesheet" href="css/style.css?v=9">
 
 <!--
   ============================================================
@@ -181,14 +181,19 @@
           <img src="img/logo-light.png?v=1" alt="Rafale Holdings" class="hero-logo-img" width="736" height="575" fetchpriority="high" decoding="async">
         </div>
 
+        <!-- 各行は「外＝マスク＋視差」「中＝出現アニメーション」の二重構造。
+             行ごとに速度と奥行きを変え、一塊に見えないようにしている。 -->
         <h1 class="hero-title" lang="en">
-          <span class="hero-line">Driven by Joy.</span>
-          <span class="hero-line">Growing People.</span>
-          <span class="hero-line">Growing Businesses.</span>
+          <span class="hero-line"><span class="hero-line-in">Driven by Joy.</span></span>
+          <span class="hero-line"><span class="hero-line-in">Growing People.</span></span>
+          <span class="hero-line"><span class="hero-line-in">Growing Businesses.</span></span>
         </h1>
 
-        <!-- 改行は常に意味の切れ目で（スマホで「事業を育／てる。」と割れないよう固定） -->
-        <p class="hero-lead">楽しさを原動力に。<br>人を育て、事業を育てる。</p>
+        <!-- 改行は常に意味の切れ目で（「事業を育／てる。」と割れないよう行を分けている） -->
+        <p class="hero-lead">
+          <span class="lead-line">楽しさを原動力に。</span>
+          <span class="lead-line">人を育て、事業を育てる。</span>
+        </p>
 
         <a href="#philosophy" class="btn hero-cta">私たちの理念を見る</a>
       </div>
@@ -502,6 +507,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=7" defer></script>
+<script src="js/script.js?v=9" defer></script>
 </body>
 </html>

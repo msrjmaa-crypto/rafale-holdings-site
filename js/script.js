@@ -113,7 +113,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ---------- reveal on scroll ---------- */
+  /* ---------- reveal on scroll ----------
+     文字の出現は全セクション共通の階層で動かす。
+       1) 大見出し        … いちばん先（マスク＋blur は CSS 側）
+       2) 本文            … 少し遅れて fade + translate
+       3) 小さなラベル/番号 … さらに遅れて
+     グループ（事業一覧など）の中は、上から順に少しずつずらす。 */
+  const TIER_HEADING = '.section-title, .philo-title .mask, .message-quote, .brand-logo';
+  const TIER_LABEL   = '.section-tag, .brand-origin, .contact-label, .biz-num';
+  const tierDelay = (el) => {
+    if (el.matches(TIER_HEADING)) return 0;
+    if (el.matches(TIER_LABEL)) return 240;
+    return 120;                                   // 本文
+  };
+
   document.querySelectorAll('.biz-list, .info-list, .contact-info, .brand')
     .forEach((group) => {
       group.querySelectorAll('.reveal').forEach((el, i) => {
@@ -122,6 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+
+  document.querySelectorAll('.reveal').forEach((el) => {
+    if (!el.dataset.revealDelay) {
+      el.dataset.revealDelay = prefersReducedMotion ? '0' : String(tierDelay(el));
+    }
+  });
 
   const revealTargets = document.querySelectorAll('.reveal');
   if (revealTargets.length) {
