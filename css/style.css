@@ -553,136 +553,86 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ============================================================
-   右側 ― R Glass Sculpture
-   Rafale の R を建築へ抽象化した、巨大な半透明のガラス彫刻。
-   字形は作らない。R から借りるのは次の3つの面だけ:
-     縦のストローク（stem）／大きな円弧（bowl）／斜めの脚（leg）
-   面は色で塗らず、輪郭・縁の反射・屈折・落ち影で立たせる。
-   Silver は縁に、Pale Blue は屈折に、Warm White は反射に置いている。
+   右側 ― Rafale Signature R
+   その場でサインしたような一筆書きの R。フォントの R は使わない。
+   線は #r-stroke ただ1本で、それを <use> で7回重ねている。
+   各コピーは同じ線の「別の区間」だけを、別の太さで描く ―― 区間は少しずつ
+   重ねてあるので継ぎ目は出ず、始筆が太く、途中が細く、曲線でまた太り、
+   払いへ向かって細く消えていく、という筆圧の変化として読める。
+   描き終わったあとは動かさない。1〜2px の漂いと、20秒に1度だけ
+   線の上を走る反射、そして背景の光に合わせた僅かな明暗だけを残す。
    ============================================================ */
-.hero-arch {
-  position: absolute; right: 0; top: 0;
-  width: min(52%, 1000px); height: 100%;
+.hero-sign {
+  position: absolute; right: 7%; top: 50%;
+  height: 64%; aspect-ratio: 300 / 380;
+  transform: translate3d(calc(var(--mx) * -4px), calc(-50% + var(--my) * -3px), 0);
   pointer-events: none;
-  transform: translate3d(calc(var(--mx) * -4px), calc(var(--my) * -3px), 0);
   will-change: transform;
 }
-.hero-arch > span { position: absolute; display: block; opacity: 0; }
+.r-sign { display: block; width: 100%; height: 100%; overflow: visible; }
 
-/* 奥の気配 ― 彫刻が置かれている空間そのもの。輪郭は持たない */
-.r-halo {
-  right: -8%; top: 0; width: 96%; height: 92%;
-  background:
-    radial-gradient(58% 46% at 62% 30%, rgba(226, 238, 247, 0.5), rgba(226,238,247,0) 74%),
-    radial-gradient(46% 38% at 30% 68%, rgba(252, 246, 238, 0.44), rgba(252,246,238,0) 76%);
-  animation: objInSoft 1.8s var(--ease-out) 0.7s forwards, driftE 33s ease-in-out 3s infinite;
-}
-
-/* 主役 ― R の大きな円弧。左は垂直に切り落とし、右へ大きく張り出す曲面。
-   Pale Blue の屈折と Warm White の反射を面の中に持たせている。 */
-.r-bowl {
-  right: 3%; top: 6%; width: 66%; height: 54%;
-  border-radius: 3% 50% 50% 3% / 5% 50% 50% 5%;
-  background: linear-gradient(152deg,
-    rgba(255, 255, 255, 0.44) 0%,
-    rgba(246, 250, 253, 0.24) 20%,
-    rgba(204, 223, 238, 0.19) 46%,   /* Pale Blue ― 屈折 */
-    rgba(252, 247, 240, 0.13) 72%,   /* Warm White ― 反射 */
-    rgba(255, 255, 255, 0.02) 96%);
-  -webkit-backdrop-filter: blur(1.5px) saturate(1.14) brightness(1.02);
-          backdrop-filter: blur(1.5px) saturate(1.14) brightness(1.02);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    inset 0 0 0 1px rgba(196, 208, 219, 0.22),         /* ガラスの厚み */
-    inset 56px 0 98px -74px rgba(255, 255, 255, 0.95), /* 内側の反射 */
-    inset 0 -78px 94px -86px rgba(52, 68, 88, 0.18),   /* 下部の陰り */
-    -46px 70px 138px -90px rgba(40, 56, 74, 0.34);     /* 床への落ち影 */
-  animation: objIn 1.9s var(--ease-out) 0.82s forwards, driftA 27s ease-in-out 3.2s infinite;
-}
-/* 円弧の内側を走る、細く長いハイライト（縁の厚みが光って見える線） */
-.r-bowl::before {
-  content: ""; position: absolute; left: 4%; top: 8%;
-  width: 2px; height: 56%;
-  border-radius: 2px;
-  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.94) 42%, rgba(255,255,255,0));
+/* 共通 ― 線の描き方。区間と太さだけを各コピーで変える。 */
+.r-seg {
+  fill: none;
+  stroke: url(#r-ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.66;
+  /* 0 のときは何も描かれていない。区間の長さまで伸ばすと描き終わる。 */
+  stroke-dasharray: 0 2000;
 }
 
-/* R の縦のストローク ― 円弧の左に立つ、細く高いガラスの柱 */
-.r-stem {
-  left: 13%; top: 3%; width: 12.5%; height: 86%;
-  background: linear-gradient(168deg,
-    rgba(255, 255, 255, 0.46) 0%,
-    rgba(252, 248, 242, 0.24) 34%,   /* Warm White */
-    rgba(238, 243, 247, 0.16) 62%,
-    rgba(255, 255, 255, 0.02) 100%);
-  border-left: 1px solid rgba(255, 255, 255, 0.92);
-  border-top: 1px solid rgba(255, 255, 255, 0.84);
-  border-right: 1px solid rgba(188, 200, 211, 0.28);
-  box-shadow:
-    inset 0 -40px 50px -48px rgba(52, 68, 88, 0.2),
-    18px 38px 82px -70px rgba(40, 56, 74, 0.3);
-  animation: objInSoft 1.8s var(--ease-out) 0.9s forwards, driftC 31s ease-in-out 3.4s infinite;
+/* 始筆 ― いちばん太く、いちばんゆっくり入る */
+.r-seg--1 { stroke-width: 13;  stroke-dashoffset: 0;    animation: inkGrow 0.42s cubic-bezier(0.34, 0.02, 0.3, 1) 1.80s forwards; --len: 130; }
+/* 立ち上がり ― 細くなりながら速度が乗る */
+.r-seg--2 { stroke-width: 9.5; stroke-dashoffset: -110; animation: inkGrow 0.32s linear 2.10s forwards; --len: 190; }
+/* 上の返し ― いちばん細い */
+.r-seg--3 { stroke-width: 7.5; stroke-dashoffset: -280; animation: inkGrow 0.26s linear 2.36s forwards; --len: 180; }
+/* ふところの曲線 ― 少し太る */
+.r-seg--4 { stroke-width: 11;  stroke-dashoffset: -440; animation: inkGrow 0.30s cubic-bezier(0.4, 0, 0.4, 1) 2.58s forwards; --len: 180; }
+/* 曲線を閉じる */
+.r-seg--5 { stroke-width: 8;   stroke-dashoffset: -600; animation: inkGrow 0.24s linear 2.85s forwards; --len: 150; }
+/* 脚 ― 勢いをつけて斜め下へ */
+.r-seg--6 { stroke-width: 5;   stroke-dashoffset: -730; animation: inkGrow 0.26s cubic-bezier(0.5, 0, 0.9, 0.6) 3.06s forwards; --len: 150; }
+/* 終筆 ― 細いまま長く、加速して抜ける */
+.r-seg--7 { stroke-width: 2.4; stroke-dashoffset: -860; animation: inkGrow 0.50s cubic-bezier(0.45, 0, 0.75, 0.45) 3.30s forwards; --len: 140; }
+
+@keyframes inkGrow { to { stroke-dasharray: var(--len) 2000; } }
+
+/* ごく淡い滲み ― 線のまわりの空気。発光にはしない */
+.r-glow {
+  fill: none;
+  stroke: #D6DEE7;
+  stroke-width: 22; stroke-linecap: round; stroke-linejoin: round;
+  filter: blur(9px);
+  opacity: 0;
+  animation: inkGlow 2.4s var(--ease) 2.2s forwards;
+}
+@keyframes inkGlow { to { opacity: 0.16; } }
+
+/* 完成後の反射 ― 線の上を短い光が1本、20秒に1度だけ走る */
+.r-sheen {
+  fill: none;
+  stroke: #F4F0E6;
+  stroke-width: 6.5; stroke-linecap: round;
+  stroke-dasharray: 70 930;
+  opacity: 0;
+  animation: sheenRun 20s linear 3.9s infinite;
+}
+@keyframes sheenRun {
+  0%   { stroke-dashoffset: 0;     opacity: 0; }
+  4%   { opacity: 0.5; }
+  22%  { opacity: 0.5; }
+  30%  { stroke-dashoffset: -1000; opacity: 0; }
+  100% { stroke-dashoffset: -1000; opacity: 0; }
 }
 
-/* R の脚 ― 円弧の下から右下へ抜ける斜めの面。四角形を斜めに切り出している */
-.r-leg {
-  left: 26%; top: 55%; width: 52%; height: 42%;
-  clip-path: polygon(0% 0%, 33% 0%, 100% 100%, 63% 100%);
-  background: linear-gradient(146deg,
-    rgba(255, 255, 255, 0.38) 0%,
-    rgba(240, 245, 249, 0.19) 46%,
-    rgba(255, 255, 255, 0.02) 100%);
-  box-shadow: inset 0 -30px 44px -46px rgba(52, 68, 88, 0.18);
-  animation: objInSoft 1.8s var(--ease-out) 1s forwards, driftB 29s ease-in-out 3.6s infinite;
+/* 描き終わったあとの漂い ― 1〜2px。回転も拡大もしない */
+.r-sign { animation: signDrift 29s ease-in-out 4.2s infinite; }
+@keyframes signDrift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-2px, 1px, 0); }
 }
-
-/* 縁を巡る Silver の反射 ― 18秒かけて円弧の面をゆっくり移動する。
-   背景の Liquid Silk がガラスの内側にも映り込んでいる、という見立て。 */
-.r-edge {
-  right: -6%; top: -8%; width: 76%; height: 74%;
-  background: linear-gradient(150deg,
-    rgba(255, 255, 255, 0) 28%,
-    rgba(206, 220, 234, 0.44) 45%,   /* Silver */
-    rgba(255, 255, 255, 0.72) 52%,
-    rgba(226, 238, 247, 0.2) 60%,
-    rgba(255, 255, 255, 0) 74%);
-  filter: blur(26px);
-  /* この層は元から大きくぼけているので、objIn（ぼけを晴らす）は使わない */
-  animation: edgeIn 2s var(--ease) 1.4s forwards, edgeTravel 18s ease-in-out 3.4s infinite;
-}
-@keyframes edgeIn { to { opacity: 1; } }
-
-/* 床 ― 長い柔らかな影・白い反射・薄いシルバーの映り込み */
-.r-ground {
-  left: -30%; right: 0; bottom: 0; height: 30%;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.12) 26%, rgba(255,255,255,0) 58%),
-    radial-gradient(46% 38% at 66% 2%, rgba(52, 68, 88, 0.15), rgba(52,68,88,0) 74%),
-    linear-gradient(104deg, rgba(52, 68, 88, 0) 14%, rgba(52, 68, 88, 0.05) 48%, rgba(52, 68, 88, 0) 86%),
-    linear-gradient(180deg, rgba(52, 68, 88, 0) 0%, rgba(52, 68, 88, 0.04) 76%, rgba(52, 68, 88, 0.07) 100%);
-  animation: objInSoft 1.9s var(--ease-out) 1.1s forwards, groundLight 24s ease-in-out 4s infinite;
-}
-
-/* 登場 ― 奥から手前へ 14px。回転もズームもしない。
-   ぼけを晴らす版は主役の曲面だけに使い、他の面は filter を持たせない
-   （常時 filter が残る要素を増やすと、合成レイヤーが固定されてしまう）。 */
-@keyframes objIn {
-  from { opacity: 0; filter: blur(10px); transform: translate3d(0, 14px, 0) scale(0.986); }
-  to   { opacity: 1; filter: blur(0);    transform: translate3d(0, 0, 0) scale(1); }
-}
-@keyframes objInSoft {
-  from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.988); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
-}
-@keyframes driftA { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(3px,-2px,0); } }
-@keyframes driftB { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-2px,2px,0); } }
-@keyframes driftC { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-2px,1px,0); } }
-@keyframes driftE { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-3px,2px,0); } }
-@keyframes edgeTravel {
-  0%,100% { transform: translate3d(-6%, 4%, 0);  opacity: 0.44; }
-  50%     { transform: translate3d(10%, -4%, 0); opacity: 0.82; }
-}
-@keyframes groundLight { 0%,100% { opacity: 0.9; } 50% { opacity: 1; } }
 
 /* ============================================================
    左側 ― ブランドと言葉（実測: 文字は x 5.7%〜52%、3行で画面高の40%）
@@ -771,9 +721,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   animation: lineRise 0.85s var(--ease-out) forwards;
   will-change: opacity, transform, filter;
 }
-.hero-line:nth-child(1) .hero-line-in { animation-delay: 1.80s; }
-.hero-line:nth-child(2) .hero-line-in { animation-delay: 2.10s; }
-.hero-line:nth-child(3) .hero-line-in { animation-delay: 2.40s; }
+.hero-line:nth-child(1) .hero-line-in { animation-delay: 1.98s; }
+.hero-line:nth-child(2) .hero-line-in { animation-delay: 2.30s; }
+.hero-line:nth-child(3) .hero-line-in { animation-delay: 2.62s; }
 @keyframes lineRise { to { opacity: 1; filter: blur(0); transform: none; } }
 
 /* ---- 日本語 ---- */
@@ -786,8 +736,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   opacity: 0; filter: blur(6px); transform: translateY(16px);
   animation: leadIn 0.9s var(--ease-out) forwards;
 }
-.lead-line:nth-child(1) { animation-delay: 2.90s; }
-.lead-line:nth-child(2) { animation-delay: 3.02s; }
+.lead-line:nth-child(1) { animation-delay: 3.10s; }
+.lead-line:nth-child(2) { animation-delay: 3.22s; }
 @keyframes leadIn { to { opacity: 1; filter: blur(0); transform: none; } }
 
 /* ---- CTA ― ボタンではなく導線。前より幅28%・高さ20%小さく ---- */
@@ -801,7 +751,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   color: #7A6136;
   font-family: var(--font-jp); font-weight: 300;
   font-size: 0.74rem; letter-spacing: 0.14em;
-  opacity: 0; animation: ctaIn 0.9s var(--ease-out) 3.22s forwards;
+  opacity: 0; animation: ctaIn 0.9s var(--ease-out) 3.44s forwards;
   transition: background 0.7s var(--ease), border-color 0.7s var(--ease), color 0.6s var(--ease);
   box-shadow: none;
 }
@@ -831,7 +781,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .scroll-cue--left {
   left: var(--gutter); transform: translateY(10px);
-  animation: cueInLeft 1s var(--ease-out) 3.45s forwards;
+  animation: cueInLeft 1s var(--ease-out) 3.66s forwards;
 }
 @keyframes cueInLeft { to { opacity: 1; transform: translateY(0); } }
 .scroll-cue-rail { width: 1px; height: 72px; margin-left: 2px; background: rgba(52, 68, 88, 0.16); position: relative; overflow: hidden; }
@@ -1485,7 +1435,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .contact-layout { grid-template-columns: 1fr; }
   /* タブレット: 建築空間は右奥へ退き、言葉が主役に戻る */
   .hero-main { max-width: min(78vw, 720px); }
-  .hero-arch { width: min(64%, 620px); opacity: 0.8; }
+  .hero-sign { right: 5%; height: 58%; }
 }
 
 @media (max-width: 768px) {
@@ -1639,46 +1589,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   /* スマホ: 建築は曲面ガラスと床だけに絞り、blur の重い層は落とす */
   .hero-main { max-width: 100%; }
 
-  /* ---- スマホの R Glass Sculpture ----
-     文字の可読性を守るため、彫刻は右奥へ寄せる。左側はマスクで抜いてある。
-     面は減らすが体験は残す ― 円弧と縦のストローク、そして床の反射。 */
-  .hero-arch {
-    width: 66%; opacity: 1; transform: none;
-    -webkit-mask-image: linear-gradient(100deg, transparent 0%, rgba(0,0,0,0.4) 20%, #000 48%);
-            mask-image: linear-gradient(100deg, transparent 0%, rgba(0,0,0,0.4) 20%, #000 48%);
+  /* ---- スマホの Signature R ----
+     何の形か分からない面は置かない。R と読める形をそのまま残し、
+     右上〜右中央に、コピーへ被らない大きさで置く。
+     線は PC より細く、少しだけ薄くする。ただし消えかけにはしない。 */
+  .hero-sign {
+    right: 4%; top: 30%; height: 40%;
+    transform: translate3d(0, -30%, 0);
   }
-  .r-leg, .r-halo { display: none; }
-  /* 円弧は右へ大きく逃がし、肩の曲線だけを画面に入れる */
-  .r-bowl {
-    right: -32%; top: 5%; width: 96%; height: 60%;
-    -webkit-backdrop-filter: none; backdrop-filter: none;
-    background: linear-gradient(152deg,
-      rgba(255, 255, 255, 0.42) 0%,
-      rgba(246, 250, 253, 0.24) 22%,
-      rgba(204, 223, 238, 0.2) 50%,
-      rgba(252, 247, 240, 0.12) 76%,
-      rgba(255, 255, 255, 0.03) 96%);
-    border: 1px solid rgba(255, 255, 255, 0.92);
-    box-shadow:
-      inset 0 0 0 1px rgba(196, 208, 219, 0.24),
-      inset 44px 0 82px -68px rgba(255, 255, 255, 1),
-      inset 0 -64px 76px -80px rgba(52, 68, 88, 0.19),
-      -28px 52px 104px -82px rgba(40, 56, 74, 0.36);
-    animation: objIn 1.9s var(--ease-out) 0.82s forwards, driftA 32s ease-in-out 3.4s infinite;
-  }
-  .r-bowl::before { left: 6%; height: 46%; }
-  /* 縦のストロークは細く短く。円弧の肩と重なる位置に残す */
-  .r-stem {
-    left: 8%; top: 12%; width: 15%; height: 62%;
-    animation: objInSoft 1.8s var(--ease-out) 0.9s forwards;
-  }
-  .r-ground {
-    left: -20%; height: 26%;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.12) 26%, rgba(255,255,255,0) 58%),
-      radial-gradient(46% 38% at 70% 2%, rgba(52, 68, 88, 0.15), rgba(52,68,88,0) 74%),
-      linear-gradient(180deg, rgba(52, 68, 88, 0) 0%, rgba(52, 68, 88, 0.04) 76%, rgba(52, 68, 88, 0.07) 100%);
-  }
+  .r-seg { opacity: 0.56; }
+  .r-seg--1 { stroke-width: 10; }
+  .r-seg--2 { stroke-width: 7.6; }
+  .r-seg--3 { stroke-width: 6; }
+  .r-seg--4 { stroke-width: 8.6; }
+  .r-seg--5 { stroke-width: 6.4; }
+  .r-seg--6 { stroke-width: 4.2; }
+  .r-seg--7 { stroke-width: 2.1; }
+  .r-glow { stroke-width: 17; filter: blur(7px); }
+  .r-sheen { stroke-width: 5.2; }
+  /* 漂いはスマホでも残す（transform ひとつだけなので負荷にならない） */
   .hero-rays { filter: blur(20px); animation: raysIn 2.4s var(--ease) 0.3s forwards; }
 
   /* ---- スマホでもロード演出は残す ----
@@ -1711,7 +1640,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
   /* 光は残しつつ、blur を伴う層の枚数を減らす（iPhone のスクロール優先） */
   .hero-silver { display: none; }
-  .r-edge { display: none; }                      /* 面を移動する反射は省略 */
+  .r-glow { display: none; }                      /* blur を伴う層をひとつ減らす */
   .logo::after { filter: blur(18px); animation: fadeIn 1.8s var(--ease) 0.9s forwards; }
   .hero-warm { filter: blur(54px); }
   .hero-tint { filter: blur(46px); animation-duration: 22s; }
@@ -1770,9 +1699,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-line { transform: none; clip-path: none; }
   .hero-line-in, .lead-line { opacity: 1; filter: none; transform: none; }
   .logo-img, .main-nav li, .hamburger { opacity: 1; transform: none; }
-  .hero-arch > span { opacity: 1; }
-  .r-bowl, .r-stem, .r-leg, .r-halo, .r-ground { filter: none; transform: none; }
-  .r-edge { opacity: 0.6; transform: none; }
+  /* サインは描く動きを止め、最初から描き終わった状態で見せる */
+  .r-seg { stroke-dasharray: var(--len) 2000; }
+  .r-glow { opacity: 0.16; }
+  .r-sheen { display: none; }
+  .r-sign { transform: none; }
   .hero-rays { opacity: 1; transform: none; }
   .hero-logo-block::after { opacity: 1; }
   .hero-sweep { display: none; }

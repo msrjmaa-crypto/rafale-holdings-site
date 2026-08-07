@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=38">
+<link rel="stylesheet" href="css/style.css?v=39">
 
 <!--
   ============================================================
@@ -192,19 +192,46 @@
       <span class="hero-rays"></span>
     </div>
 
-    <!-- 右側 ― R Glass Sculpture。
-         Rafale の R を、文字としてではなく建築として取り出したガラスの彫刻。
-         R から借りているのは「縦のストローク」「大きな円弧」「斜めの脚」の
-         3つの面だけで、字形そのものは作らない。
-         奥から: 気配 → 円弧（主役の曲面）→ 縦のストローク → 脚 →
-         縁を巡るシルバーの反射 → 床への反射。 -->
-    <div class="hero-arch" aria-hidden="true">
-      <span class="r-halo"></span>
-      <span class="r-bowl"></span>
-      <span class="r-stem"></span>
-      <span class="r-leg"></span>
-      <span class="r-edge"></span>
-      <span class="r-ground"></span>
+    <!-- 右側 ― Rafale Signature R。
+         その場でサインしたような一筆書きの R を、1.8秒から3.8秒かけて描く。
+         線は1本の path（#r-stroke）だけで、それを <use> で重ねている。
+         ・r-seg 1〜7 … 同じ線の別々の区間を、別々の太さで描く。
+                        重ねているので継ぎ目は出ず、筆圧の変化として読める。
+                        始筆 13 → 細く 7.5 → 曲線 11 → 払い 2.4。
+         ・r-glow      … ごく淡い滲み（ネオンにはしない）
+         ・r-sheen     … 完成後、線の上を1本の反射が20秒ごとに走る
+         pathLength="1000" にしてあるので、区間はすべて 0〜1000 で指定できる。 -->
+    <div class="hero-sign" aria-hidden="true">
+      <svg class="r-sign" viewBox="0 0 300 380" fill="none" preserveAspectRatio="xMidYMid meet" role="presentation">
+        <defs>
+          <!-- 下から立ち上がり、上で右へ返し、ふところを閉じて、脚が長く抜ける。
+               わざと左右対称にせず、わずかな揺らぎを残している。 -->
+          <path id="r-stroke" pathLength="1000"
+                d="M 64 332
+                   C 59 252, 57 158, 68 72
+                   C 73 41, 97 25, 132 30
+                   C 178 37, 199 68, 187 102
+                   C 178 130, 149 148, 110 152
+                   C 147 170, 176 210, 205 251
+                   C 226 280, 251 301, 288 313"/>
+          <linearGradient id="r-ink" x1="0" y1="0" x2="1" y2="0.9">
+            <stop offset="0"    stop-color="#C6D2DE"/>
+            <stop offset="0.34" stop-color="#E4E0D5"/>
+            <stop offset="0.62" stop-color="#C9D5E0"/>
+            <stop offset="1"    stop-color="#DCE4EC"/>
+          </linearGradient>
+        </defs>
+
+        <use class="r-glow" href="#r-stroke"/>
+        <use class="r-seg r-seg--1" href="#r-stroke"/>
+        <use class="r-seg r-seg--2" href="#r-stroke"/>
+        <use class="r-seg r-seg--3" href="#r-stroke"/>
+        <use class="r-seg r-seg--4" href="#r-stroke"/>
+        <use class="r-seg r-seg--5" href="#r-stroke"/>
+        <use class="r-seg r-seg--6" href="#r-stroke"/>
+        <use class="r-seg r-seg--7" href="#r-stroke"/>
+        <use class="r-sheen" href="#r-stroke"/>
+      </svg>
     </div>
 
     <div class="hero-inner">
