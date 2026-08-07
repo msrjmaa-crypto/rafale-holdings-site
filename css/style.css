@@ -1241,15 +1241,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .field-lamps { transform: translate3d(0, calc(var(--sp, 0) * 10px), 0); }
 
   /* Silver ― 主役。13秒で左外から右外まで通過する。
-     地より暗いので「壁を影が横切る」ように読め、いちばん動きが分かりやすい。 */
+     地より暗いので「壁を影が横切る」ように読める。
+     opacity は既に上限なので、地との明度差そのものを約1.3倍にして存在感を上げた
+     （地 #F1EBE6 との差 55 → 73）。中心の濃度も一段上げ、blur を少し詰めている。 */
   .field-lamp--c {
     left: -56%; top: 26%; bottom: auto; width: 60%; height: 46%;
     background: radial-gradient(closest-side,
-      rgba(186, 199, 213, 1) 0%,
-      rgba(186, 199, 213, 0.74) 30%,
-      rgba(186, 199, 213, 0.3) 58%,
-      rgba(186, 199, 213, 0) 80%);
-    filter: blur(28px);
+      rgba(168, 184, 201, 1) 0%,
+      rgba(168, 184, 201, 0.82) 30%,
+      rgba(168, 184, 201, 0.36) 58%,
+      rgba(168, 184, 201, 0) 80%);
+    filter: blur(26px);
     animation: lampCsp 13s linear infinite;
   }
   @keyframes lampCsp {
@@ -1260,58 +1262,60 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     100% { transform: translate3d(244%, 2%, 0) scale(1);     opacity: 0; }
   }
 
-  /* Warm White ― 18秒。右上から中央下へ斜めに降りる（Silver とは別の軌道） */
+  /* Warm White ― 補助光。18秒で右上から左下へ降りるが、役割は「暖かい空気を足す」だけ。
+     Silver より必ず弱くなるよう、中心濃度と opacity の上限を明確に下げてある。 */
   .field-lamp--a {
     left: auto; right: -46%; top: -18%; width: 58%; height: 48%;
     background: radial-gradient(closest-side,
-      rgba(255, 249, 233, 1) 0%,
-      rgba(255, 249, 233, 0.72) 32%,
-      rgba(255, 249, 233, 0.28) 60%,
+      rgba(255, 249, 233, 0.82) 0%,
+      rgba(255, 249, 233, 0.56) 32%,
+      rgba(255, 249, 233, 0.2) 60%,
       rgba(255, 249, 233, 0) 80%);
-    filter: blur(26px);
+    filter: blur(30px);
     animation: lampAsp 18s linear infinite;
   }
   @keyframes lampAsp {
     0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
-    16%  { opacity: 0.92; }
-    50%  { transform: translate3d(-96%, 96%, 0) scale(1.06);   opacity: 1; }
-    84%  { opacity: 0.86; }
+    16%  { opacity: 0.64; }
+    50%  { transform: translate3d(-96%, 96%, 0) scale(1.06);   opacity: 0.72; }
+    84%  { opacity: 0.6; }
     100% { transform: translate3d(-186%, 176%, 0) scale(1);    opacity: 0; }
   }
 
-  /* Pale Blue ― 23秒。奥行き担当なので最も控えめに、下から上へゆっくり昇る */
+  /* Pale Blue ― いちばん控えめ。動きを見せるためではなく、奥行きと未来感のためだけに置く。
+     Silver の通過を邪魔しない濃度に抑えている。 */
   .field-lamp--b {
     display: block;
     left: 14%; right: auto; top: auto; bottom: -34%; width: 54%; height: 44%;
     background: radial-gradient(closest-side,
-      rgba(198, 223, 242, 0.92) 0%,
-      rgba(198, 223, 242, 0.6) 34%,
-      rgba(198, 223, 242, 0.22) 62%,
+      rgba(198, 223, 242, 0.42) 0%,
+      rgba(198, 223, 242, 0.26) 34%,
+      rgba(198, 223, 242, 0.1) 62%,
       rgba(198, 223, 242, 0) 82%);
-    filter: blur(34px);
+    filter: blur(38px);
     animation: lampBsp 23s linear infinite;
   }
   @keyframes lampBsp {
     0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
-    18%  { opacity: 0.7; }
-    50%  { transform: translate3d(38%, -128%, 0) scale(1.05);  opacity: 0.82; }
-    84%  { opacity: 0.62; }
+    18%  { opacity: 0.34; }
+    50%  { transform: translate3d(38%, -128%, 0) scale(1.05);  opacity: 0.4; }
+    84%  { opacity: 0.3; }
     100% { transform: translate3d(72%, -252%, 0) scale(1);     opacity: 0; }
   }
 
-  /* 反射 ― 幅を狭くし、移動距離を伸ばす。画面全体が明るくなるのではなく、
-     ガラス面を光が「通過した」と感じる短い変化にする。blur は使わない。 */
+  /* 反射 ― Silver が通ったあとに、かすかに追いかけて見える程度に留める。
+     主役の邪魔をしないよう濃度を落としてある。blur は使わない。 */
   .field-pane {
     display: block;
     top: -14%; left: -34%; width: 30%; height: 128%;
-    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(236, 245, 252, 0.62) 48%, rgba(255,255,255,0) 90%);
+    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(238, 246, 252, 0.42) 48%, rgba(255,255,255,0) 90%);
     filter: none;
     animation: paneSp 21s linear infinite;
   }
   @keyframes paneSp {
     0%   { transform: translateX(0) skewX(-5deg);    opacity: 0; }
-    20%  { opacity: 0.78; }
-    76%  { opacity: 0.78; }
+    20%  { opacity: 0.46; }
+    76%  { opacity: 0.46; }
     100% { transform: translateX(520%) skewX(-5deg); opacity: 0; }
   }
 
