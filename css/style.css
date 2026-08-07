@@ -39,6 +39,18 @@
   --font-en: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-jp: 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
+  /* 日本語見出し専用。本文の --font-jp とは分けてある。
+     Noto Sans JP は軽いウェイトだと骨格が柔らかく、丸みのある印象が出る。
+     見出しだけ各OSの端正なゴシックを先に置く ―― どれも直線的でクセがなく、
+     外部フォントを増やさずに済む。
+       Apple   … ヒラギノ角ゴ
+       Windows … 游ゴシック（Medium を先に指定して、Chrome での痩せを避ける）
+       その他   … Noto Sans JP（Android の標準でもあるので見え方は変わらない） */
+  --font-jp-title:
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans',
+    'Yu Gothic Medium', 'Yu Gothic', YuGothic,
+    'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
   --ease:     cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.30, 1);
 
@@ -1096,7 +1108,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-size: 0.8rem; letter-spacing: 0.36em; color: var(--label);
 }
 .section-title {
-  font-family: var(--font-jp); font-weight: 400;
+  font-family: var(--font-jp-title); font-weight: 500;
+  font-feature-settings: "palt" 1;
   font-size: clamp(1.7rem, 3.6vw, 2.6rem);
   line-height: 1.5; letter-spacing: 0.08em; color: var(--ink);
   margin-bottom: clamp(24px, 3vh, 36px);
@@ -1199,7 +1212,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    PHILOSOPHY
    ============================================================ */
 .philo-title {
-  font-family: var(--font-jp); font-weight: 300;
+  /* いちばん大きく出るので、上げるのは 300 → 400 まで。
+     太さではなく骨格の直線性で存在感を出す。 */
+  font-family: var(--font-jp-title); font-weight: 400;
+  font-feature-settings: "palt" 1;
   font-size: clamp(2rem, 6.4vw, 5rem);
   line-height: 1.36; letter-spacing: 0.02em; color: var(--ink);
   margin-bottom: clamp(72px, 10vh, 148px);
@@ -1291,7 +1307,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 .biz-body { padding-top: clamp(0px, 0.3vw, 4px); }
 .biz-name {
-  font-family: var(--font-jp); font-weight: 500;
+  font-family: var(--font-jp-title); font-weight: 500;
+  font-feature-settings: "palt" 1;
   font-size: clamp(1.14rem, 2.3vw, 1.52rem);
   line-height: 1.6; letter-spacing: 0.06em; color: var(--ink);
   transition: transform 0.9s var(--ease-out);
@@ -1421,7 +1438,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* 冒頭の言葉 ― 囲わず、余白だけで Statement にする */
 .message-quote {
-  font-family: var(--font-jp); font-weight: 400;
+  font-family: var(--font-jp-title); font-weight: 500;
+  font-feature-settings: "palt" 1;
   font-size: clamp(1.34rem, 2.9vw, 1.92rem);
   line-height: 2.0; letter-spacing: 0.07em; color: var(--ink);
   max-width: 20em;
