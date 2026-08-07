@@ -37,11 +37,31 @@ document.addEventListener('DOMContentLoaded', () => {
      位置は先に控えておき、スクロール中は引き算だけで済ませる
      （毎フレーム要素の位置を測り直さないので、レイアウトは発生しない）。 */
   const motionSections = document.querySelectorAll('#philosophy, #business, #message, #company, #contact');
+
+  /* ページ全体の地（.page-tone）の区切り位置。
+     セクションの実際の位置から割り出して1回だけ書き込む。
+     これで文章量やビューポートが変わっても継ぎ目が出ない。 */
+  const toneIds = ['#philosophy', '#business', '#brands', '#message', '#company', '#contact'];
+  const toneVars = ['--b1', '--b2', '--b3', '--b4', '--b5', '--b6'];
+  const toneEls = toneIds.map((s) => document.querySelector(s));
+  const measureTone = () => {
+    const H = document.documentElement.scrollHeight;
+    if (!H) return;
+    const at = toneEls.map((el) => (el ? Math.round((el.offsetTop / H) * 1000) / 10 : null));
+    at.forEach((v, i) => { if (v !== null) root.style.setProperty(toneVars[i], v + '%'); });
+    // BUSINESS の後半でシルバーが混ざり始める位置
+    if (at[1] !== null && at[2] !== null) {
+      root.style.setProperty('--b2b', (at[1] + (at[2] - at[1]) * 0.55).toFixed(1) + '%');
+    }
+  };
   let secGeom = [];
   const measureSections = () => {
     secGeom = Array.prototype.map.call(motionSections, (el) => ({
-      el: el, top: el.offsetTop, h: el.offsetHeight, p: -1, e: -1,
+      // 値は光の層そのものへ書く。セクションへ書くと中身すべての
+      // スタイルを計算し直すことになり、スクロールが重くなる。
+      el: el.querySelector('.sec-light') || el, top: el.offsetTop, h: el.offsetHeight, p: -1, e: -1,
     }));
+    measureTone();
   };
 
   const measure = () => {
@@ -220,6 +240,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
 
     revealTargets.forEach((el) => observer.observe(el));
+  }
+
+  /* ---------- 見えている範囲だけ動かす ----------
+     常時まわるアニメーションが20件以上あり、画面の外でも回り続けていた。
+     ここで「今そのあたりを見ているか」を .is-live で知らせ、
+     CSS 側（スマホのみ）で見えていない間だけ止める。
+     少し手前から on にするので、入ってくる時に止まって見えることはない。 */
+  const liveTargets = document.querySelectorAll('.hero, .section');
+  if (liveTargets.length && 'IntersectionObserver' in window) {
+    const liveObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle('is-live', entry.isIntersecting);
+      });
+    }, { rootMargin: '25% 0px 25% 0px' });
+    liveTargets.forEach((el) => liveObserver.observe(el));
   }
 
   /* HERO の3行は、既存の表示アニメーション(lineRise)が終わってから

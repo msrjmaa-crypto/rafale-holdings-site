@@ -57,6 +57,7 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 
 body {
+  position: relative;
   margin: 0;
   background: var(--paper);
   color: var(--ink-2);
@@ -101,13 +102,39 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ============================================================
+   ページ全体の地
+   HERO から CONTACT まで、1枚のグラデーションで途切れずに続く。
+   セクションごとに平らな帯を敷くと「面が切り替わった」ように見えるので、
+   帯はここへ一本化し、各セクションには光の溜まりだけを残してある。
+   区切りの位置（--b1〜--b6）は js/script.js が実測して入れるので、
+   文章量やビューポートが変わっても継ぎ目は出ない。
+   BRANDS の黒は .brand-shift が上に重なる。その上下端は透明なので、
+   この地とそのまま繋がり、白→シルバー→黒→シルバー→白と沈んで戻る。
+   ============================================================ */
+.page-tone {
+  position: absolute; inset: 0; z-index: -3;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    #F5F1EB 0%,                 /* HERO      ― Warm White */
+    #F2F1EE var(--b1, 13%),     /* PHILOSOPHY 上端 */
+    #EDF1F6 var(--b2, 30%),     /* BUSINESS   上端 ― Pale Blue */
+    #E7ECF2 var(--b2b, 42%),    /* BUSINESS   後半 */
+    #DDE3EA var(--b3, 52%),     /* BRANDS     上端 ― Silver Gray が混ざる */
+    #E2E7ED var(--b4, 66%),     /* MESSAGE    上端 ― 黒から戻ってくる */
+    #F1F0EC var(--b5, 78%),     /* COMPANY    上端 ― Warm White へ */
+    #ECEFF3 var(--b6, 89%),     /* CONTACT    上端 */
+    #E7EAEE 100%);              /* 最下部 ― 静かに沈めて終える */
+}
+
+/* ============================================================
    FIELD ― 白い空間（固定背景）
    ============================================================ */
 .field {
   position: fixed; inset: 0; z-index: -2;
   overflow: hidden; pointer-events: none;
   contain: layout paint;
-  background: var(--paper);
+  /* 地色は .page-tone が持つ。ここは光だけを浮かせる層にする */
+  background: transparent;
 }
 
 /* 朝の光が入るロビー ― 上と右奥から柔らかく差す */
@@ -447,8 +474,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   display: flex; align-items: center;
   padding: 148px 0 128px;
   overflow: hidden;
-  /* HERO だけ、左が暖かく右が冷たい地色を敷く（実測値どおり） */
+  /* HERO だけ、左が暖かく右が冷たい地色を敷く（実測値どおり）。
+     下端は .page-tone の PHILOSOPHY 上端と同じ色（#F2F1EE）まで溶かすので、
+     セクションの境目に水平線は出ず、そのまま次の空間へ続く。 */
   background:
+    linear-gradient(180deg,
+      rgba(242, 241, 238, 0) 0%,
+      rgba(242, 241, 238, 0) 54%,
+      rgba(242, 241, 238, 0.5) 80%,
+      rgba(242, 241, 238, 1) 100%),
     linear-gradient(100deg,
       #F3EDE8 0%,
       #F1EBE6 26%,
@@ -963,8 +997,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     radial-gradient(60% 46% at 20% 22%, rgba(220, 234, 242, 0.85), rgba(220,234,242,0) 72%),
     radial-gradient(46% 38% at 84% 78%, rgba(238, 244, 248, 0.9), rgba(238,244,248,0) 74%);
 }
-#business::before {          /* 白 〜 薄いグレー */
-  background: linear-gradient(180deg, rgba(242, 245, 247, 0) 0%, rgba(238, 241, 244, 0.9) 40%, rgba(242, 245, 247, 0) 100%);
+/* 平らな帯は .page-tone が受け持つので、ここは光の溜まりだけにする */
+#business::before {
+  background:
+    radial-gradient(52% 40% at 76% 24%, rgba(228, 236, 244, 0.62), rgba(228,236,244,0) 74%),
+    radial-gradient(44% 34% at 18% 70%, rgba(248, 245, 239, 0.58), rgba(248,245,239,0) 76%);
 }
 /* BRANDS の黒から抜けてきた照明が、そのまま MESSAGE の白へ移り変わる。
    新しい色は足さず、既にある Silver / Pale Blue / Warm White だけで
@@ -985,19 +1022,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 #company::before {
   background:
     radial-gradient(50% 38% at 18% 16%, rgba(250, 246, 240, 0.72), rgba(250,246,240,0) 74%),
-    radial-gradient(44% 34% at 84% 54%, rgba(226, 238, 246, 0.44), rgba(226,238,246,0) 76%),
-    linear-gradient(180deg, rgba(240, 243, 246, 0.55) 0%, rgba(247, 248, 250, 0) 40%);
+    radial-gradient(44% 34% at 84% 54%, rgba(226, 238, 246, 0.44), rgba(226,238,246,0) 76%);
 }
 /* 最後は光がわずかに沈む。黒には向かわず、シルバー寄りの静けさで終える。 */
 #contact::before {
   background:
     radial-gradient(46% 34% at 74% 14%, rgba(228, 238, 245, 0.46), rgba(228,238,245,0) 76%),
-    radial-gradient(40% 30% at 16% 46%, rgba(250, 247, 242, 0.6), rgba(250,247,242,0) 78%),
-    linear-gradient(180deg,
-      rgba(240, 243, 246, 0.5) 0%,
-      rgba(247, 248, 250, 0) 34%,
-      rgba(232, 236, 240, 0.42) 78%,
-      rgba(224, 229, 234, 0.62) 100%);
+    radial-gradient(40% 30% at 16% 46%, rgba(250, 247, 242, 0.6), rgba(250,247,242,0) 78%);
 }
 
 /* ---------- セクションごとの表情 ― スクロールに連動する層 ----------
@@ -1014,23 +1045,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
      COMPANY    … 冷たいシルバーが横へ大きくパンする
      CONTACT    … 光が下から立ち上がって閉じる
    動かすのは transform と opacity だけ。ぼかしは掛けていない。 */
-#philosophy::after,
-#business::after,
-#message::after,
-#company::after,
-#contact::after {
+#philosophy .sec-light,
+#business .sec-light,
+#message .sec-light,
+#company .sec-light,
+#contact .sec-light {
   content: ""; position: absolute; inset: -4% -12%; z-index: 0;
   pointer-events: none; will-change: transform, opacity;
 }
 
-#philosophy::after {
+#philosophy .sec-light {
   background: radial-gradient(58% 44% at 26% 30%, rgba(206, 226, 240, 0.55), rgba(206,226,240,0) 72%);
   transform: translate3d(calc(-14% + var(--p, 0) * 20%), calc(-8% + var(--p, 0) * 14%), 0)
              scale(calc(0.92 + var(--e, 0) * 0.16));
   opacity: calc(0.18 + var(--e, 0) * 0.82);
 }
 
-#business::after {
+#business .sec-light {
   top: 0; bottom: auto; height: 46%;
   background: linear-gradient(180deg,
     rgba(210, 219, 228, 0) 0%,
@@ -1040,14 +1071,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   opacity: calc(0.2 + var(--e, 0) * 0.8);
 }
 
-#message::after {
+#message .sec-light {
   background: radial-gradient(46% 40% at 50% 44%, rgba(252, 246, 236, 0.62), rgba(252,246,236,0) 74%);
   transform: scale(calc(0.7 + var(--e, 0) * 0.5))
              translate3d(0, calc(6% - var(--p, 0) * 12%), 0);
   opacity: calc(var(--e, 0) * 0.95);
 }
 
-#company::after {
+#company .sec-light {
   left: -62%; right: auto; width: 70%;
   background: linear-gradient(96deg,
     rgba(224, 233, 241, 0) 0%,
@@ -1057,7 +1088,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   opacity: calc(0.15 + var(--e, 0) * 0.85);
 }
 
-#contact::after {
+#contact .sec-light {
   background: linear-gradient(0deg,
     rgba(232, 240, 246, 0.55) 0%,
     rgba(232, 240, 246, 0.18) 40%,
@@ -1067,8 +1098,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #philosophy::after, #business::after, #message::after,
-  #company::after, #contact::after { transform: none; opacity: 0.4; }
+  #philosophy .sec-light, #business .sec-light, #message .sec-light,
+  #company .sec-light, #contact .sec-light { transform: none; opacity: 0.4; }
 }
 
 .section-head { margin-bottom: clamp(30px, 4.5vh, 52px); }
@@ -1701,6 +1732,31 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .section--brand::after { filter: blur(42px); }
   .field-daylight { animation: none; opacity: 0.95; }
   .hero-sweep { display: none; }
+
+  /* ---- スクロールを軽くする（見た目は変えない） ----
+     常時まわっているアニメーションが20件以上あり、画面の外に出ても
+     回り続けていた。JS が「今そのあたりを見ているか」を .is-live で
+     知らせるので、見えていない間だけ止める。位置も見た目もそのまま。 */
+  .hero:not(.is-live) .hero-flow > span,
+  .hero:not(.is-live) .r-sign,
+  .hero:not(.is-live) .r-sheen,
+  .hero:not(.is-live) .scroll-cue-rail::after,
+  .hero:not(.is-live) .hero-atmos > span,
+  .section:not(.is-live)::before,
+  .section:not(.is-live) .sec-light,
+  .section--brand:not(.is-live)::after {
+    animation-play-state: paused;
+  }
+  /* HERO を離れたら、いちばん重い層（大きな SVG のぼかし）は下ろす */
+  .hero:not(.is-live) .r-glow { display: none; }
+
+  /* will-change は必要な間だけ。常時つけたままにすると
+     iPhone では合成レイヤーが積み上がってスクロールが引っかかる。 */
+  .section::before, .section .sec-light,
+  .field-silk-band, .hero-sign { will-change: auto; }
+  .hero.is-live .hero-sign,
+  .section.is-live .sec-light { will-change: transform, opacity; }
+
   .hero-halo { animation: haloIn 2.2s var(--ease) 0.15s forwards; transform: translate(-12%, -50%); }
   /* スマホ: 建築は曲面ガラスと床だけに絞り、blur の重い層は落とす */
   .hero-main { max-width: 100%; }

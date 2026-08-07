@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=47">
+<link rel="stylesheet" href="css/style.css?v=49">
 
 <!--
   ============================================================
@@ -120,6 +120,11 @@
      朝の自然光、ガラス越しの淡いブルーの反射、薄い影。
      線・粒子・グリッドは使わず、光と空気だけで奥行きを作る。
      ============================================================ -->
+<!-- ページ全体の地 ― HERO から CONTACT まで途切れない1枚のグラデーション。
+     区切りの位置は js/script.js が実測して --b1〜--b6 に入れるので、
+     セクションの高さが変わっても継ぎ目は出ない。 -->
+<div class="page-tone" aria-hidden="true"></div>
+
 <div class="field" aria-hidden="true">
   <div class="field-sky"></div>
   <div class="field-daylight"></div>
@@ -328,6 +333,7 @@
 
   <!-- ============================ PHILOSOPHY ============================ -->
   <section class="section" id="philosophy">
+    <div class="sec-light" aria-hidden="true"></div>
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">PHILOSOPHY</p>
@@ -356,6 +362,7 @@
 
   <!-- ============================ BUSINESS ============================ -->
   <section class="section" id="business">
+    <div class="sec-light" aria-hidden="true"></div>
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">BUSINESS</p>
@@ -481,6 +488,7 @@
 
   <!-- ============================ MESSAGE ============================ -->
   <section class="section" id="message">
+    <div class="sec-light" aria-hidden="true"></div>
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en" data-reveal-delay="0">MESSAGE</p>
@@ -507,6 +515,7 @@
 
   <!-- ============================ COMPANY ============================ -->
   <section class="section" id="company">
+    <div class="sec-light" aria-hidden="true"></div>
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en" data-reveal-delay="0">COMPANY</p>
@@ -563,6 +572,7 @@
 
   <!-- ============================ CONTACT ============================ -->
   <section class="section" id="contact">
+    <div class="sec-light" aria-hidden="true"></div>
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en" data-reveal-delay="0">CONTACT</p>
@@ -633,6 +643,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=13" defer></script>
+<script src="js/script.js?v=14" defer></script>
 </body>
 </html>
