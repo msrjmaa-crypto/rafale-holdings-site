@@ -166,10 +166,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   padding: 24px 0;
   transition: background 0.7s var(--ease), padding 0.6s var(--ease), box-shadow 0.7s var(--ease);
 }
+/* スクロール中は「半透明のガラス板」にする。
+   0.82 では裏の本文が読めてしまっていたので、不透明度を 0.90 まで上げ、
+   最小限の backdrop-blur を併用して背後の文字を判別不能にする。
+   ベタ白にはせず、境界線と影は従来のまま（強くしない）。 */
 .site-header.is-scrolled {
   padding: 14px 0;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(250, 249, 247, 0.90);
+  -webkit-backdrop-filter: blur(14px) saturate(1.06);
+          backdrop-filter: blur(14px) saturate(1.06);
   box-shadow: 0 1px 0 var(--line), 0 18px 40px -34px rgba(30, 50, 70, 0.28);
+}
+/* backdrop-filter が使えない環境では、不透明度だけで遮蔽する */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header.is-scrolled { background: rgba(250, 249, 247, 0.97); }
 }
 .header-inner {
   width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
@@ -739,10 +749,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   letter-spacing: 0.1em; line-height: 2 !important;
   padding: 24px 28px; margin-left: -28px;
 }
+/* カードではなく「その一文のところだけ光が集まっている」状態にする。
+   矩形の輪郭が出ないよう、要素より外へ広げた楕円の光をぼかして置く。
+   枠線・角丸・落ち影は使わない。 */
 .philo-accent::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 3px;
-  background: linear-gradient(100deg, rgba(255,255,255,0.95), rgba(220, 236, 246, 0.55));
-  box-shadow: 0 24px 50px -40px rgba(30, 50, 70, 0.5);
+  content: ""; position: absolute; inset: -24% -14%; z-index: -1;
+  background:
+    radial-gradient(56% 68% at 24% 50%, rgba(255, 255, 255, 0.96), rgba(255,255,255,0) 72%),
+    radial-gradient(46% 58% at 58% 46%, rgba(226, 238, 247, 0.52), rgba(226,238,247,0) 74%);
+  filter: blur(16px);
 }
 
 /* ============================================================
@@ -765,6 +780,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .biz-row:hover::before { opacity: 1; }
 
+/* ---- 行の中で 番号 → 事業名 → 説明 の順に、ごく短い時間差で現れる ----
+   親（.biz-row）は場所を動かさず、中の3要素が opacity + 12px + 弱い blur で
+   立ち上がる。transition-delay は transform に掛けていないので、
+   ホバー時の横移動は遅れない。表示は IntersectionObserver が一度だけ発火する。 */
+.biz-row.reveal { opacity: 1; transform: none; }
+.biz-row .biz-num,
+.biz-row .biz-name,
+.biz-row .biz-desc {
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition-property: opacity, transform, filter;
+  transition-duration: 0.85s, 0.85s, 0.85s;
+  transition-timing-function: var(--ease-out);
+}
+.biz-row.is-visible .biz-num  { opacity: 1; transform: none; filter: blur(0); transition-delay: 0.02s; }
+.biz-row.is-visible .biz-name { opacity: 1; transform: none; filter: blur(0); transition-delay: 0.11s; }
+.biz-row.is-visible .biz-desc { opacity: 1; transform: none; filter: blur(0); transition-delay: 0.20s; }
+
+/* 縦に9つ並ぶので、等間隔に見えすぎないよう上下の余白をわずかに揺らす
+   （レイアウトは変えず、リズムだけ作る） */
+.biz-row:nth-child(4n+1) { padding-top: calc(clamp(26px, 3.4vh, 40px) + 11px); }
+.biz-row:nth-child(4n+3) { padding-bottom: calc(clamp(26px, 3.4vh, 40px) + 9px); }
+.biz-row:nth-child(4n)   { padding-top: calc(clamp(26px, 3.4vh, 40px) - 5px); }
+
 .biz-num {
   font-family: var(--font-en); font-weight: 400;
   font-size: clamp(0.94rem, 1.5vw, 1.12rem);
@@ -780,7 +818,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   line-height: 1.6; letter-spacing: 0.06em; color: var(--ink);
   transition: transform 0.9s var(--ease-out);
 }
-.biz-row:hover .biz-name { transform: translateX(6px); }
+.biz-row:hover .biz-name { transform: translateX(6px); transition-delay: 0s; }
 .biz-en {
   display: block; margin-top: 10px;
   font-family: var(--font-en); font-weight: 400;
@@ -791,7 +829,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.15; color: var(--sub);
   transition: transform 0.9s var(--ease-out);
 }
-.biz-row:hover .biz-desc { transform: translateX(6px); }
+.biz-row:hover .biz-desc { transform: translateX(6px); transition-delay: 0s; }
 
 /* ============================================================
    BRANDS ― 白 → グレー → グラファイト → 黒 → 白へ戻る
