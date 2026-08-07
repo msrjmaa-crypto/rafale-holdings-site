@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 通常は最後の行が出終わった瞬間。届かなかった場合の保険としてタイマーも置く。
     heroLines[heroLines.length - 1]
       .addEventListener('animationend', startHeroSweep, { once: true });
-    window.setTimeout(startHeroSweep, 3600);
+    window.setTimeout(startHeroSweep, 5200);
   }
 
   /* ---------- マウスに対するごく弱い反応（PCのみ） ----------
