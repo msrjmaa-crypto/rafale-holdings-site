@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=35">
+<link rel="stylesheet" href="css/style.css?v=36">
 
 <!--
   ============================================================
@@ -133,6 +133,19 @@
     <span class="field-lamp field-lamp--c"></span>
     <span class="field-pane"></span>
   </div>
+
+  <!-- Liquid Silk ― 光溜まりの手前を、白とシルバーの大きな面が流れていく層。
+       1枚ごとに山（白）と谷（シルバー）を持たせてあるので、平らな帯ではなく
+       絹の折り目として読める。ぼかしは使わずグラデーションの裾で柔らかくして
+       いるため、動かしているのは transform と opacity だけ。
+       周期 12 / 16.5 / 10.5 秒と、奥の光溜まり 24 / 31 / 37 秒がずれているので
+       全体が同じ並びに戻ることはない。 -->
+  <div class="field-silk">
+    <span class="field-silk-band field-silk-band--1"></span>
+    <span class="field-silk-band field-silk-band--2"></span>
+    <span class="field-silk-band field-silk-band--3"></span>
+  </div>
+
   <div class="field-floor"></div>
 </div>
 
