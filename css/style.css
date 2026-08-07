@@ -132,25 +132,75 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   50%      { transform: translateX(-50%) translate3d(-3%, 2.5%, 0);   opacity: 1; }
 }
 
-/* ガラス越しの反射 ― 面ではなく、淡いブルーの光の帯 */
-.field-reflect {
-  position: absolute; top: -8%; height: 116%; width: min(38vw, 520px);
-  filter: blur(40px);
+/* ============================================================
+   MOVING LIGHT ― サイト共通の常時モーション
+   ------------------------------------------------------------
+   Warm White / Pale Blue / Silver の3つの光が、それぞれ違う速さで
+   空間を巡回する。粒子でも線でもなく「大きくぼかした面」だけ。
+   固定背景の中にあるので、どのセクションへスクロールしても
+   同じ光が引き継がれ、BRANDS の黒い階調に入ると自然に隠れる。
+   動かすのは transform と opacity のみ（blur は初期化時に1度だけ）。
+   ============================================================ */
+.field-lamps {
+  position: absolute; inset: 0;
+  /* 照明の位置だけがスクロールでわずかに動く（最大16px） */
+  transform: translate3d(0, calc(var(--sp, 0) * 16px), 0);
   will-change: transform;
 }
-.field-reflect--l {
-  left: -8%;
-  background: linear-gradient(112deg, rgba(199, 215, 226, 0.42) 0%, rgba(199,215,226,0) 68%);
-  transform: translate3d(calc(var(--mx) * 10px), 0, 0);
-  animation: reflectBreath 26s ease-in-out infinite;
+.field-lamp { position: absolute; display: block; will-change: transform, opacity; }
+
+/* Warm White ― 24秒 */
+.field-lamp--a {
+  left: -14%; top: -12%; width: 62%; height: 76%;
+  background: radial-gradient(closest-side, rgba(250, 244, 234, 0.74), rgba(250,244,234,0) 72%);
+  filter: blur(64px);
+  animation: lampA 24s ease-in-out infinite;
 }
-.field-reflect--r {
-  right: -10%;
-  background: linear-gradient(248deg, rgba(220, 234, 242, 0.5) 0%, rgba(220,234,242,0) 66%);
-  transform: translate3d(calc(var(--mx) * -10px), 0, 0);
-  animation: reflectBreath 30s ease-in-out infinite reverse;
+@keyframes lampA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);       opacity: 0.72; }
+  50%      { transform: translate3d(9%, 6%, 0) scale(1.08);  opacity: 1; }
 }
-@keyframes reflectBreath { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+
+/* Pale Blue ― 31秒 */
+.field-lamp--b {
+  right: -12%; top: -8%; width: 56%; height: 72%;
+  background: radial-gradient(closest-side, rgba(216, 232, 244, 0.6), rgba(216,232,244,0) 74%);
+  filter: blur(70px);
+  animation: lampB 31s ease-in-out infinite;
+}
+@keyframes lampB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 0.58; }
+  50%      { transform: translate3d(-6%, 8%, 0) scale(1.1);   opacity: 0.92; }
+}
+
+/* Silver ― 37秒 */
+.field-lamp--c {
+  left: 16%; bottom: -18%; width: 68%; height: 64%;
+  background: radial-gradient(closest-side, rgba(206, 214, 222, 0.5), rgba(206,214,222,0) 76%);
+  filter: blur(76px);
+  animation: lampC 37s ease-in-out infinite;
+}
+@keyframes lampC {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 0.5; }
+  50%      { transform: translate3d(-7%, -5%, 0) scale(1.06); opacity: 0.86; }
+}
+
+/* Architectural Reflection ― ガラス面の反射が45秒かけて空間を横切る。
+   カードにはせず、傾いた帯を大きくぼかしただけ。 */
+.field-pane {
+  position: absolute; top: -20%; left: -34%;
+  width: 40%; height: 140%;
+  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 255, 255, 0.46) 46%, rgba(255,255,255,0) 82%);
+  filter: blur(38px);
+  animation: paneDrift 45s linear infinite;
+  will-change: transform, opacity;
+}
+@keyframes paneDrift {
+  0%   { transform: translateX(0) skewX(-6deg);    opacity: 0; }
+  12%  { opacity: 0.66; }
+  84%  { opacity: 0.66; }
+  100% { transform: translateX(320%) skewX(-6deg); opacity: 0; }
+}
 
 /* 床に落ちる、ごく薄い影 */
 .field-floor {
@@ -697,8 +747,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     radial-gradient(52% 40% at 76% 30%, rgba(224, 238, 246, 0.52), rgba(224,238,246,0) 74%),
     radial-gradient(46% 34% at 14% 64%, rgba(250, 246, 240, 0.66), rgba(250,246,240,0) 76%);
 }
-#company::before, #contact::before {
-  background: linear-gradient(180deg, rgba(240, 243, 246, 0.7) 0%, rgba(247, 248, 250, 0) 46%);
+/* MESSAGE から続く同じ建築空間を歩いている感じにする。
+   大きな色変化は作らず、Warm White / Pale Blue / Silver をごく淡く置くだけ。 */
+#company::before {
+  background:
+    radial-gradient(50% 38% at 18% 16%, rgba(250, 246, 240, 0.72), rgba(250,246,240,0) 74%),
+    radial-gradient(44% 34% at 84% 54%, rgba(226, 238, 246, 0.44), rgba(226,238,246,0) 76%),
+    linear-gradient(180deg, rgba(240, 243, 246, 0.55) 0%, rgba(247, 248, 250, 0) 40%);
+}
+/* 最後は光がわずかに沈む。黒には向かわず、シルバー寄りの静けさで終える。 */
+#contact::before {
+  background:
+    radial-gradient(46% 34% at 74% 14%, rgba(228, 238, 245, 0.46), rgba(228,238,245,0) 76%),
+    radial-gradient(40% 30% at 16% 46%, rgba(250, 247, 242, 0.6), rgba(250,247,242,0) 78%),
+    linear-gradient(180deg,
+      rgba(240, 243, 246, 0.5) 0%,
+      rgba(247, 248, 250, 0) 34%,
+      rgba(232, 236, 240, 0.42) 78%,
+      rgba(224, 229, 234, 0.62) 100%);
 }
 
 .section-head { margin-bottom: clamp(30px, 4.5vh, 52px); }
@@ -868,6 +934,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       #C8CDD3 90%,
       rgba(247, 248, 250, 0) 100%);
 }
+/* 黒に入ったら、白側の光は brand-shift の不透明部分に隠れて自然に消える。
+   代わりにチャコールの光だけを 33 秒で巡回させる（アンバーは使わない）。
+   .brand-shift のグラデーションと SAKURA の面には一切触れていない。 */
+.section--brand::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(44% 32% at 60% 46%, rgba(124, 136, 152, 0.18), rgba(124,136,152,0) 74%);
+  filter: blur(58px);
+  animation: brandLight 33s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes brandLight {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 0.7; }
+  50%      { transform: translate3d(-4%, 3%, 0) scale(1.08);  opacity: 1; }
+}
+
 .section--brand .section-tag   { color: var(--gold-soft); }
 .section--brand .section-title { color: #F4EFE6; }
 .section--brand .section-lead  { color: #9C9286; }
@@ -959,18 +1040,35 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 #message .reveal.is-visible { transform: none; filter: blur(0); }
 
+/* COMPANY / CONTACT も MESSAGE と同じ出方に揃える（順番は data-reveal-delay） */
+#company .reveal, #contact .reveal {
+  transform: translateY(13px); filter: blur(3px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out), filter 1s var(--ease-out);
+}
+#company .reveal.is-visible, #contact .reveal.is-visible { transform: none; filter: blur(0); }
+
 /* ============================================================
    COMPANY
    ============================================================ */
-.info-list { border-top: 1px solid var(--line); }
+/* 「表を読む」ではなく「静かに閲覧する」。罫線は輪郭を出さない程度まで薄くし、
+   項目の区切りは余白で行う。囲いを作らないよう、最初と最後の線は引かない。 */
+.info-list { max-width: 62em; }
 .info-row {
   display: grid; grid-template-columns: clamp(150px, 18vw, 240px) minmax(0, 1fr);
-  gap: clamp(16px, 3vw, 48px);
-  padding: clamp(24px, 3.2vh, 34px) 4px;
-  border-bottom: 1px solid var(--line);
+  gap: clamp(14px, 2.6vw, 44px);
+  padding: clamp(26px, 3.6vh, 40px) 2px;
+  border-bottom: 1px solid rgba(30, 50, 70, 0.055);
 }
-.info-row dt { font-size: 0.88rem; font-weight: 400; letter-spacing: 0.16em; color: var(--label); }
-.info-row dd { font-size: clamp(0.96rem, 1.7vw, 1.04rem); color: var(--ink); font-weight: 400; }
+.info-row:last-child { border-bottom: none; }
+/* ラベルは小さく・字間を広く・薄いグレー、内容は濃いチャコール */
+.info-row dt {
+  font-size: 0.78rem; font-weight: 400;
+  letter-spacing: 0.22em; line-height: 2.1; color: var(--label);
+}
+.info-row dd {
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem); line-height: 2.1;
+  color: var(--ink); font-weight: 400; letter-spacing: 0.05em;
+}
 .info-list-inline { display: flex; flex-wrap: wrap; gap: 10px 30px; }
 .info-list-inline li { color: var(--ink-2); }
 
@@ -981,35 +1079,62 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   display: grid; grid-template-columns: minmax(0, 0.74fr) minmax(0, 1.26fr);
   gap: clamp(44px, 5vw, 100px); align-items: start;
 }
-.contact-info-row { padding: 26px 0; display: flex; flex-direction: column; gap: 10px; }
-.contact-info-row + .contact-info-row { border-top: 1px solid var(--line); }
+.contact-info-row { padding: 28px 0; display: flex; flex-direction: column; gap: 11px; }
+.contact-info-row + .contact-info-row { border-top: 1px solid rgba(30, 50, 70, 0.055); }
 .contact-label { font-family: var(--font-en); font-weight: 400; font-size: 0.78rem; letter-spacing: 0.22em; color: var(--label); }
 .contact-info-row span:not(.contact-label) { font-size: 1rem; color: var(--ink); font-weight: 400; line-height: 1.95; }
 .contact-info-row a { border-bottom: 1px solid rgba(30, 50, 70, 0.2); transition: border-color 0.5s var(--ease), color 0.5s var(--ease); }
 .contact-info-row a:hover { color: #4E7FA4; border-color: #4E7FA4; }
 
-.form-row { position: relative; margin-bottom: clamp(26px, 3.4vh, 36px); }
-.form-row label { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 0.88rem; letter-spacing: 0.12em; color: var(--ink-2); }
-.required { font-size: 0.7rem; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 2px; color: var(--sub); background: rgba(150, 185, 214, 0.18); }
+/* 箱型のフォームにしない。枠を持たず、細い下線と余白だけで受け付ける。
+   入力項目・name属性・送信処理には一切触れていない（見た目だけ）。 */
+.form-row { position: relative; margin-bottom: clamp(30px, 4vh, 44px); }
+.form-row label {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 13px;
+  font-size: 0.78rem; font-weight: 400; letter-spacing: 0.22em; color: var(--label);
+}
+.required {
+  font-size: 0.66rem; letter-spacing: 0.1em; padding: 2px 0 2px 12px;
+  border-radius: 0; color: var(--label); background: none;
+  border-left: 1px solid rgba(30, 50, 70, 0.14);
+}
 .contact-form input, .contact-form textarea {
-  width: 100%; padding: 15px 2px;
+  width: 100%; padding: 14px 2px;
   background: transparent; color: var(--ink);
-  border: none; border-bottom: 1px solid rgba(30, 50, 70, 0.16); border-radius: 0;
-  font-size: 1rem; letter-spacing: 0.04em;
+  border: none; border-bottom: 1px solid rgba(30, 50, 70, 0.13); border-radius: 0;
+  font-size: 1rem; letter-spacing: 0.05em;
   transition: border-color 0.6s var(--ease);
   -webkit-appearance: none; appearance: none;
 }
-.contact-form textarea { resize: vertical; min-height: 144px; line-height: 2; }
-.contact-form input:focus, .contact-form textarea:focus { outline: none; border-bottom-color: rgba(127, 166, 196, 0.6); }
+.contact-form textarea { resize: vertical; min-height: 148px; line-height: 2.05; }
+/* フォーカスは「わずかに濃くなる」だけ。発光も色替えもしない */
+.contact-form input:focus, .contact-form textarea:focus { outline: none; border-bottom-color: rgba(30, 50, 70, 0.30); }
 .form-row::after {
   content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
-  background: linear-gradient(90deg, #7FA6C4, rgba(199, 215, 226, 0.4));
+  background: linear-gradient(90deg, rgba(120, 140, 160, 0.55), rgba(190, 202, 214, 0.28));
   transform: scaleX(0); transform-origin: 0 50%;
   transition: transform 0.9s var(--ease-out); pointer-events: none;
 }
 .form-row:focus-within::after { transform: scaleX(1); }
-.contact-form .btn { margin-top: 12px; }
-.form-note { margin-top: 22px; font-size: 0.92rem; line-height: 1.95; color: var(--ink-2); }
+
+/* 送信 ― 塗りボタンにしない。淡い枠とほぼ透明の地だけ */
+.contact-form .btn {
+  margin-top: 18px;
+  min-height: 48px; padding: 13px 34px;
+  border: 1px solid rgba(30, 50, 70, 0.16);
+  background: rgba(255, 255, 255, 0.34);
+  color: var(--ink-2);
+  font-size: 0.8rem; letter-spacing: 0.16em;
+  box-shadow: none;
+}
+.contact-form .btn-block { width: auto; min-width: 210px; }
+.contact-form .btn:hover {
+  background: rgba(236, 239, 242, 0.72);
+  border-color: rgba(30, 50, 70, 0.26);
+  color: var(--ink);
+  box-shadow: none;
+}
+.form-note { margin-top: 24px; font-size: 0.9rem; line-height: 2; color: var(--ink-2); }
 
 /* ============================================================
    FOOTER
@@ -1065,8 +1190,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .nav-link { display: block; width: 100%; padding: 18px 0; font-size: 1rem; border-bottom: 1px solid var(--line); }
   .nav-cta { margin-top: 24px; text-align: center; border-bottom: none; }
 
-  .info-row { grid-template-columns: 1fr; gap: 8px; }
-  .info-row dt { font-size: 0.8rem; }
+  /* スマホ: ラベルと内容を縦に。情報量が多いので、行間はやや詰めて
+     項目どうしの余白で読み分けさせる（1項目が間延びしないように） */
+  .info-row { grid-template-columns: 1fr; gap: 7px; padding: clamp(22px, 2.8vh, 30px) 2px; }
+  .info-row dt { font-size: 0.72rem; letter-spacing: 0.2em; line-height: 1.8; }
+  .info-row dd { line-height: 1.95; }
+  .info-list-inline { gap: 8px 22px; }
+  /* 送信ボタンはスマホでも塗りにしない。押しやすさは確保する */
+  .contact-form .btn { min-height: 46px; padding: 12px 28px; font-size: 0.78rem; }
+  .contact-form .btn-block { width: 100%; min-width: 0; }
   /* スマホ: 縦に伸びすぎないよう、Statement と本文の余白を少し戻す。
      1行あたりの文字数は max-width（em 指定）が効くので詰まりすぎない。 */
   .message-sign { text-align: left; margin-top: clamp(34px, 4.6vh, 48px); }
@@ -1076,7 +1208,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .section--brand { min-height: 118svh; }
 
   /* スマホ: blur を伴う重い層を落とし、光だけ残す */
-  .field-reflect { display: none; }
+  /* ---- Moving Light の軽量版 ----
+     大きな blur を伴う層は2枚まで（Warm White と Silver）。
+     Pale Blue とガラス反射は省き、スクロール連動も切って
+     transform / opacity の更新だけにする。 */
+  .field-lamp--b, .field-pane { display: none; }
+  .field-lamps { transform: none; }
+  .field-lamp--a { filter: blur(48px); width: 76%; height: 62%; }
+  .field-lamp--c { filter: blur(54px); width: 82%; height: 52%; }
+  .section--brand::after { filter: blur(42px); }
   .field-daylight { animation: none; opacity: 0.95; }
   .hero-sweep { display: none; }
   .hero-halo { animation: haloIn 2.2s var(--ease) 0.15s forwards; transform: translate(-12%, -50%); }

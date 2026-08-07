@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastMeasureWidth = window.innerWidth;
   let lastScrolled = null;
   let lastDepth = -1;
+  let lastProg = -1;
 
   const measure = () => {
     winHeight = window.innerHeight;
@@ -60,9 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
       lastScrolled = scrolled;
     }
 
+    const p = docHeight > 0 ? y / docHeight : 0;
+    const prog = p < 0 ? 0 : p > 1 ? 1 : p;
+
     if (scrollProgress) {
-      const p = docHeight > 0 ? y / docHeight : 0;
-      scrollProgress.style.transform = 'scaleX(' + (p < 0 ? 0 : p > 1 ? 1 : p) + ')';
+      scrollProgress.style.transform = 'scaleX(' + prog + ')';
+    }
+
+    /* --sp: ページ全体の進捗。照明の位置を最大16pxずらすためだけに使う。
+       小数2桁に丸めてから比較するので、書き込みは1%進むごとに1回だけ。 */
+    if (!prefersReducedMotion) {
+      const sp = Math.round(prog * 100) / 100;
+      if (sp !== lastProg) {
+        root.style.setProperty('--sp', String(sp));
+        lastProg = sp;
+      }
     }
 
     // ヒーロー内にいる間だけ、背景空間をごくわずかに沈ませる（--sy: 0→1）
