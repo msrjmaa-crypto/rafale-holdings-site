@@ -1233,65 +1233,86 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
   /* スマホ: blur を伴う重い層を落とし、光だけ残す */
   /* ---- Moving Light（スマホ版）----
-     見えなかった理由は2つあった。
-       ① 光の色が地とほぼ同じ明度だった（地 #F1EBE6 に対し光 #FAF3E7 ＝ 差 +9）
-       ② Silver の中心が画面の 93% 位置にあり、視界の中央を通っていなかった
-     そこで「明るくする」のではなく、地との差を持つ色に変え、
-     3つの光の中心が画面の中央帯（25〜65%）を横切るよう配置し直す。
-     blur を持つ層は光3枚のみ（反射は blur を使わずグラデーションだけで作る）。 */
+     光は見えているのに「動き」として読めなかったのは、光源が画面幅の 76〜88% と
+     大きすぎて、移動しても画面全体の色が一様に変わるだけだったため。
+     そこで強さではなく、形（小さく・中心を明確に）と経路（端から端へ一方向）を
+     作り直す。往復させると同じ場所を漂って見えるので、一方向に通過させて
+     両端でフェードさせる。blur を持つ層は光3枚のみ。 */
   .field-lamps { transform: translate3d(0, calc(var(--sp, 0) * 10px), 0); }
 
-  /* Warm White ― 14秒。左上から中央へ抜ける（横 約25% / 縦 約16%） */
-  .field-lamp--a {
-    left: -20%; top: -6%; width: 82%; height: 62%;
-    background: radial-gradient(closest-side, rgba(255, 250, 236, 1), rgba(255,250,236,0) 72%);
-    filter: blur(32px);
-    animation: lampAsp 14s ease-in-out infinite;
-  }
-  @keyframes lampAsp {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.6; }
-    50%      { transform: translate3d(30%, 26%, 0) scale(1.1);    opacity: 1; }
-  }
-
-  /* Pale Blue ― 18秒。右から左へ横断（横 約24% / 縦 約12%）。地より青いので差が出る */
-  .field-lamp--b {
-    display: block;
-    right: -18%; left: auto; top: 20%; width: 76%; height: 58%;
-    background: radial-gradient(closest-side, rgba(203, 226, 243, 0.9), rgba(203,226,243,0) 74%);
-    filter: blur(36px);
-    animation: lampBsp 18s ease-in-out infinite;
-  }
-  @keyframes lampBsp {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.48; }
-    50%      { transform: translate3d(-32%, 20%, 0) scale(1.06);  opacity: 0.94; }
-  }
-
-  /* Silver ― 23秒。下から中央へ上がる。地より暗いので「影の移動」として読める */
+  /* Silver ― 主役。13秒で左外から右外まで通過する。
+     地より暗いので「壁を影が横切る」ように読め、いちばん動きが分かりやすい。 */
   .field-lamp--c {
-    left: 4%; bottom: -8%; width: 88%; height: 56%;
-    background: radial-gradient(closest-side, rgba(194, 206, 219, 0.94), rgba(194,206,219,0) 76%);
-    filter: blur(38px);
-    animation: lampCsp 23s ease-in-out infinite;
+    left: -56%; top: 26%; bottom: auto; width: 60%; height: 46%;
+    background: radial-gradient(closest-side,
+      rgba(186, 199, 213, 1) 0%,
+      rgba(186, 199, 213, 0.74) 30%,
+      rgba(186, 199, 213, 0.3) 58%,
+      rgba(186, 199, 213, 0) 80%);
+    filter: blur(28px);
+    animation: lampCsp 13s linear infinite;
   }
   @keyframes lampCsp {
-    0%, 100% { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.5; }
-    50%      { transform: translate3d(-28%, -22%, 0) scale(1.08); opacity: 0.96; }
+    0%   { transform: translate3d(0, 0, 0) scale(1);         opacity: 0; }
+    14%  { opacity: 0.96; }
+    50%  { transform: translate3d(120%, 16%, 0) scale(1.04); opacity: 1; }
+    86%  { opacity: 0.9; }
+    100% { transform: translate3d(244%, 2%, 0) scale(1);     opacity: 0; }
   }
 
-  /* 反射 ― 21秒で斜めに流れる。blur は使わず、グラデーションの緩さだけで柔らかくする
-     （これで blur を持つ層は光の3枚だけに収まる）。黒背景には出さない。 */
+  /* Warm White ― 18秒。右上から中央下へ斜めに降りる（Silver とは別の軌道） */
+  .field-lamp--a {
+    left: auto; right: -46%; top: -18%; width: 58%; height: 48%;
+    background: radial-gradient(closest-side,
+      rgba(255, 249, 233, 1) 0%,
+      rgba(255, 249, 233, 0.72) 32%,
+      rgba(255, 249, 233, 0.28) 60%,
+      rgba(255, 249, 233, 0) 80%);
+    filter: blur(26px);
+    animation: lampAsp 18s linear infinite;
+  }
+  @keyframes lampAsp {
+    0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
+    16%  { opacity: 0.92; }
+    50%  { transform: translate3d(-96%, 96%, 0) scale(1.06);   opacity: 1; }
+    84%  { opacity: 0.86; }
+    100% { transform: translate3d(-186%, 176%, 0) scale(1);    opacity: 0; }
+  }
+
+  /* Pale Blue ― 23秒。奥行き担当なので最も控えめに、下から上へゆっくり昇る */
+  .field-lamp--b {
+    display: block;
+    left: 14%; right: auto; top: auto; bottom: -34%; width: 54%; height: 44%;
+    background: radial-gradient(closest-side,
+      rgba(198, 223, 242, 0.92) 0%,
+      rgba(198, 223, 242, 0.6) 34%,
+      rgba(198, 223, 242, 0.22) 62%,
+      rgba(198, 223, 242, 0) 82%);
+    filter: blur(34px);
+    animation: lampBsp 23s linear infinite;
+  }
+  @keyframes lampBsp {
+    0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
+    18%  { opacity: 0.7; }
+    50%  { transform: translate3d(38%, -128%, 0) scale(1.05);  opacity: 0.82; }
+    84%  { opacity: 0.62; }
+    100% { transform: translate3d(72%, -252%, 0) scale(1);     opacity: 0; }
+  }
+
+  /* 反射 ― 幅を狭くし、移動距離を伸ばす。画面全体が明るくなるのではなく、
+     ガラス面を光が「通過した」と感じる短い変化にする。blur は使わない。 */
   .field-pane {
     display: block;
-    top: -14%; left: -48%; width: 52%; height: 128%;
-    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(233, 243, 251, 0.5) 46%, rgba(255,255,255,0) 88%);
+    top: -14%; left: -34%; width: 30%; height: 128%;
+    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(236, 245, 252, 0.62) 48%, rgba(255,255,255,0) 90%);
     filter: none;
     animation: paneSp 21s linear infinite;
   }
   @keyframes paneSp {
     0%   { transform: translateX(0) skewX(-5deg);    opacity: 0; }
-    14%  { opacity: 0.72; }
-    82%  { opacity: 0.72; }
-    100% { transform: translateX(330%) skewX(-5deg); opacity: 0; }
+    20%  { opacity: 0.78; }
+    76%  { opacity: 0.78; }
+    100% { transform: translateX(520%) skewX(-5deg); opacity: 0; }
   }
 
   /* セクションが持つ光も、スマホでは移動量を倍にして周期を短くする
@@ -1304,7 +1325,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   @keyframes lightPhilSp { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(13%, 9%, 0); } }
   @keyframes lightBizSp  { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-12%, 11%, 0); } }
   @keyframes lightMsgSp  { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(14%, -7%, 0); } }
-  @keyframes lightCompSp { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(15%, 4%, 0); } }
+  @keyframes lightCompSp { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-16%, 3%, 0); } }
   @keyframes lightContSp { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(5%, 13%, 0); } }
 
   .section--brand::after { filter: blur(42px); }
