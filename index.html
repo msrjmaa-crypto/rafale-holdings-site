@@ -276,16 +276,21 @@
       <h2 class="section-title reveal">私たちが手掛けるブランド</h2>
 
       <div class="brand-grid">
-        <article class="brand-card">
+        <!-- data-brand-href: カードのどこをクリックしてもブランドサイトへ（js/script.js）。
+             ボタン自体が本来のリンクなので、JSが無効でも遷移できます。 -->
+        <article class="brand-card" data-brand-href="https://sakura-poker.jp/">
 
           <div class="brand-logo reveal">
-            <img src="img/brand-sakura-logo.png" alt="SAKURA Poker Lounge" loading="lazy" decoding="async">
+            <img src="img/brand-sakura-logo.png?v=2" alt="SAKURA Poker Lounge"
+                 width="1400" height="556" loading="lazy" decoding="async">
           </div>
           <h3 class="brand-name reveal" lang="en">SAKURA Poker Lounge</h3>
           <p class="brand-tagline reveal">静かに、熱く。</p>
           <p class="brand-desc reveal">初心者から経験者まで、<br>心地よく楽しめるポーカーラウンジ。</p>
 
-          <a href="#" class="btn btn-gold brand-btn reveal">ブランドサイトを見る</a>
+          <a href="https://sakura-poker.jp/" class="btn btn-gold brand-btn reveal"
+             target="_blank" rel="noopener noreferrer"
+             aria-label="SAKURA Poker Lounge のブランドサイトを見る（新しいタブで開きます）">ブランドサイトを見る</a>
         </article>
       </div>
     </div>

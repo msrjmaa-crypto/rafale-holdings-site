@@ -890,9 +890,14 @@ textarea:focus-visible {
 
 .brand-card:hover::before { transform: scaleX(1); }
 
+/* カード全体がブランドサイトへのリンクになっている場合の手がかり（見た目は不変） */
+.brand-card[data-brand-href] { cursor: pointer; }
+
 .brand-logo {
   width: 100%;
-  max-width: 260px;
+  /* SAKURAの正式ロゴは横長（1400×556）。枠の高さ120pxに合わせて幅300pxまで許容し、
+     縦横比を保ったままロゴが主役の大きさで収まるようにする（object-fit: contain）。 */
+  max-width: 300px;
   height: 120px;
   margin: 0 auto 28px;
 }

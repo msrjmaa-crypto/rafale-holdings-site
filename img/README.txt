@@ -25,8 +25,10 @@
   img/icon-512.png        … ブラウザタブ・スマホのホーム画面アイコン用
   img/brand-sakura-logo.png … BRANDSセクション「SAKURA Poker Lounge」のロゴ
 
-img/brand-sakura-logo.png は現在、仮ロゴ（プレースホルダー）です。
-正式ロゴが完成したら、同じファイル名で上書きするだけで反映されます。
+img/brand-sakura-logo.png は SAKURA Poker Lounge の正式ロゴです
+（公式サイト sakura-poker.jp で使用しているものと同一・背景透過PNG・1400×556）。
+差し替えるときは同じファイル名で上書きし、index.html の src に付けている
+「?v=」の数字を1つ上げてください（/img/* は1週間キャッシュされるため）。
 正方形・横長どちらの比率でも object-fit: contain によりロゴ全体が
 必ず表示され、切れることはありません（枠に対して余白ができるだけです）。
 推奨: 長辺1000px程度、背景透過PNG（黒背景のままでも問題ありません）。

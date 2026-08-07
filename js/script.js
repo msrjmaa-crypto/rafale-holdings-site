@@ -465,4 +465,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  /* ---------- BRANDS: カード全体をクリックしてもブランドサイトへ ----------
+     本来のリンクはカード内の「ブランドサイトを見る」ボタン（<a>）で、これはその補助。
+     カード内のリンク上や、テキストを選択しただけのときは何もしないため、
+     既存の見た目・スクロール挙動・アニメーションには影響しません。 */
+  document.querySelectorAll('.brand-card[data-brand-href]').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a, button')) return;            // ボタン等は本来の動作に任せる
+      const selection = window.getSelection();
+      if (selection && selection.toString()) return;         // テキスト選択中は遷移しない
+      window.open(card.dataset.brandHref, '_blank', 'noopener,noreferrer');
+    });
+  });
 });
