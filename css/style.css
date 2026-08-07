@@ -810,13 +810,37 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .arch-mid { animation: archIn 2s var(--ease-out) 0.6s forwards; }
   .arch-curve { animation: archIn 2.2s var(--ease-out) 0.8s forwards; }
   .hero-tint { filter: blur(46px); animation-duration: 22s; }
+
+  /* ---- ロゴの重複を避ける ----
+     ヘッダーに正式ロゴが常時出ているので、HERO内の大きなロゴは出さない。
+     消えた分は上の余白として残し、ヘッダーとコピーの間に「間」を作る。 */
+  .hero-logo-block { display: none; }
+  .hero { padding-top: 172px; padding-bottom: 124px; }
+
+  /* 英語コピー: 390px でも3行に収まる大きさ。字間をわずかに詰めて余白を稼ぐ */
+  .hero-title { font-size: clamp(1.95rem, 9.2vw, 2.8rem); line-height: 1.18; letter-spacing: -0.025em; }
+
+  /* CTA: 幅を約2割落とし、枠は最小限。地の色は置かず、触れたときだけ淡く反応する */
+  .hero-cta {
+    align-self: flex-start;
+    min-height: 46px; padding: 12px 26px;
+    font-size: 0.8rem; letter-spacing: 0.11em;
+    border-color: rgba(30, 50, 70, 0.10);
+    background: transparent;
+    box-shadow: none;
+  }
+  .hero-cta:hover, .hero-cta:active {
+    background: rgba(150, 185, 214, 0.14);
+    border-color: rgba(30, 50, 70, 0.16);
+    box-shadow: none;
+  }
 }
 
 @media (max-width: 480px) {
   body { font-size: 1rem; }
-  .hero { padding-top: 136px; padding-bottom: 116px; }
-  .hero-logo-img { height: clamp(66px, 18vw, 92px); }
-  .hero-title { font-size: clamp(2.15rem, 10.4vw, 3rem); line-height: 1.14; }
+  /* 480px 以下も 768px 側の指定（ロゴ非表示・3行の文字サイズ・CTA）をそのまま使う。
+     ここでは上下の余白だけ、画面の高さに合わせて詰める。 */
+  .hero { padding-top: 156px; padding-bottom: 108px; }
   .biz-row { grid-template-columns: 38px minmax(0, 1fr); gap: 14px; padding-left: 16px; padding-right: 16px; margin-left: -16px; }
   .philo-title { font-size: clamp(1.72rem, 8.4vw, 2.4rem); }
   .philo-title .mask:nth-child(2) .mask-in,
