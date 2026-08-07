@@ -1241,20 +1241,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .field-lamps { transform: translate3d(0, calc(var(--sp, 0) * 10px), 0); }
 
   /* Silver ― 主役。13秒で左外から右外まで通過する。
-     以前は地より暗い色だったので「影が横切る」ように見えていた。
-     ただし白い地の上では、純白を重ねても明るさは +8〜24 しか稼げず、
-     明るくするだけでは動きが読めない。そこで実際の光が面に当たったときと
-     同じ作り方にした ―― 芯は白く持ち上げ、その外側だけがごくわずかに沈む
-     （周辺減光）。芯と外周の差 11〜19 で面が読め、芯は必ず地より明るいので
-     影には見えない。 */
+     白い地の上では、純白を重ねても明るさは +7〜19 しか稼げない。
+     明るさだけでは動きが読めないので、2段構成にしている ――
+       1) 芯   … 地を必ず持ち上げる。純白に寄せないと白いセクションで沈む
+                （#F7F8FA より暗い色は、どれだけ重ねても明るくならない）
+       2) 反射差 … その外側に、ごく薄いシルバーグレー rgba(170,180,190)。
+                かつて影に見えていた層の 1/6 以下の濃度で、単独では影に
+                ならないが、芯との開き（12〜22）を作って面の輪郭を伝える。
+     不定形に見えるよう楕円の中心を少し左上へ寄せてある。 */
   .field-lamp--c {
-    left: -56%; top: 22%; bottom: auto; width: 60%; height: 54%;
-    background: radial-gradient(closest-side,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(252, 254, 255, 0.7) 26%,
-      rgba(228, 236, 245, 0.34) 58%,
-      rgba(228, 236, 245, 0) 84%);
-    filter: blur(32px);
+    left: -58%; top: 20%; bottom: auto; width: 62%; height: 58%;
+    background: radial-gradient(ellipse 56% 52% at 45% 47%,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(247, 251, 255, 0.6) 22%,
+      rgba(214, 224, 234, 0.14) 40%,
+      rgba(170, 180, 190, 0.08) 60%,
+      rgba(170, 180, 190, 0.03) 76%,
+      rgba(170, 180, 190, 0) 92%);
+    filter: blur(34px);
     animation: lampCsp 13s linear infinite;
   }
   @keyframes lampCsp {
