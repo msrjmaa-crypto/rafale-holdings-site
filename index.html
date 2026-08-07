@@ -39,7 +39,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=11">
+<!-- HEROの「Joy.」だけに使うサイン調の書体。text= で4文字だけを配信するため、
+     追加の読み込みは1KB未満で、表示速度に影響しません。 -->
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400&text=Joy.&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=12">
 
 <!--
   ============================================================
@@ -187,7 +190,7 @@
         <!-- 各行は「外＝マスク＋視差」「中＝出現アニメーション」の二重構造。
              行ごとに速度と奥行きを変え、一塊に見えないようにしている。 -->
         <h1 class="hero-title" lang="en">
-          <span class="hero-line"><span class="hero-line-in">Driven by Joy.</span></span>
+          <span class="hero-line"><span class="hero-line-in">Driven by <span class="sig">Joy.</span></span></span>
           <span class="hero-line"><span class="hero-line-in">Growing People.</span></span>
           <span class="hero-line"><span class="hero-line-in">Growing Businesses.</span></span>
         </h1>

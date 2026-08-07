@@ -501,6 +501,21 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hero-line:nth-child(2) { --lx: 5px; --ly: -18px; color: #2A343F; }
 .hero-line:nth-child(3) { --lx: 6px; --ly: -24px; color: #46525F; }
 
+/* ---- サイン調のアクセント ----
+   理念の核である「Joy.」だけを Bodoni Moda のイタリックにする。
+   高級車の広告やモード誌の見出しに使われる書体で、細く流麗。
+   筆記体にはせず、HERO の英語のうち1語だけ＝全体の15%程度に留める。
+   行の出現アニメーションは親（.hero-line-in）が担当するので、
+   ここでは書体と字送りだけを扱う。 */
+.sig {
+  font-family: 'Bodoni Moda', 'Times New Roman', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.17em;                 /* わずかに大きく */
+  letter-spacing: 0;                 /* イタリックは字間を詰めない */
+  padding-right: 0.05em;             /* 右へ傾くぶんの余白 */
+}
+
 /* ---- 内側: 下から静かに立ち上がる（blur → clear） ---- */
 .hero-line-in {
   display: block;
@@ -514,9 +529,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 @keyframes lineRise { to { opacity: 1; filter: blur(0); transform: none; } }
 
 /* ---- 日本語 ― 英語のあと、2行を少しずらして ---- */
+/* 英語がイタリックのセリフを含むようになったので、日本語も字送りをわずかに開いて
+   余白感を合わせる（書体・太さは変えない） */
 .hero-lead {
   font-size: clamp(1.06rem, 2.1vw, 1.36rem);
-  line-height: 2.05; letter-spacing: 0.16em; color: var(--ink-2);
+  line-height: 2.1; letter-spacing: 0.185em; color: var(--ink-2);
 }
 .lead-line {
   display: block;
