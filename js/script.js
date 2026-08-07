@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- reveal on scroll ---------- */
-  document.querySelectorAll('.biz-list, .info-list, .contact-info, .brand-grid')
+  document.querySelectorAll('.biz-list, .info-list, .contact-info, .brand')
     .forEach((group) => {
       group.querySelectorAll('.reveal').forEach((el, i) => {
         if (!el.dataset.revealDelay) {
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- BRANDS: カード全体をクリックしてもブランドサイトへ ----------
      本来のリンクはカード内の「ブランドサイトを見る」ボタン（<a>）で、これはその補助。
      カード内のリンク上や、テキストを選択しただけのときは何もしない。 */
-  document.querySelectorAll('.brand-card[data-brand-href]').forEach((card) => {
+  document.querySelectorAll('.brand[data-brand-href]').forEach((card) => {
     card.addEventListener('click', (e) => {
       if (e.target.closest('a, button')) return;
       const selection = window.getSelection();
