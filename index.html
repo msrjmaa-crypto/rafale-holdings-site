@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=5">
 
 <!--
   ============================================================
@@ -114,19 +114,20 @@
 <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
 <!-- ============================================================
-     FIELD ― 未来空間（固定背景）
-     透明なガラス面／薄い光の平面／遠近感だけで構成。
-     粒子・星・回路・六角形は使わない。動くのは transform のみ。
+     FIELD ― 空間（固定背景）
+     壁面照明のような光、奥から差す光、ガラス越しの反射、薄い霧。
+     線でも粒子でもなく「光と空気」で奥行きを作る。
      ============================================================ -->
 <div class="field" aria-hidden="true">
   <div class="field-sky"></div>
-  <div class="field-stage">
-    <span class="pane pane--a"></span>
-    <span class="pane pane--b"></span>
-    <span class="pane pane--c"></span>
+  <div class="field-lamp field-lamp--l"></div>
+  <div class="field-lamp field-lamp--r"></div>
+  <div class="field-glass">
+    <span class="glass glass--a"></span>
+    <span class="glass glass--b"></span>
   </div>
-  <div class="field-plane"></div>
-  <div class="field-horizon"></div>
+  <div class="field-mist"></div>
+  <div class="field-floor"></div>
 </div>
 
 <header class="site-header" id="site-header">
@@ -160,7 +161,11 @@
     <!-- 背景動画（未配置。assets/videos/rafale-opening.mp4 を置くとPCで自動再生） -->
     <video class="hero-video" id="hero-video" muted loop playsinline disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
 
-    <div class="hero-light" aria-hidden="true"></div>
+    <!-- 言葉のまわりの空気。ゆっくり呼吸する光と、画面を横切る一条の光。 -->
+    <div class="hero-atmos" aria-hidden="true">
+      <span class="hero-halo"></span>
+      <span class="hero-sweep"></span>
+    </div>
 
     <div class="hero-grid">
       <div class="hero-main">
@@ -174,15 +179,14 @@
           <span class="mask"><span class="mask-in">Growing Businesses.</span></span>
         </h1>
 
-        <div class="hero-foot">
-          <span class="hero-foot-rule" aria-hidden="true"></span>
-          <p class="hero-lead">楽しさを原動力に。<br class="only-pc">人を育て、事業を育てる。</p>
-        </div>
+        <p class="hero-lead">楽しさを原動力に。<br class="only-pc">人を育て、事業を育てる。</p>
 
         <a href="#philosophy" class="btn hero-cta">私たちの理念を見る</a>
       </div>
 
+      <!-- 右側は文字を置かず、ガラス越しの光の空間にする -->
       <div class="hero-side" aria-hidden="true">
+        <span class="hero-glass"></span>
         <span class="hero-vertical" lang="en">RAFALE HOLDINGS</span>
       </div>
     </div>
@@ -195,8 +199,6 @@
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">PHILOSOPHY</p>
-        <span class="head-rule reveal" aria-hidden="true"></span>
-        <p class="section-index reveal" lang="en" aria-hidden="true">01</p>
       </header>
 
       <h2 class="philo-title">
@@ -224,8 +226,6 @@
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">BUSINESS</p>
-        <span class="head-rule reveal" aria-hidden="true"></span>
-        <p class="section-index reveal" lang="en" aria-hidden="true">02</p>
       </header>
       <h2 class="section-title reveal">事業内容</h2>
       <p class="section-lead reveal">飲食からエンターテインメント、コンサルティングまで。<br class="only-pc">私たちは9つの事業領域で、専門性と実行力を掛け合わせ、お客様と社会に持続的な価値を提供しています。</p>
@@ -237,7 +237,6 @@
             <h3 class="biz-name">飲食事業</h3>
             <p class="biz-desc">飲食店・接待飲食店の企画から運営まで、上質な体験をお届けします。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -246,7 +245,6 @@
             <h3 class="biz-name">エンターテインメント事業</h3>
             <p class="biz-desc">ポーカーラウンジ・アミューズメント施設の企画・運営を手掛けます。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -255,7 +253,6 @@
             <h3 class="biz-name">コンサルティング事業</h3>
             <p class="biz-desc">経営コンサルティング・店舗開発・事業支援まで、伴走型でサポートします。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -264,7 +261,6 @@
             <h3 class="biz-name">店舗プロデュース事業</h3>
             <p class="biz-desc">店舗企画・内装設計から開業支援まで、トータルでプロデュースします。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -273,7 +269,6 @@
             <h3 class="biz-name">マーケティング事業</h3>
             <p class="biz-desc">広告・ブランディング・販促・SNS運用まで、事業の魅力を届けます。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -282,7 +277,6 @@
             <h3 class="biz-name">Webサイト制作・運用支援<span class="biz-en" lang="en">Web Design &amp; Management</span></h3>
             <p class="biz-desc">企業・店舗・ブランドのWebサイト制作から、公開後の更新・運用・改善まで一貫して支援します。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -291,7 +285,6 @@
             <h3 class="biz-name">人材サービス事業</h3>
             <p class="biz-desc">有料職業紹介・採用支援・人材育成を通じて、人と企業をつなぎます。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -300,7 +293,6 @@
             <h3 class="biz-name">不動産事業</h3>
             <p class="biz-desc">不動産の売買・賃貸・仲介・管理まで、資産価値を最大化します。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
 
         <li class="biz-row reveal">
@@ -309,7 +301,6 @@
             <h3 class="biz-name">リユース・EC事業</h3>
             <p class="biz-desc">古物営業、商品の企画・販売・輸出入、EC事業を展開しています。</p>
           </div>
-          <span class="biz-line" aria-hidden="true"></span>
         </li>
       </ol>
     </div>
@@ -324,8 +315,6 @@
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">BRANDS</p>
-        <span class="head-rule reveal" aria-hidden="true"></span>
-        <p class="section-index reveal" lang="en" aria-hidden="true">03</p>
       </header>
       <h2 class="section-title reveal">私たちが手掛けるブランド</h2>
       <p class="section-lead reveal">Rafale Holdingsが生み出し、育てているブランドです。</p>
@@ -362,8 +351,6 @@
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">MESSAGE</p>
-        <span class="head-rule reveal" aria-hidden="true"></span>
-        <p class="section-index reveal" lang="en" aria-hidden="true">04</p>
       </header>
 
       <div class="message-layout">
@@ -388,8 +375,6 @@
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">COMPANY</p>
-        <span class="head-rule reveal" aria-hidden="true"></span>
-        <p class="section-index reveal" lang="en" aria-hidden="true">05</p>
       </header>
       <h2 class="section-title reveal">会社概要</h2>
 
@@ -446,8 +431,6 @@
     <div class="section-inner">
       <header class="section-head">
         <p class="section-tag reveal" lang="en">CONTACT</p>
-        <span class="head-rule reveal" aria-hidden="true"></span>
-        <p class="section-index reveal" lang="en" aria-hidden="true">06</p>
       </header>
       <h2 class="section-title reveal">お問い合わせ</h2>
       <p class="section-lead reveal">お気軽にお問い合わせください。<br class="only-pc">内容を確認のうえ、担当者よりご連絡いたします。</p>
@@ -515,6 +498,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=4" defer></script>
+<script src="js/script.js?v=5" defer></script>
 </body>
 </html>
