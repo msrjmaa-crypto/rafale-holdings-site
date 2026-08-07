@@ -221,12 +221,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   transition: color 0.5s var(--ease);
 }
 .nav-link:hover { color: var(--ink); }
+/* 参考画像に合わせ、細い枠だけのボタン（塗りは持たせない） */
 .nav-cta {
-  padding: 10px 24px; border-radius: 2px; color: var(--ink);
-  background: rgba(150, 185, 214, 0.16);
-  transition: background 0.6s var(--ease);
+  padding: 11px 26px; border-radius: 0; color: var(--ink);
+  border: 1px solid rgba(30, 50, 70, 0.16);
+  background: rgba(255, 255, 255, 0.32);
+  transition: background 0.6s var(--ease), border-color 0.6s var(--ease);
 }
-.nav-cta:hover { background: rgba(150, 185, 214, 0.28); }
+.nav-cta:hover { background: rgba(246, 241, 232, 0.7); border-color: rgba(184, 145, 84, 0.42); }
 
 .hamburger { display: none; width: 46px; height: 46px; padding: 0; background: none; border: none; cursor: pointer; }
 .hamburger span {
@@ -241,89 +243,106 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hamburger.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 /* ============================================================
-   HERO ― 白い未来建築の中に、言葉が浮かんでいる
+   HERO ― 参考画像（reference/rafale-hero-reference.png）の再現
    ------------------------------------------------------------
-   左: ブランドと言葉 ／ 右: 光・ガラス・空間 と役割を分ける。
-   右側は写真を使わず、傾けた面・曲面・光の透過だけで
-   「建築物の一部」に見せる。動きはすべて 1〜4px と極小。
+   左 48% : ロゴ → サイン体3行 → 日本語2行 → CTA → Scroll(左下)
+   右 52% : 大型のガラス建築（縦長アーチ2枚・奥の平面板2枚・
+            手前の横長スラブ・床の反射）
+   左上から斜めに光が差し込み、左は暖かいオフホワイト、
+   右はガラスの影響で淡いブルーグレーに寄る。
    ============================================================ */
 .hero {
   position: relative; min-height: 100svh;
   display: flex; align-items: center;
-  padding: 156px 0 136px;
+  padding: 150px 0 130px;
   overflow: hidden;
 }
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 2s var(--ease); }
 .hero-video.is-ready { opacity: 0.4; }
 
-/* ---------- 空気（3つの光がそれぞれ別の速さで動く） ---------- */
+/* ---------- 空気 ― 左は暖色、右はクール ---------- */
 .hero-atmos { position: absolute; inset: 0; pointer-events: none; }
 
-/* ① 白い光 ― 英語コピーの左奥に溜まり、ゆっくり呼吸する */
-.hero-halo {
-  position: absolute; left: 0; top: 44%;
-  width: min(1180px, 112vw); height: min(880px, 96vh);
-  transform: translate(-18%, -50%) translate3d(calc(var(--mx) * 12px), calc(var(--my) * 9px + var(--sy) * 44px), 0);
+.hero-warm {
+  position: absolute; left: -16%; top: -18%;
+  width: 80%; height: 128%;
   background:
-    radial-gradient(closest-side, rgba(255, 255, 255, 0.98), rgba(255,255,255,0) 64%),
-    radial-gradient(closest-side at 44% 56%, rgba(236, 244, 250, 0.72), rgba(236,244,250,0) 72%);
+    radial-gradient(46% 40% at 40% 32%, rgba(228, 210, 182, 0.30), rgba(228,210,182,0) 72%),
+    radial-gradient(58% 52% at 24% 60%, rgba(250, 245, 236, 0.9), rgba(250,245,236,0) 74%);
+  filter: blur(58px);
+  animation: warmBreath 29s ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes warmBreath {
+  0%, 100% { opacity: 0.74; transform: translate3d(0, 0, 0); }
+  50%      { opacity: 1;    transform: translate3d(2%, 2%, 0); }
+}
+
+.hero-halo {
+  position: absolute; left: 0; top: 46%;
+  width: min(980px, 92vw); height: min(800px, 90vh);
+  transform: translate(-22%, -50%) translate3d(calc(var(--mx) * 10px), calc(var(--my) * 8px + var(--sy) * 44px), 0);
+  background: radial-gradient(closest-side, rgba(255, 252, 247, 0.94), rgba(255,252,247,0) 66%);
   opacity: 0;
   animation: haloIn 2.2s var(--ease) 0.10s forwards, haloBreath 19s ease-in-out 2.4s infinite;
   will-change: transform, opacity;
 }
 @keyframes haloIn { to { opacity: 1; } }
-@keyframes haloBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
+@keyframes haloBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
 
-/* ② 淡いブルー ― 17秒で空間をゆっくり移動する */
+.hero-silver {
+  position: absolute; right: -14%; top: -14%;
+  width: 74%; height: 122%;
+  background:
+    radial-gradient(46% 40% at 52% 38%, rgba(196, 214, 230, 0.58), rgba(196,214,230,0) 74%),
+    radial-gradient(40% 36% at 42% 76%, rgba(212, 224, 235, 0.52), rgba(212,224,235,0) 76%);
+  filter: blur(70px);
+  animation: silverDrift 23s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes silverDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1);      opacity: 0.68; }
+  44%  { transform: translate3d(-4%, 4%, 0) scale(1.1); opacity: 0.96; }
+  100% { transform: translate3d(0, 0, 0) scale(1);      opacity: 0.68; }
+}
+
 .hero-tint {
   position: absolute; inset: -28%;
-  background: radial-gradient(38% 34% at 32% 44%, rgba(168, 202, 232, 0.72), rgba(168,202,232,0) 72%);
+  background: radial-gradient(32% 28% at 48% 44%, rgba(174, 202, 226, 0.44), rgba(174,202,226,0) 72%);
   filter: blur(66px);
   animation: tintDrift 17s ease-in-out infinite;
   will-change: transform, opacity;
 }
 @keyframes tintDrift {
-  0%   { transform: translate3d(-9%, 3%, 0)  scale(1);    opacity: 0.7; }
-  32%  { transform: translate3d(5%, -4%, 0)  scale(1.16); opacity: 1; }
-  66%  { transform: translate3d(21%, 5%, 0)  scale(1.06); opacity: 0.82; }
-  100% { transform: translate3d(-9%, 3%, 0)  scale(1);    opacity: 0.7; }
+  0%   { transform: translate3d(-8%, 3%, 0)  scale(1);    opacity: 0.6; }
+  32%  { transform: translate3d(6%, -4%, 0)  scale(1.16); opacity: 0.9; }
+  66%  { transform: translate3d(20%, 5%, 0)  scale(1.06); opacity: 0.74; }
+  100% { transform: translate3d(-8%, 3%, 0)  scale(1);    opacity: 0.6; }
 }
 
-/* ③ シルバー ― 右のガラス面のあたりに溜まる。青とは別周期（23秒） */
-.hero-silver {
-  position: absolute; right: -18%; top: -12%;
-  width: 74%; height: 110%;
-  background: radial-gradient(44% 38% at 52% 44%, rgba(184, 196, 208, 0.60), rgba(184,196,208,0) 74%);
-  filter: blur(72px);
-  animation: silverDrift 23s ease-in-out infinite;
+/* 斜めに差し込む光 ― 参考画像でいちばん効いている要素。
+   左上から右下へ、幅の違う帯を3本重ねて1枚のレイヤーで描く。 */
+.hero-rays {
+  position: absolute; inset: -30% -20%;
+  background:
+    linear-gradient(114deg, rgba(255,255,255,0) 30%, rgba(255, 253, 248, 0.86) 36%, rgba(255,255,255,0) 42%),
+    linear-gradient(114deg, rgba(255,255,255,0) 44%, rgba(255, 252, 245, 0.54) 49%, rgba(255,255,255,0) 55%),
+    linear-gradient(114deg, rgba(255,255,255,0) 58%, rgba(252, 250, 245, 0.34) 62%, rgba(255,255,255,0) 67%);
+  filter: blur(26px);
+  opacity: 0;
+  animation: raysIn 3s var(--ease) 0.3s forwards, raysDrift 25s ease-in-out 3.4s infinite;
   will-change: transform, opacity;
 }
-@keyframes silverDrift {
-  0%   { transform: translate3d(0, 0, 0) scale(1);       opacity: 0.62; }
-  44%  { transform: translate3d(-4%, 5%, 0) scale(1.1);  opacity: 0.92; }
-  100% { transform: translate3d(0, 0, 0) scale(1);       opacity: 0.62; }
+@keyframes raysIn { to { opacity: 1; } }
+@keyframes raysDrift {
+  0%, 100% { transform: translate3d(0, 0, 0);      opacity: 1; }
+  50%      { transform: translate3d(1.6%, 1%, 0);  opacity: 0.78; }
 }
 
-/* ④ ごく薄い暖色 ― ヘッダーのゴールドロゴのあたりだけ、空気がわずかに温かい。
-      発光ではなく「白い壁にロゴの色が反射している」程度。29秒周期。 */
-.hero-warm {
-  position: absolute; left: 2%; top: -16%;
-  width: 46%; height: 62%;
-  background: radial-gradient(46% 42% at 34% 52%, rgba(206, 176, 126, 0.30), rgba(206,176,126,0) 74%);
-  filter: blur(78px);
-  animation: warmBreath 29s ease-in-out infinite;
-  will-change: opacity;
-}
-@keyframes warmBreath {
-  0%, 100% { opacity: 0.58; transform: translate3d(0, 0, 0); }
-  50%      { opacity: 0.95; transform: translate3d(2%, 2%, 0); }
-}
-
-/* ⑤ 一条の光 ― 21秒かけて空間を横切る */
 .hero-sweep {
   position: absolute; top: -22%; left: -38%;
-  width: 26vw; height: 144%;
-  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 255, 255, 0.95) 48%, rgba(255,255,255,0) 82%);
+  width: 24vw; height: 144%;
+  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 253, 248, 0.72) 48%, rgba(255,255,255,0) 82%);
   filter: blur(34px);
   animation: sweep 21s linear 1.6s infinite;
 }
@@ -331,126 +350,147 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   0%   { transform: translateX(0); opacity: 0; }
   12%  { opacity: 1; }
   84%  { opacity: 1; }
-  100% { transform: translateX(420%); opacity: 0; }
+  100% { transform: translateX(430%); opacity: 0; }
 }
 
 /* ============================================================
-   右側 ― 建築ガラス
-   ------------------------------------------------------------
-   高級ショールームの大型ガラスとして見せるために、
-   「透明な図形」ではなく次の4つを必ず持たせる。
-     ① 厚み  … 光の当たる側は明るい縁、反対側は暗い縁、内側に反射
-     ② 屈折  … backdrop-filter で背景がほんの少し冷たく・濃く見える
-     ③ 反射  … 面の明るさが 26 秒かけて静かに移動する（線は動かさない）
-     ④ 接地  … 床の影と映り込みで、空中に浮かせない
-   光は左上から入る前提で、縁が明るく／中央は透明／下部は影。
+   右側 ― ガラス建築
+   縦長アーチ（外・内）／奥の平面板2枚／手前の横長スラブ／床
    ============================================================ */
 .hero-arch {
   position: absolute; right: 0; top: 0;
-  width: min(58%, 940px); height: 100%;
+  width: min(54%, 1040px); height: 100%;
   pointer-events: none;
   transform: translate3d(calc(var(--mx) * -5px), calc(var(--my) * -3px), 0);
   will-change: transform;
 }
-.hero-arch > span { position: absolute; display: block; }
+.hero-arch > span { position: absolute; display: block; opacity: 0; }
 
-/* ---------- ① 奥に立つ平面ガラス ---------- */
-.arch-back {
-  left: 4%; top: -6%; width: 48%; height: 96%;
-  background: linear-gradient(166deg,
-    rgba(255, 255, 255, 0.66) 0%,
-    rgba(228, 240, 248, 0.34) 38%,
-    rgba(210, 222, 233, 0.17) 72%,
-    rgba(255, 255, 255, 0.02) 100%);
-  /* 左＝光が当たる側は明るい縁、右＝反対側はごく薄い暗い縁 */
-  border-left: 1px solid rgba(255, 255, 255, 0.92);
-  border-right: 1px solid rgba(150, 172, 192, 0.20);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),              /* 上端の縁 */
-    inset 0 -46px 56px -48px rgba(40, 62, 88, 0.30),      /* 下部の影 */
-    26px 44px 96px -66px rgba(30, 50, 70, 0.34);          /* 奥への落ち影 */
-  opacity: 0;
-  animation: glassIn 2.4s var(--ease-out) 0.5s forwards, backDrift 31s ease-in-out 3s infinite;
+/* 奥のアーチ（外側の大きな弧） */
+.g-arch-far {
+  right: -6%; top: -4%; width: 92%; height: 96%;
+  border-radius: 50% 50% 4% 4% / 46% 46% 4% 4%;
+  background: linear-gradient(158deg,
+    rgba(255,255,255,0.42) 0%,
+    rgba(214, 230, 243, 0.26) 42%,
+    rgba(196, 212, 228, 0.16) 74%,
+    rgba(255,255,255,0) 96%);
+  border: 1px solid rgba(255,255,255,0.5);
+  filter: blur(1px);
+  animation: glassIn 2.4s var(--ease-out) 0.42s forwards, driftE 33s ease-in-out 3s infinite;
 }
 
-/* ---------- ② 手前の大きな曲面ガラス ---------- */
-.arch-pane {
-  right: -12%; top: 1%; width: 76%; height: 96%;
-  border-radius: 44% 0 0 50% / 52% 0 0 48%;
-  overflow: hidden;                                        /* 反射を面の形に収める */
-  /* ガラス自体の色。左上から右下へ、白 → 淡いブルー → ごく薄いグレー */
-  background: linear-gradient(155deg,
-    rgba(255, 255, 255, 0.80) 0%,
-    rgba(232, 243, 250, 0.46) 26%,
-    rgba(214, 228, 240, 0.26) 52%,
-    rgba(224, 228, 234, 0.14) 74%,
-    rgba(255, 255, 255, 0.03) 96%);
-  /* 屈折 ― ガラス越しの背景がわずかに冷たく、少し濃く、ごくわずかに滲む */
-  -webkit-backdrop-filter: blur(2px) saturate(1.22) brightness(1.02);
-          backdrop-filter: blur(2px) saturate(1.22) brightness(1.02);
-  border-left: 1px solid rgba(255, 255, 255, 0.96);        /* 明るい縁 */
+/* 中央奥の縦長平面板（2枚を少しずらして重ねる） */
+.g-plate-a {
+  left: 6%; top: 18%; width: 30%; height: 74%;
+  background: linear-gradient(168deg,
+    rgba(255,255,255,0.60) 0%,
+    rgba(224, 237, 246, 0.34) 40%,
+    rgba(202, 216, 229, 0.20) 76%,
+    rgba(255,255,255,0.02) 100%);
+  border-left: 1px solid rgba(255,255,255,0.9);
+  border-top: 1px solid rgba(255,255,255,0.86);
+  border-right: 1px solid rgba(150, 172, 192, 0.16);
   box-shadow:
-    inset -1px 0 0 rgba(146, 168, 190, 0.22),              /* 反対側の暗い縁 */
-    inset 44px 0 86px -62px rgba(255, 255, 255, 0.95),     /* 内側の反射 */
-    inset 0 -70px 80px -70px rgba(40, 62, 88, 0.26),       /* 下部の影 */
-    -46px 64px 132px -76px rgba(30, 50, 70, 0.44);         /* 床への落ち影 */
-  opacity: 0;
-  animation: paneIn 2.8s var(--ease-out) 0.9s forwards, paneDrift 27s ease-in-out 3.6s infinite;
+    inset 0 -40px 50px -46px rgba(40, 62, 88, 0.24),
+    18px 40px 84px -68px rgba(30, 50, 70, 0.32);
+  animation: glassIn 2.4s var(--ease-out) 0.54s forwards, driftC 31s ease-in-out 3.2s infinite;
 }
-/* 縁のいちばん明るいところ（カーブの上寄りだけ） */
-.arch-pane::before {
-  content: ""; position: absolute; left: -1px; top: 4%;
-  width: 2px; height: 62%;
-  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255, 255, 255, 0.98) 38%, rgba(255,255,255,0));
+.g-plate-b {
+  left: 26%; top: 8%; width: 26%; height: 84%;
+  background: linear-gradient(170deg,
+    rgba(255,255,255,0.54) 0%,
+    rgba(218, 233, 245, 0.30) 44%,
+    rgba(198, 213, 227, 0.17) 78%,
+    rgba(255,255,255,0.02) 100%);
+  border-left: 1px solid rgba(255,255,255,0.88);
+  border-top: 1px solid rgba(255,255,255,0.82);
+  border-right: 1px solid rgba(150, 172, 192, 0.14);
+  box-shadow:
+    inset 0 -44px 54px -50px rgba(40, 62, 88, 0.22),
+    16px 36px 80px -70px rgba(30, 50, 70, 0.30);
+  animation: glassIn 2.5s var(--ease-out) 0.66s forwards, driftB 29s ease-in-out 3.4s infinite;
 }
-/* ③ 反射 ― 白い線ではなく、面の明るさそのものが 26 秒かけて移動する */
-.arch-pane::after {
-  content: ""; position: absolute; left: -20%; top: -14%;
-  width: 90%; height: 128%;
+
+/* 右端の巨大なアーチ（主役）― 上が丸く、床まで届く縦長 */
+.g-arch {
+  right: -2%; top: 2%; width: 66%; height: 94%;
+  border-radius: 50% 50% 3% 3% / 44% 44% 3% 3%;
+  overflow: hidden;
+  background: linear-gradient(156deg,
+    rgba(255,255,255,0.72) 0%,
+    rgba(228, 242, 250, 0.44) 22%,
+    rgba(200, 219, 235, 0.30) 46%,
+    rgba(214, 226, 236, 0.18) 70%,
+    rgba(255,255,255,0.04) 94%);
+  -webkit-backdrop-filter: blur(2px) saturate(1.2) brightness(1.02);
+          backdrop-filter: blur(2px) saturate(1.2) brightness(1.02);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow:
+    inset 0 0 0 1px rgba(186, 206, 224, 0.18),
+    inset 54px 0 96px -70px rgba(255,255,255,0.95),
+    inset 0 -80px 92px -78px rgba(40, 62, 88, 0.24),
+    -46px 70px 140px -84px rgba(30, 50, 70, 0.40);
+  animation: paneIn 2.8s var(--ease-out) 0.88s forwards, driftA 27s ease-in-out 3.6s infinite;
+}
+/* アーチの縁がいちばん強く光を拾うところ（左肩） */
+.g-arch::before {
+  content: ""; position: absolute; left: 2%; top: 6%;
+  width: 2px; height: 52%;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.96) 40%, rgba(255,255,255,0));
+  transform: rotate(-6deg);
+}
+/* 面の明るさが 26 秒かけて移動する */
+.g-arch::after {
+  content: ""; position: absolute; left: -24%; top: -14%;
+  width: 94%; height: 128%;
   background: linear-gradient(158deg,
     rgba(255,255,255,0) 24%,
-    rgba(255, 255, 255, 0.52) 46%,
-    rgba(236, 245, 251, 0.22) 58%,
+    rgba(255,255,255,0.46) 46%,
+    rgba(232, 243, 251, 0.2) 58%,
     rgba(255,255,255,0) 74%);
-  filter: blur(26px);
+  filter: blur(28px);
   opacity: 0;
   animation: sheenIn 2.4s var(--ease) 1.5s forwards, sheenMove 26s ease-in-out 3.9s infinite;
 }
 
-/* ---------- ④ 床 ― 影と映り込みで接地させる ---------- */
-.arch-ground {
-  left: 0; right: 0; bottom: 0; height: 36%;
-  background:
-    /* ガラスの映り込み（下へ向かって急速に消える） */
-    linear-gradient(180deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.12) 30%, rgba(255,255,255,0) 66%),
-    /* 接地の影 ― ガラスの下端の真下だけ濃い */
-    radial-gradient(58% 42% at 62% 4%, rgba(30, 50, 70, 0.17), rgba(30,50,70,0) 74%),
-    /* 床そのものの陰り */
-    linear-gradient(180deg, rgba(30, 50, 70, 0) 0%, rgba(30, 50, 70, 0.05) 78%, rgba(30, 50, 70, 0.08) 100%);
-  opacity: 0;
-  animation: glassIn 2.6s var(--ease-out) 1.25s forwards;
+/* 手前下部の横長スラブ ― 床に接地している板 */
+.g-slab {
+  left: -16%; bottom: 8%; width: 104%; height: 24%;
+  background: linear-gradient(176deg, rgba(255,255,255,0.5) 0%, rgba(212, 227, 240, 0.26) 52%, rgba(255,255,255,0.03) 100%);
+  border-top: 1px solid rgba(255,255,255,0.92);
+  border-left: 1px solid rgba(255,255,255,0.7);
+  box-shadow:
+    inset 0 -1px 0 rgba(150, 172, 192, 0.2),
+    0 30px 64px -54px rgba(30, 50, 70, 0.42);
+  animation: glassIn 2.4s var(--ease-out) 1.06s forwards, driftD 35s ease-in-out 4s infinite;
 }
 
-/* ---------- 出現と、ロード後のごく弱い漂い（1〜3px） ---------- */
+/* 床 ― ガラスの映り込み・接地の濃い影・横へ伸びる光 */
+.g-ground {
+  left: -26%; right: 0; bottom: 0; height: 32%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.12) 26%, rgba(255,255,255,0) 60%),
+    radial-gradient(48% 40% at 68% 2%, rgba(30, 50, 70, 0.19), rgba(30,50,70,0) 74%),
+    linear-gradient(104deg, rgba(30, 50, 70, 0) 16%, rgba(30, 50, 70, 0.055) 50%, rgba(30, 50, 70, 0) 88%),
+    linear-gradient(180deg, rgba(30, 50, 70, 0) 0%, rgba(30, 50, 70, 0.05) 78%, rgba(30, 50, 70, 0.08) 100%);
+  animation: glassIn 2.6s var(--ease-out) 1.2s forwards, groundLight 24s ease-in-out 4.2s infinite;
+}
+
 @keyframes glassIn { to { opacity: 1; } }
-@keyframes sheenIn  { to { opacity: 1; } }
-/* 手前の曲面はぼけから結像させる＝奥から前へ出てくるように見せる */
-@keyframes paneIn {
-  from { opacity: 0; filter: blur(18px); }
-  to   { opacity: 1; filter: blur(0); }
-}
-@keyframes backDrift {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(-2px, 1px, 0); }
-}
-@keyframes paneDrift {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(3px, -2px, 0); }
-}
+@keyframes sheenIn { to { opacity: 1; } }
+@keyframes paneIn  { from { opacity: 0; filter: blur(18px); } to { opacity: 1; filter: blur(0); } }
+@keyframes driftA { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(3px,-2px,0); } }
+@keyframes driftB { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-2px,2px,0); } }
+@keyframes driftC { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-2px,1px,0); } }
+@keyframes driftD { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(2px,-1px,0); } }
+@keyframes driftE { 0%,100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-3px,2px,0); } }
 @keyframes sheenMove {
-  0%, 100% { transform: translate3d(-5%, 3%, 0);  opacity: 0.5; }
-  50%      { transform: translate3d(9%, -3%, 0);  opacity: 0.9; }
+  0%,100% { transform: translate3d(-5%, 3%, 0);  opacity: 0.5; }
+  50%     { transform: translate3d(9%, -3%, 0);  opacity: 0.88; }
 }
+@keyframes groundLight { 0%,100% { opacity: 0.88; } 50% { opacity: 1; } }
 
 /* ============================================================
    左側 ― ブランドと言葉
@@ -459,20 +499,18 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   position: relative; z-index: 2;
   width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
 }
-/* 3行が必ず1行ずつ収まる幅を確保する */
-.hero-main { max-width: min(62vw, 860px); }
+.hero-main { max-width: min(52vw, 720px); }
 
-.hero-logo-block { position: relative; display: inline-block; margin-bottom: clamp(32px, 5.5vh, 58px); }
+.hero-logo-block { position: relative; display: inline-block; margin-bottom: clamp(34px, 6vh, 66px); }
 .hero-logo-img {
-  height: clamp(76px, 11.5vh, 124px); width: auto;
+  height: clamp(66px, 9vh, 96px); width: auto;
   opacity: 0;
   animation: logoIn 1.9s var(--ease-out) 0.5s forwards;
 }
 @keyframes logoIn {
-  from { opacity: 0; transform: scale(0.96) translateY(16px); filter: blur(12px); }
+  from { opacity: 0; transform: scale(0.96) translateY(16px); filter: blur(11px); }
   to   { opacity: 1; transform: none; filter: blur(0); }
 }
-/* ゴールドの周囲に、ごく薄い暖色の反射 */
 .hero-logo-block::after {
   content: ""; position: absolute; left: 50%; top: 50%; z-index: -1;
   width: 168%; height: 178%; transform: translate(-50%, -50%);
@@ -481,44 +519,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   opacity: 0; animation: fadeIn 2.4s var(--ease) 1.1s forwards;
 }
 
+/* ---- 英語コピー ― 3行ともサイン体・シャンパンゴールド ----
+   参考画像に合わせ、行はかなり大きく、行間は詰めて重なるくらいにする。 */
 .hero-title {
-  font-family: var(--font-en); font-weight: 200;
-  font-size: clamp(2.35rem, 5.9vw, 5.15rem);
-  line-height: 1.16; letter-spacing: -0.014em;
-  color: var(--ink);
-  margin-bottom: clamp(36px, 6vh, 64px);
+  font-family: 'Mrs Saint Delafield', 'Segoe Script', cursive;
+  font-weight: 400;
+  font-size: clamp(3.4rem, 8.4vw, 7.6rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  margin-bottom: clamp(34px, 5vh, 58px);
 }
-/* ---- 外側: マスクと視差 ----
-   下端だけを切るクリップ（左右と上は blur のぶん余裕を残す）。
-   スクロールとマウスに対して行ごとに違う量だけ動き、奥行きを作る。 */
 .hero-line {
   display: block; white-space: nowrap;
-  clip-path: inset(-0.22em -0.3em 0 -0.3em);
+  clip-path: inset(-0.42em -0.4em -0.06em -0.4em);   /* ループが切れないよう上下に余裕 */
   transform: translate3d(calc(var(--mx) * var(--lx, 0px)), calc(var(--sy) * var(--ly, 0px)), 0);
   will-change: transform;
 }
+/* サイン体特有のリズム ― 行頭をわずかにずらす */
 .hero-line:nth-child(1) { --lx: 4px; --ly: -12px; }
-.hero-line:nth-child(2) { --lx: 5px; --ly: -18px; color: #2A343F; }
-.hero-line:nth-child(3) { --lx: 6px; --ly: -24px; color: #46525F; }
+.hero-line:nth-child(2) { --lx: 5px; --ly: -18px; padding-left: 0.02em; }
+.hero-line:nth-child(3) { --lx: 6px; --ly: -24px; padding-left: 0.01em; }
 
-/* ---- サイン調のアクセント ----
-   理念の核である「Joy.」だけを Bodoni Moda のイタリックにする。
-   高級車の広告やモード誌の見出しに使われる書体で、細く流麗。
-   筆記体にはせず、HERO の英語のうち1語だけ＝全体の15%程度に留める。
-   行の出現アニメーションは親（.hero-line-in）が担当するので、
-   ここでは書体と字送りだけを扱う。 */
-.sig {
-  font-family: 'Bodoni Moda', 'Times New Roman', Georgia, serif;
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.17em;                 /* わずかに大きく */
-  letter-spacing: 0;                 /* イタリックは字間を詰めない */
-  padding-right: 0.05em;             /* 右へ傾くぶんの余白 */
-}
-
-/* ---- 内側: 下から静かに立ち上がる（blur → clear） ---- */
 .hero-line-in {
   display: block;
+  color: #B98D4E;
+  background: linear-gradient(96deg, #AC7F3C 0%, #C49A5C 46%, #B0854A 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
   opacity: 0; filter: blur(10px); transform: translateY(28px);
   animation: lineRise 1.35s var(--ease-out) forwards;
   will-change: opacity, transform, filter;
@@ -528,12 +555,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hero-line:nth-child(3) .hero-line-in { animation-delay: 1.57s; animation-duration: 1.45s; }
 @keyframes lineRise { to { opacity: 1; filter: blur(0); transform: none; } }
 
-/* ---- 日本語 ― 英語のあと、2行を少しずらして ---- */
-/* 英語がイタリックのセリフを含むようになったので、日本語も字送りをわずかに開いて
-   余白感を合わせる（書体・太さは変えない） */
+/* ---- 日本語 ― 小さめ・チャコール・字間広め ---- */
 .hero-lead {
-  font-size: clamp(1.06rem, 2.1vw, 1.36rem);
-  line-height: 2.1; letter-spacing: 0.185em; color: var(--ink-2);
+  font-size: clamp(0.92rem, 1.4vw, 1.02rem);
+  line-height: 2.3; letter-spacing: 0.26em; color: var(--ink-2);
 }
 .lead-line {
   display: block;
@@ -544,37 +569,54 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .lead-line:nth-child(2) { animation-delay: 2.21s; }
 @keyframes leadIn { to { opacity: 1; filter: blur(0); transform: none; } }
 
-.hero-cta { margin-top: clamp(40px, 6vh, 66px); opacity: 0; animation: ctaIn 1.2s var(--ease-out) 2.55s forwards; }
-@keyframes ctaIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-
-/* 触れたときだけ、淡いシルバーが差して文字が少し濃くなる（色は変えない） */
-.hero-cta:hover, .hero-cta:focus-visible {
-  background: rgba(174, 188, 199, 0.20);
-  border-color: rgba(30, 50, 70, 0.22);
-  color: var(--ink);
+/* ---- CTA ― 細い枠・広い余白・右に細い矢印 ---- */
+.hero-cta {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 34px;
+  margin-top: clamp(34px, 5vh, 52px);
+  min-width: 250px; min-height: 54px; padding: 15px 24px;
+  border: 1px solid rgba(184, 145, 84, 0.42);
+  border-radius: 0;
+  background: rgba(255, 253, 249, 0.34);
+  color: #7E6335;
+  font-family: var(--font-jp); font-weight: 300;
+  font-size: 0.82rem; letter-spacing: 0.16em;
+  opacity: 0; animation: ctaIn 1.2s var(--ease-out) 2.55s forwards;
+  transition: background 0.7s var(--ease), border-color 0.7s var(--ease), color 0.6s var(--ease);
   box-shadow: none;
 }
+.hero-cta::after {
+  content: "→"; font-family: var(--font-en); font-size: 0.9rem; opacity: 0.75;
+  transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease);
+}
+.hero-cta:hover, .hero-cta:focus-visible {
+  background: rgba(243, 236, 224, 0.6);
+  border-color: rgba(184, 145, 84, 0.62);
+  color: #6E5529;
+  box-shadow: none;
+}
+.hero-cta:hover::after { transform: translateX(4px); opacity: 1; }
+@keyframes ctaIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 @keyframes fadeIn { to { opacity: 1; } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes maskUp { to { transform: translateY(0); } }
 
+/* ---- Scroll ― 左下。細い縦線の中を小さな光が落ちる ---- */
 .scroll-cue {
-  position: absolute; left: 50%; bottom: 36px;
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-  font-family: var(--font-en); font-size: 0.72rem; font-weight: 300;
-  letter-spacing: 0.28em; color: var(--sub);
-  opacity: 0; transform: translateX(-50%) translateY(10px);
-  animation: cueIn 1.4s var(--ease-out) 3.0s forwards;
-  z-index: 3;
+  position: absolute; bottom: 40px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 14px;
+  font-family: var(--font-en); font-size: 0.7rem; font-weight: 300;
+  letter-spacing: 0.24em; color: var(--sub);
+  opacity: 0; z-index: 3;
 }
-@keyframes cueIn { to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-
-/* 縦線の中を、光が上から下へ一方向に流れ落ちる（往復させない） */
-.scroll-cue-rail { width: 1px; height: 58px; background: rgba(30, 50, 70, 0.12); position: relative; overflow: hidden; }
+.scroll-cue--left {
+  left: var(--gutter); transform: translateY(10px);
+  animation: cueInLeft 1.4s var(--ease-out) 3.0s forwards;
+}
+@keyframes cueInLeft { to { opacity: 1; transform: translateY(0); } }
+.scroll-cue-rail { width: 1px; height: 76px; margin-left: 2px; background: rgba(30, 50, 70, 0.16); position: relative; overflow: hidden; }
 .scroll-cue-rail::after {
-  content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 46%;
-  background: linear-gradient(180deg, rgba(127,166,196,0), #7FA6C4);
+  content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 34%;
+  background: linear-gradient(180deg, rgba(190, 150, 92, 0), #BE965C);
   animation: cueFlow 3.8s cubic-bezier(0.4, 0, 0.5, 1) infinite;
 }
 @keyframes cueFlow {
@@ -583,7 +625,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   70%  { opacity: 1; }
   100% { transform: translateY(230%); opacity: 0; }
 }
-
 /* ============================================================
    BUTTON
    ============================================================ */
@@ -951,16 +992,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-halo { animation: haloIn 2.2s var(--ease) 0.15s forwards; transform: translate(-12%, -50%); }
   /* スマホ: 建築は曲面ガラスと床だけに絞り、blur の重い層は落とす */
   .hero-main { max-width: 100%; }
-  .hero-line { white-space: normal; }
   .hero-arch { width: 74%; opacity: 0.62; transform: none; }
   /* ガラスは奥の平面を省き、曲面と床だけに絞る。
      backdrop-filter は iPhone で重いので外し、色味で代替する。 */
-  .arch-back { display: none; }
-  .arch-pane {
-    right: -16%; width: 88%;
+  /* ガラスは背景として右に一部だけ覗かせる。奥の板と手前のスラブは省略し、
+     backdrop-filter は iPhone で重いので外す。 */
+  .g-plate-a, .g-plate-b, .g-slab, .g-arch-far { display: none; }
+  .g-arch {
+    right: -22%; width: 96%; top: 6%; height: 78%;
     -webkit-backdrop-filter: none; backdrop-filter: none;
     animation: paneIn 2.4s var(--ease-out) 0.8s forwards;
   }
+  .g-ground { left: -10%; height: 26%; }
+  .hero-rays { filter: blur(20px); animation: raysIn 2.4s var(--ease) 0.3s forwards; }
 
   /* ---- ロゴの重複を避ける ----
      ヘッダーに正式ロゴが常時出ているので、HERO内の大きなロゴは出さない。
@@ -968,8 +1012,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-logo-block { display: none; }
   .hero { padding-top: 172px; padding-bottom: 124px; }
 
-  /* 英語コピー: 390px でも3行に収まる大きさ。字間をわずかに詰めて余白を稼ぐ */
-  .hero-title { font-size: clamp(1.95rem, 9.2vw, 2.8rem); line-height: 1.22; letter-spacing: -0.022em; }
+  /* 英語コピー: サイン体のままスマホでも主役に。折り返しは許容する
+     （サイン体は単語の途中で切れないので、崩れて見えない） */
+  .hero-title { font-size: clamp(2.7rem, 12.5vw, 4rem); line-height: 1.02; letter-spacing: 0.01em; }
+  .hero-line { white-space: normal; clip-path: inset(-0.34em -0.3em -0.06em -0.3em); }
 
   /* 文字の動きは残すが、量と重さを落とす（マウス追従なし・視差は最大10px・blurも軽く） */
   .hero-line { --lx: 0px; }
@@ -981,7 +1027,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
   /* 光は残しつつ、blur を伴う層の枚数を減らす（iPhone のスクロール優先） */
   .hero-silver { display: none; }
-  .arch-pane::after { display: none; }            /* 面を移動する反射は省略 */
+  .g-arch::after { display: none; }               /* 面を移動する反射は省略 */
   .logo::after { filter: blur(18px); animation: fadeIn 1.8s var(--ease) 0.9s forwards; }
   .hero-warm { filter: blur(54px); }
   .hero-tint { filter: blur(46px); animation-duration: 22s; }
@@ -1036,8 +1082,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-line-in, .lead-line { opacity: 1; filter: none; transform: none; }
   .logo-img, .main-nav li, .hamburger { opacity: 1; transform: none; }
   .hero-arch > span { opacity: 1; }
-  .arch-pane { filter: none; }
-  .arch-pane::after { opacity: 0.6; transform: none; }
+  .g-arch { filter: none; }
+  .g-arch::after { opacity: 0.6; transform: none; }
+  .hero-rays { opacity: 1; transform: none; }
   .hero-logo-block::after { opacity: 1; }
   .hero-sweep { display: none; }
 }

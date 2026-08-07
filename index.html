@@ -39,10 +39,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
-<!-- HEROの「Joy.」だけに使うサイン調の書体。text= で4文字だけを配信するため、
-     追加の読み込みは1KB未満で、表示速度に影響しません。 -->
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400&text=Joy.&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=12">
+<!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=14">
 
 <!--
   ============================================================
@@ -169,16 +168,19 @@
       <span class="hero-silver"></span>
       <span class="hero-warm"></span>
       <span class="hero-sweep"></span>
+      <span class="hero-rays"></span>
     </div>
 
-    <!-- 右側 ― 建築ガラス。層は3枚だけに絞る。
-         奥に立つ平面ガラス → 手前の大きな曲面ガラス → 床（影と映り込み）。
-         曲面には backdrop-filter を薄く掛け、実際に「ガラス越し」に
-         背景の光がにじんで見えるようにしている。 -->
+    <!-- 右側 ― 大型のガラス建築。奥から手前へ5枚。
+         E 奥の薄い層 → C 中央奥の縦長平面 → B 内側の円弧 →
+         A 右端の巨大な縦長曲面 → D 手前下部の横長。最後に床。 -->
     <div class="hero-arch" aria-hidden="true">
-      <span class="arch-back"></span>
-      <span class="arch-pane"></span>
-      <span class="arch-ground"></span>
+      <span class="g-arch-far"></span>
+      <span class="g-plate-a"></span>
+      <span class="g-plate-b"></span>
+      <span class="g-arch"></span>
+      <span class="g-slab"></span>
+      <span class="g-ground"></span>
     </div>
 
     <div class="hero-inner">
@@ -190,7 +192,7 @@
         <!-- 各行は「外＝マスク＋視差」「中＝出現アニメーション」の二重構造。
              行ごとに速度と奥行きを変え、一塊に見えないようにしている。 -->
         <h1 class="hero-title" lang="en">
-          <span class="hero-line"><span class="hero-line-in">Driven by <span class="sig">Joy.</span></span></span>
+          <span class="hero-line"><span class="hero-line-in">Driven by Joy.</span></span>
           <span class="hero-line"><span class="hero-line-in">Growing People.</span></span>
           <span class="hero-line"><span class="hero-line-in">Growing Businesses.</span></span>
         </h1>
@@ -205,7 +207,7 @@
       </div>
     </div>
 
-    <a href="#philosophy" class="scroll-cue" aria-hidden="true"><span class="scroll-cue-rail"></span>Scroll</a>
+    <a href="#philosophy" class="scroll-cue scroll-cue--left" aria-hidden="true"><span class="scroll-cue-rail"></span>Scroll</a>
   </section>
 
   <!-- ============================ PHILOSOPHY ============================ -->
