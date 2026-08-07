@@ -51,7 +51,10 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* 横スクロールを作らない。clip は「スクロール領域を作らずに切る」ので、
+   clip はスクロール領域を作らないので、sticky や固定要素の挙動を変えない。
+   clip 非対応の古い環境向けに body 側の overflow-x: hidden も残す。 */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 
 body {
   margin: 0;
@@ -214,6 +217,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    ============================================================ */
 .site-header {
   position: fixed; top: 0; left: 0; z-index: 80; width: 100%;
+  /* ロゴ背後の暖色（.logo::after は width:200%）が左へ数px出るので横だけ切る */
+  overflow-x: clip;
   padding: 24px 0;
   transition: background 0.7s var(--ease), padding 0.6s var(--ease), box-shadow 0.7s var(--ease);
 }
@@ -722,7 +727,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* ============================================================
    SECTION ― セクションごとに空気を変える（すべて明るい側）
    ============================================================ */
-.section { position: relative; padding: clamp(120px, 17vh, 220px) 0; }
+/* overflow-x: clip ― セクションの光（::before は inset:-6%）や使命の光、
+   事業行の負のマージンが横スクロール領域を作らないよう、横だけ切る。
+   縦は visible のままなので、sticky も落ち影も従来どおり。 */
+.section { position: relative; padding: clamp(120px, 17vh, 220px) 0; overflow-x: clip; }
 .section-inner { position: relative; z-index: 1; width: var(--shell); margin: 0 auto; padding: 0 var(--gutter); }
 /* セクションが元から持っている光にも、それぞれ違う向き・違う速さの動きを与える。
    動かすのは transform だけ（blur は掛けていないので合成のみで済む）。
