@@ -33,6 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastDepth = -1;
   let lastProg = -1;
 
+  /* セクションごとのスクロール連動。
+     位置は先に控えておき、スクロール中は引き算だけで済ませる
+     （毎フレーム要素の位置を測り直さないので、レイアウトは発生しない）。 */
+  const motionSections = document.querySelectorAll('#philosophy, #business, #message, #company, #contact');
+  let secGeom = [];
+  const measureSections = () => {
+    secGeom = Array.prototype.map.call(motionSections, (el) => ({
+      el: el, top: el.offsetTop, h: el.offsetHeight, p: -1, e: -1,
+    }));
+  };
+
   const measure = () => {
     winHeight = window.innerHeight;
     // 幅が変わらない高さだけの変化（スマホのアドレスバー伸縮）では測り直さない
@@ -40,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       lastMeasureWidth = window.innerWidth;
       scrollHeightCache = document.documentElement.scrollHeight;
       if (heroEl) heroHeight = heroEl.offsetHeight;
+      measureSections();
     }
     docHeight = scrollHeightCache - winHeight;
   };
@@ -49,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     lastMeasureWidth = window.innerWidth;
     winHeight = window.innerHeight;
     if (heroEl) heroHeight = heroEl.offsetHeight;
+    measureSections();
     docHeight = scrollHeightCache - winHeight;
   };
 
@@ -75,6 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (sp !== lastProg) {
         root.style.setProperty('--sp', String(sp));
         lastProg = sp;
+      }
+    }
+
+    /* 各セクションへ、そのセクションが画面を通過した割合を渡す。
+         --p … 下から入り上へ抜けるまで 0 → 1（向きのある動き用）
+         --e … 画面に写っている度合い 0 → 1 → 0（濃さ用）
+       小数2桁で比較するので、書き込みは1%進むごとに1回だけ。 */
+    if (!prefersReducedMotion) {
+      for (let i = 0; i < secGeom.length; i++) {
+        const s = secGeom[i];
+        const raw = (y + winHeight - s.top) / (s.h + winHeight);
+        const p = Math.round((raw < 0 ? 0 : raw > 1 ? 1 : raw) * 100) / 100;
+        if (p !== s.p) { s.el.style.setProperty('--p', String(p)); s.p = p; }
+        const e = Math.round((1 - Math.abs(p * 2 - 1)) * 100) / 100;
+        if (e !== s.e) { s.el.style.setProperty('--e', String(e)); s.e = e; }
       }
     }
 

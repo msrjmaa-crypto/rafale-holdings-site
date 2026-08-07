@@ -906,6 +906,77 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
       rgba(224, 229, 234, 0.62) 100%);
 }
 
+/* ---------- セクションごとの表情 ― スクロールに連動する層 ----------
+   ::before は各セクションが元から持っている地で、時間で循環するだけの光。
+   その手前に ::after を1枚だけ足し、こちらは時間ではなく
+   「そのセクションが画面を通過した割合」に直結して動かす。
+   スクロールを止めれば止まり、戻せば戻る ―― だから画面が変わって見える。
+     --p … 下から入り上へ抜けるまで 0 → 1（向きのある動きに使う）
+     --e … 画面に写っている度合い 0 → 1 → 0（濃さに使う）
+   セクションごとに向きも性格も変えてある:
+     PHILOSOPHY … 淡いブルーが左上から差し込み、広がる
+     BUSINESS   … シルバーの面が 01 から 09 へ降りていく
+     MESSAGE    … 黒から抜けた直後、中央から暖かい光が開く
+     COMPANY    … 冷たいシルバーが横へ大きくパンする
+     CONTACT    … 光が下から立ち上がって閉じる
+   動かすのは transform と opacity だけ。ぼかしは掛けていない。 */
+#philosophy::after,
+#business::after,
+#message::after,
+#company::after,
+#contact::after {
+  content: ""; position: absolute; inset: -4% -12%; z-index: 0;
+  pointer-events: none; will-change: transform, opacity;
+}
+
+#philosophy::after {
+  background: radial-gradient(58% 44% at 26% 30%, rgba(206, 226, 240, 0.55), rgba(206,226,240,0) 72%);
+  transform: translate3d(calc(-14% + var(--p, 0) * 20%), calc(-8% + var(--p, 0) * 14%), 0)
+             scale(calc(0.92 + var(--e, 0) * 0.16));
+  opacity: calc(0.18 + var(--e, 0) * 0.82);
+}
+
+#business::after {
+  top: 0; bottom: auto; height: 46%;
+  background: linear-gradient(180deg,
+    rgba(210, 219, 228, 0) 0%,
+    rgba(198, 209, 221, 0.5) 42%,
+    rgba(210, 219, 228, 0) 100%);
+  transform: translate3d(0, calc(var(--p, 0) * 190% - 26%), 0);
+  opacity: calc(0.2 + var(--e, 0) * 0.8);
+}
+
+#message::after {
+  background: radial-gradient(46% 40% at 50% 44%, rgba(252, 246, 236, 0.62), rgba(252,246,236,0) 74%);
+  transform: scale(calc(0.7 + var(--e, 0) * 0.5))
+             translate3d(0, calc(6% - var(--p, 0) * 12%), 0);
+  opacity: calc(var(--e, 0) * 0.95);
+}
+
+#company::after {
+  left: -62%; right: auto; width: 70%;
+  background: linear-gradient(96deg,
+    rgba(224, 233, 241, 0) 0%,
+    rgba(206, 219, 231, 0.5) 46%,
+    rgba(224, 233, 241, 0) 100%);
+  transform: translate3d(calc(var(--p, 0) * 196%), 0, 0);
+  opacity: calc(0.15 + var(--e, 0) * 0.85);
+}
+
+#contact::after {
+  background: linear-gradient(0deg,
+    rgba(232, 240, 246, 0.55) 0%,
+    rgba(232, 240, 246, 0.18) 40%,
+    rgba(232, 240, 246, 0) 78%);
+  transform: translate3d(0, calc(40% - var(--p, 0) * 52%), 0);
+  opacity: calc(0.2 + var(--e, 0) * 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #philosophy::after, #business::after, #message::after,
+  #company::after, #contact::after { transform: none; opacity: 0.4; }
+}
+
 .section-head { margin-bottom: clamp(30px, 4.5vh, 52px); }
 .section-tag {
   font-family: var(--font-en); font-weight: 400;
