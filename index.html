@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=10">
+<link rel="stylesheet" href="css/style.css?v=11">
 
 <!--
   ============================================================
@@ -168,15 +168,14 @@
       <span class="hero-sweep"></span>
     </div>
 
-    <!-- 右側 ― 抽象的な未来建築（斜めのガラス壁・曲面ガラス・床の反射）。
-         写真は使わず、傾けた面と光だけで「建築物の一部」を作る。 -->
+    <!-- 右側 ― 建築ガラス。層は3枚だけに絞る。
+         奥に立つ平面ガラス → 手前の大きな曲面ガラス → 床（影と映り込み）。
+         曲面には backdrop-filter を薄く掛け、実際に「ガラス越し」に
+         背景の光がにじんで見えるようにしている。 -->
     <div class="hero-arch" aria-hidden="true">
-      <span class="arch-far"></span>
-      <span class="arch-mid"></span>
-      <span class="arch-curve"></span>
-      <span class="arch-near"></span>
-      <span class="arch-beam"></span>
-      <span class="arch-floor"></span>
+      <span class="arch-back"></span>
+      <span class="arch-pane"></span>
+      <span class="arch-ground"></span>
     </div>
 
     <div class="hero-inner">

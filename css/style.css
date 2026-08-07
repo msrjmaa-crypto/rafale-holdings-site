@@ -335,128 +335,121 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ============================================================
-   右側 ― 抽象的な未来建築
-   斜めのガラス壁を3枚重ねて奥行きを作り、曲面ガラスを1枚差す。
+   右側 ― 建築ガラス
+   ------------------------------------------------------------
+   高級ショールームの大型ガラスとして見せるために、
+   「透明な図形」ではなく次の4つを必ず持たせる。
+     ① 厚み  … 光の当たる側は明るい縁、反対側は暗い縁、内側に反射
+     ② 屈折  … backdrop-filter で背景がほんの少し冷たく・濃く見える
+     ③ 反射  … 面の明るさが 26 秒かけて静かに移動する（線は動かさない）
+     ④ 接地  … 床の影と映り込みで、空中に浮かせない
+   光は左上から入る前提で、縁が明るく／中央は透明／下部は影。
    ============================================================ */
 .hero-arch {
   position: absolute; right: 0; top: 0;
   width: min(58%, 940px); height: 100%;
   pointer-events: none;
-  transform: translate3d(calc(var(--mx) * -6px), calc(var(--my) * -4px), 0);
+  transform: translate3d(calc(var(--mx) * -5px), calc(var(--my) * -3px), 0);
   will-change: transform;
 }
 .hero-arch > span { position: absolute; display: block; }
 
-/* 奥のガラス壁 */
-.arch-far {
-  left: 20%; top: -8%; width: 84%; height: 116%;
-  background: linear-gradient(112deg, rgba(255,255,255,0.68) 0%, rgba(212, 230, 243, 0.34) 46%, rgba(255,255,255,0) 84%);
-  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
-  opacity: 0;
-  animation: archIn 2.4s var(--ease-out) 0.5s forwards, archDrift 30s ease-in-out 2.9s infinite;
-}
-
-/* 中景のガラス壁 ― いちばん建築らしい傾き */
-.arch-mid {
-  left: 2%; top: 2%; width: 78%; height: 96%;
-  background: linear-gradient(122deg, rgba(255,255,255,0.86) 0%, rgba(199, 215, 226, 0.36) 52%, rgba(255,255,255,0) 88%);
-  clip-path: polygon(26% 0, 100% 0, 86% 100%, 0 100%);
-  box-shadow: -50px 70px 130px -80px rgba(30, 50, 70, 0.55);
-  opacity: 0;
-  animation: archIn 2.4s var(--ease-out) 0.72s forwards, archDrift 26s ease-in-out 3.1s infinite reverse;
-}
-
-/* 曲面ガラス ― 高級ショールームの曲面。厚み・屈折・反射を持たせる。
-   ・background に青→わずかに暖色の色差を入れて「屈折」に見せる
-   ・inset の影で板の厚み、外側の影で床への落ち影
-   ・::before が縁のハイライト、::after が斜めの反射 */
-.arch-curve {
-  right: -14%; top: 6%; width: 66%; height: 88%;
-  border-radius: 46% 0 0 54% / 54% 0 0 46%;
-  background:
-    linear-gradient(140deg,
-      rgba(255, 255, 255, 0.94) 0%,
-      rgba(216, 232, 243, 0.52) 34%,
-      rgba(226, 226, 232, 0.34) 58%,
-      rgba(244, 236, 226, 0.22) 76%,      /* 端でわずかに暖色へ転ぶ＝屈折 */
-      rgba(255, 255, 255, 0.04) 94%);
-  border-left: 1px solid rgba(255, 255, 255, 0.98);
+/* ---------- ① 奥に立つ平面ガラス ---------- */
+.arch-back {
+  left: 4%; top: -6%; width: 48%; height: 96%;
+  background: linear-gradient(166deg,
+    rgba(255, 255, 255, 0.66) 0%,
+    rgba(228, 240, 248, 0.34) 38%,
+    rgba(210, 222, 233, 0.17) 72%,
+    rgba(255, 255, 255, 0.02) 100%);
+  /* 左＝光が当たる側は明るい縁、右＝反対側はごく薄い暗い縁 */
+  border-left: 1px solid rgba(255, 255, 255, 0.92);
+  border-right: 1px solid rgba(150, 172, 192, 0.20);
   box-shadow:
-    inset 46px 0 78px -58px rgba(30, 50, 70, 0.42),   /* 板の厚み */
-    inset -18px 0 44px -40px rgba(255, 255, 255, 0.9),
-    -44px 62px 130px -74px rgba(30, 50, 70, 0.46);    /* 落ち影 */
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),              /* 上端の縁 */
+    inset 0 -46px 56px -48px rgba(40, 62, 88, 0.30),      /* 下部の影 */
+    26px 44px 96px -66px rgba(30, 50, 70, 0.34);          /* 奥への落ち影 */
   opacity: 0;
-  /* 奥から前へ ― ぼけた状態から結像させる（transform は archBreath が使うので触らない） */
-  animation: curveIn 2.8s var(--ease-out) 0.9s forwards, archBreath 27s ease-in-out 3.6s infinite;
+  animation: glassIn 2.4s var(--ease-out) 0.5s forwards, backDrift 31s ease-in-out 3s infinite;
 }
-@keyframes curveIn {
-  from { opacity: 0; filter: blur(16px); }
+
+/* ---------- ② 手前の大きな曲面ガラス ---------- */
+.arch-pane {
+  right: -12%; top: 1%; width: 76%; height: 96%;
+  border-radius: 44% 0 0 50% / 52% 0 0 48%;
+  overflow: hidden;                                        /* 反射を面の形に収める */
+  /* ガラス自体の色。左上から右下へ、白 → 淡いブルー → ごく薄いグレー */
+  background: linear-gradient(155deg,
+    rgba(255, 255, 255, 0.80) 0%,
+    rgba(232, 243, 250, 0.46) 26%,
+    rgba(214, 228, 240, 0.26) 52%,
+    rgba(224, 228, 234, 0.14) 74%,
+    rgba(255, 255, 255, 0.03) 96%);
+  /* 屈折 ― ガラス越しの背景がわずかに冷たく、少し濃く、ごくわずかに滲む */
+  -webkit-backdrop-filter: blur(2px) saturate(1.22) brightness(1.02);
+          backdrop-filter: blur(2px) saturate(1.22) brightness(1.02);
+  border-left: 1px solid rgba(255, 255, 255, 0.96);        /* 明るい縁 */
+  box-shadow:
+    inset -1px 0 0 rgba(146, 168, 190, 0.22),              /* 反対側の暗い縁 */
+    inset 44px 0 86px -62px rgba(255, 255, 255, 0.95),     /* 内側の反射 */
+    inset 0 -70px 80px -70px rgba(40, 62, 88, 0.26),       /* 下部の影 */
+    -46px 64px 132px -76px rgba(30, 50, 70, 0.44);         /* 床への落ち影 */
+  opacity: 0;
+  animation: paneIn 2.8s var(--ease-out) 0.9s forwards, paneDrift 27s ease-in-out 3.6s infinite;
+}
+/* 縁のいちばん明るいところ（カーブの上寄りだけ） */
+.arch-pane::before {
+  content: ""; position: absolute; left: -1px; top: 4%;
+  width: 2px; height: 62%;
+  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255, 255, 255, 0.98) 38%, rgba(255,255,255,0));
+}
+/* ③ 反射 ― 白い線ではなく、面の明るさそのものが 26 秒かけて移動する */
+.arch-pane::after {
+  content: ""; position: absolute; left: -20%; top: -14%;
+  width: 90%; height: 128%;
+  background: linear-gradient(158deg,
+    rgba(255,255,255,0) 24%,
+    rgba(255, 255, 255, 0.52) 46%,
+    rgba(236, 245, 251, 0.22) 58%,
+    rgba(255,255,255,0) 74%);
+  filter: blur(26px);
+  opacity: 0;
+  animation: sheenIn 2.4s var(--ease) 1.5s forwards, sheenMove 26s ease-in-out 3.9s infinite;
+}
+
+/* ---------- ④ 床 ― 影と映り込みで接地させる ---------- */
+.arch-ground {
+  left: 0; right: 0; bottom: 0; height: 36%;
+  background:
+    /* ガラスの映り込み（下へ向かって急速に消える） */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.12) 30%, rgba(255,255,255,0) 66%),
+    /* 接地の影 ― ガラスの下端の真下だけ濃い */
+    radial-gradient(58% 42% at 62% 4%, rgba(30, 50, 70, 0.17), rgba(30,50,70,0) 74%),
+    /* 床そのものの陰り */
+    linear-gradient(180deg, rgba(30, 50, 70, 0) 0%, rgba(30, 50, 70, 0.05) 78%, rgba(30, 50, 70, 0.08) 100%);
+  opacity: 0;
+  animation: glassIn 2.6s var(--ease-out) 1.25s forwards;
+}
+
+/* ---------- 出現と、ロード後のごく弱い漂い（1〜3px） ---------- */
+@keyframes glassIn { to { opacity: 1; } }
+@keyframes sheenIn  { to { opacity: 1; } }
+/* 手前の曲面はぼけから結像させる＝奥から前へ出てくるように見せる */
+@keyframes paneIn {
+  from { opacity: 0; filter: blur(18px); }
   to   { opacity: 1; filter: blur(0); }
 }
-/* 縁のハイライト ― カーブの内側だけが強く光を拾う */
-.arch-curve::before {
-  content: ""; position: absolute; left: -1px; top: 6%;
-  width: 2px; height: 88%;
-  border-radius: 2px;
-  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255, 255, 255, 0.98) 42%, rgba(255,255,255,0));
-  filter: blur(0.4px);
-}
-/* 斜めの反射 ― 面をなぞる細い光。ゆっくり位置が変わる */
-.arch-curve::after {
-  content: ""; position: absolute; left: 12%; top: -6%;
-  width: 26%; height: 112%;
-  background: linear-gradient(168deg, rgba(255,255,255,0) 0%, rgba(255, 255, 255, 0.62) 46%, rgba(255,255,255,0) 82%);
-  filter: blur(16px);
-  animation: glassSheen 26s ease-in-out 3.8s infinite;
-}
-@keyframes glassSheen {
-  0%, 100% { transform: translate3d(0, 0, 0);      opacity: 0.5; }
-  50%      { transform: translate3d(10%, -2%, 0);  opacity: 0.85; }
-}
-
-/* 手前のガラス ― 最も明るい反射だけを拾う */
-.arch-near {
-  left: 32%; top: 14%; width: 56%; height: 78%;
-  background: linear-gradient(150deg, rgba(255,255,255,0.62) 0%, rgba(226, 240, 248, 0.24) 40%, rgba(255,255,255,0) 78%);
-  clip-path: polygon(30% 0, 100% 6%, 100% 94%, 0 100%);
-  opacity: 0;
-  animation: archIn 2.4s var(--ease-out) 1.15s forwards, archDrift 34s ease-in-out 3.6s infinite;
-}
-
-/* 面を透過してくる光 */
-.arch-beam {
-  left: 38%; top: -12%; width: 13%; height: 124%;
-  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255, 255, 255, 0.88) 42%, rgba(255,255,255,0));
-  filter: blur(28px);
-  transform: rotate(9deg);
-  opacity: 0;
-  animation: beamIn 2.6s var(--ease) 1.35s forwards, beamBreath 22s ease-in-out 4s infinite;
-}
-
-/* 床 ― 反射と、ごく薄い影 */
-.arch-floor {
-  left: 0; bottom: 0; width: 100%; height: 36%;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0), rgba(255, 255, 255, 0.6) 62%),
-    radial-gradient(84% 62% at 42% 100%, rgba(30, 50, 70, 0.11), rgba(30,50,70,0) 74%);
-  opacity: 0;
-  animation: archIn 2.6s var(--ease-out) 1.05s forwards;
-}
-
-@keyframes archIn  { to { opacity: 1; } }
-@keyframes beamIn  { to { opacity: 0.75; } }
-/* 動きは 1〜4px。止まって見えないが、視線を邪魔しない範囲。 */
-@keyframes archDrift {
+@keyframes backDrift {
   0%, 100% { transform: translate3d(0, 0, 0); }
-  50%      { transform: translate3d(-3px, 2px, 0); }
+  50%      { transform: translate3d(-2px, 1px, 0); }
 }
-@keyframes archBreath {
-  0%, 100% { opacity: 0.94; transform: translate3d(0, 0, 0); }
-  50%      { opacity: 1;    transform: translate3d(2px, -3px, 0); }
+@keyframes paneDrift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(3px, -2px, 0); }
 }
-@keyframes beamBreath {
-  0%, 100% { opacity: 0.45; }
-  50%      { opacity: 0.9; }
+@keyframes sheenMove {
+  0%, 100% { transform: translate3d(-5%, 3%, 0);  opacity: 0.5; }
+  50%      { transform: translate3d(9%, -3%, 0);  opacity: 0.9; }
 }
 
 /* ============================================================
@@ -943,8 +936,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-main { max-width: 100%; }
   .hero-line { white-space: normal; }
   .hero-arch { width: 74%; opacity: 0.62; transform: none; }
-  .arch-far, .arch-near, .arch-beam { display: none; }
-  .arch-mid { animation: archIn 2s var(--ease-out) 0.6s forwards; }
+  /* ガラスは奥の平面を省き、曲面と床だけに絞る。
+     backdrop-filter は iPhone で重いので外し、色味で代替する。 */
+  .arch-back { display: none; }
+  .arch-pane {
+    right: -16%; width: 88%;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+    animation: paneIn 2.4s var(--ease-out) 0.8s forwards;
+  }
 
   /* ---- ロゴの重複を避ける ----
      ヘッダーに正式ロゴが常時出ているので、HERO内の大きなロゴは出さない。
@@ -965,8 +964,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
   /* 光は残しつつ、blur を伴う層の枚数を減らす（iPhone のスクロール優先） */
   .hero-silver { display: none; }
-  .arch-curve::after { display: none; }          /* 面をなぞる反射は省略 */
-  .arch-curve { animation: curveIn 2.4s var(--ease-out) 0.8s forwards; }
+  .arch-pane::after { display: none; }            /* 面を移動する反射は省略 */
   .logo::after { filter: blur(18px); animation: fadeIn 1.8s var(--ease) 0.9s forwards; }
   .hero-warm { filter: blur(54px); }
   .hero-tint { filter: blur(46px); animation-duration: 22s; }
@@ -1021,7 +1019,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-line-in, .lead-line { opacity: 1; filter: none; transform: none; }
   .logo-img, .main-nav li, .hamburger { opacity: 1; transform: none; }
   .hero-arch > span { opacity: 1; }
-  .arch-beam { opacity: 0.6; }
+  .arch-pane { filter: none; }
+  .arch-pane::after { opacity: 0.6; transform: none; }
   .hero-logo-block::after { opacity: 1; }
   .hero-sweep { display: none; }
 }
