@@ -124,7 +124,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   background:
     radial-gradient(closest-side, rgba(255, 255, 255, 0.95) 0%, rgba(255,255,255,0) 72%),
     radial-gradient(closest-side at 58% 62%, rgba(214, 234, 246, 0.55) 0%, rgba(214,234,246,0) 74%);
-  animation: daylight 24s ease-in-out infinite;
+  /* 28秒 ― Warm White(24s) と同じ固定背景にいるので、周期をずらして同期させない */
+  animation: daylight 28s ease-in-out infinite;
   will-change: transform, opacity;
 }
 @keyframes daylight {
@@ -723,7 +724,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    ============================================================ */
 .section { position: relative; padding: clamp(120px, 17vh, 220px) 0; }
 .section-inner { position: relative; z-index: 1; width: var(--shell); margin: 0 auto; padding: 0 var(--gutter); }
-.section::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+/* セクションが元から持っている光にも、それぞれ違う向き・違う速さの動きを与える。
+   動かすのは transform だけ（blur は掛けていないので合成のみで済む）。
+   端に隙間が出ないよう、あらかじめ外へ 6% 広げてある。 */
+.section::before { content: ""; position: absolute; inset: -6%; z-index: 0; pointer-events: none; }
+
+#philosophy::before { animation: lightPhil 21s ease-in-out infinite; }  /* 左上 → 中央 */
+#business::before   { animation: lightBiz  26s ease-in-out infinite; }  /* 右上 → 左下 */
+#message::before    { animation: lightMsg  19s ease-in-out infinite; }  /* 中央奥 → 右 */
+#company::before    { animation: lightComp 24s ease-in-out infinite; }  /* 左 → 右 */
+#contact::before    { animation: lightCont 29s ease-in-out infinite; }  /* 上 → 下 */
+
+@keyframes lightPhil { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(5%, 4%, 0); } }
+@keyframes lightBiz  { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(-5%, 5%, 0); } }
+@keyframes lightMsg  { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(6%, -2%, 0); } }
+@keyframes lightComp { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(7%, 1%, 0); } }
+@keyframes lightCont { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(1%, 6%, 0); } }
 
 #philosophy::before {        /* 白 〜 ごく薄いブルー */
   background:
@@ -1208,14 +1224,53 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .section--brand { min-height: 118svh; }
 
   /* スマホ: blur を伴う重い層を落とし、光だけ残す */
-  /* ---- Moving Light の軽量版 ----
-     大きな blur を伴う層は2枚まで（Warm White と Silver）。
-     Pale Blue とガラス反射は省き、スクロール連動も切って
-     transform / opacity の更新だけにする。 */
-  .field-lamp--b, .field-pane { display: none; }
-  .field-lamps { transform: none; }
-  .field-lamp--a { filter: blur(48px); width: 76%; height: 62%; }
-  .field-lamp--c { filter: blur(54px); width: 82%; height: 52%; }
+  /* ---- Moving Light（スマホ版）----
+     画面が小さいと光の移動が読み取れないので、量ではなく「分かりやすさ」を上げる。
+     ・光を強く（alpha を 1.35〜1.65 倍）
+     ・移動量を約1.5倍にして、光の中心が画面の中を確実に横切るようにする
+     ・blur をわずかに弱め、輪郭がかすかに感じられる程度に
+     ・周期を 18 / 23 / 27 秒へ短縮（互いに素のまま）
+     blur を持つ層は Warm White / Silver / 反射の3枚まで。 */
+  .field-lamp--b { display: none; }
+  .field-lamps { transform: translate3d(0, calc(var(--sp, 0) * 10px), 0); }
+
+  .field-lamp--a {
+    left: -18%; top: -14%; width: 78%; height: 64%;
+    background: radial-gradient(closest-side, rgba(250, 243, 231, 1), rgba(250,243,231,0) 74%);
+    filter: blur(40px);
+    animation: lampAsp 18s ease-in-out infinite;
+  }
+  @keyframes lampAsp {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.58; }
+    50%      { transform: translate3d(14%, 9%, 0) scale(1.12);    opacity: 1; }
+  }
+
+  .field-lamp--c {
+    left: 8%; bottom: -20%; width: 84%; height: 54%;
+    background: radial-gradient(closest-side, rgba(202, 212, 222, 0.82), rgba(202,212,222,0) 76%);
+    filter: blur(46px);
+    animation: lampCsp 27s ease-in-out infinite;
+  }
+  @keyframes lampCsp {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1);          opacity: 0.42; }
+    50%      { transform: translate3d(-11%, -8%, 0) scale(1.1);   opacity: 0.92; }
+  }
+
+  /* 反射は1枚だけ、ごく薄く。斜めに 23 秒でゆっくり流れる（黒背景には出さない） */
+  .field-pane {
+    display: block;
+    top: -16%; left: -40%; width: 46%; height: 132%;
+    background: linear-gradient(102deg, rgba(255,255,255,0) 0%, rgba(224, 236, 246, 0.34) 48%, rgba(255,255,255,0) 84%);
+    filter: blur(26px);
+    animation: paneSp 23s linear infinite;
+  }
+  @keyframes paneSp {
+    0%   { transform: translateX(0) skewX(-5deg);    opacity: 0; }
+    14%  { opacity: 0.55; }
+    82%  { opacity: 0.55; }
+    100% { transform: translateX(300%) skewX(-5deg); opacity: 0; }
+  }
+
   .section--brand::after { filter: blur(42px); }
   .field-daylight { animation: none; opacity: 0.95; }
   .hero-sweep { display: none; }
