@@ -204,7 +204,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hamburger.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 /* ============================================================
-   HERO ― 白い未来建築のロビー
+   HERO ― 白い未来建築の中に、言葉が浮かんでいる
+   ------------------------------------------------------------
+   左: ブランドと言葉 ／ 右: 光・ガラス・空間 と役割を分ける。
+   右側は写真を使わず、傾けた面・曲面・光の透過だけで
+   「建築物の一部」に見せる。動きはすべて 1〜4px と極小。
    ============================================================ */
 .hero {
   position: relative; min-height: 100svh;
@@ -215,101 +219,199 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 2s var(--ease); }
 .hero-video.is-ready { opacity: 0.4; }
 
+/* ---------- 空気（3つの光がそれぞれ別の速さで動く） ---------- */
 .hero-atmos { position: absolute; inset: 0; pointer-events: none; }
 
-/* 言葉のまわりの空気 ― 白い光がゆっくり呼吸する */
+/* ① 白い光 ― 言葉の背後で呼吸する */
 .hero-halo {
-  position: absolute; left: 2%; top: 48%;
-  width: min(1180px, 120vw); height: min(860px, 96vh);
-  transform: translate(-12%, -50%) translate3d(calc(var(--mx) * 14px), calc(var(--my) * 10px + var(--sy) * 48px), 0);
-  background:
-    radial-gradient(closest-side, rgba(255, 255, 255, 0.92), rgba(255,255,255,0) 68%),
-    radial-gradient(closest-side at 58% 60%, rgba(220, 236, 246, 0.6), rgba(220,236,246,0) 72%);
+  position: absolute; left: 0; top: 46%;
+  width: min(1100px, 108vw); height: min(820px, 92vh);
+  transform: translate(-16%, -50%) translate3d(calc(var(--mx) * 12px), calc(var(--my) * 9px + var(--sy) * 44px), 0);
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.94), rgba(255,255,255,0) 68%);
   opacity: 0;
-  animation: haloIn 2.6s var(--ease) 0.15s forwards, haloBreath 20s ease-in-out 2.8s infinite;
+  animation: haloIn 2.4s var(--ease) 0.15s forwards, haloBreath 20s ease-in-out 2.6s infinite;
   will-change: transform, opacity;
 }
 @keyframes haloIn { to { opacity: 1; } }
-@keyframes haloBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.82; } }
+@keyframes haloBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.84; } }
 
-/* 一条の光が 22 秒かけて空間を横切る */
+/* ② 淡いブルー〜シルバーの色味 ― 18秒で空間をゆっくり移動する。
+      白の中でもはっきり気づく濃さにし、輪郭は大きくぼかす。 */
+.hero-tint {
+  position: absolute; inset: -28%;
+  background:
+    radial-gradient(38% 34% at 30% 42%, rgba(178, 208, 234, 0.62), rgba(178,208,234,0) 72%),
+    radial-gradient(30% 26% at 66% 62%, rgba(196, 206, 216, 0.42), rgba(196,206,216,0) 74%);
+  filter: blur(64px);
+  animation: tintDrift 18s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes tintDrift {
+  0%   { transform: translate3d(-9%, 3%, 0)  scale(1);    opacity: 0.72; }
+  32%  { transform: translate3d(5%, -3%, 0)  scale(1.14); opacity: 1; }
+  66%  { transform: translate3d(20%, 5%, 0)  scale(1.06); opacity: 0.84; }
+  100% { transform: translate3d(-9%, 3%, 0)  scale(1);    opacity: 0.72; }
+}
+
+/* ③ 一条の光 ― 20秒かけて空間を横切る */
 .hero-sweep {
-  position: absolute; top: -20%; left: -34%;
-  width: 30vw; height: 140%;
-  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 255, 255, 0.75) 46%, rgba(255,255,255,0) 80%);
-  filter: blur(30px);
-  animation: sweep 22s linear 2s infinite;
+  position: absolute; top: -22%; left: -38%;
+  width: 26vw; height: 144%;
+  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 255, 255, 0.92) 48%, rgba(255,255,255,0) 82%);
+  filter: blur(34px);
+  animation: sweep 20s linear 1.8s infinite;
 }
 @keyframes sweep {
   0%   { transform: translateX(0); opacity: 0; }
-  14%  { opacity: 1; }
-  82%  { opacity: 1; }
-  100% { transform: translateX(380%); opacity: 0; }
+  12%  { opacity: 1; }
+  84%  { opacity: 1; }
+  100% { transform: translateX(420%); opacity: 0; }
 }
 
-.hero-grid {
+/* ============================================================
+   右側 ― 抽象的な未来建築
+   斜めのガラス壁を3枚重ねて奥行きを作り、曲面ガラスを1枚差す。
+   ============================================================ */
+.hero-arch {
+  position: absolute; right: 0; top: 0;
+  width: min(58%, 940px); height: 100%;
+  pointer-events: none;
+  transform: translate3d(calc(var(--mx) * -6px), calc(var(--my) * -4px), 0);
+  will-change: transform;
+}
+.hero-arch > span { position: absolute; display: block; }
+
+/* 奥のガラス壁 */
+.arch-far {
+  left: 20%; top: -8%; width: 84%; height: 116%;
+  background: linear-gradient(112deg, rgba(255,255,255,0.68) 0%, rgba(212, 230, 243, 0.34) 46%, rgba(255,255,255,0) 84%);
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 0;
+  animation: archIn 2.4s var(--ease-out) 0.5s forwards, archDrift 30s ease-in-out 2.9s infinite;
+}
+
+/* 中景のガラス壁 ― いちばん建築らしい傾き */
+.arch-mid {
+  left: 2%; top: 2%; width: 78%; height: 96%;
+  background: linear-gradient(122deg, rgba(255,255,255,0.86) 0%, rgba(199, 215, 226, 0.36) 52%, rgba(255,255,255,0) 88%);
+  clip-path: polygon(26% 0, 100% 0, 86% 100%, 0 100%);
+  box-shadow: -50px 70px 130px -80px rgba(30, 50, 70, 0.55);
+  opacity: 0;
+  animation: archIn 2.4s var(--ease-out) 0.72s forwards, archDrift 26s ease-in-out 3.1s infinite reverse;
+}
+
+/* 曲面ガラス ― 面がカーブして光を返す */
+.arch-curve {
+  right: -14%; top: 6%; width: 66%; height: 88%;
+  border-radius: 46% 0 0 54% / 54% 0 0 46%;
+  background: linear-gradient(140deg, rgba(255,255,255,0.92) 0%, rgba(220, 234, 242, 0.44) 48%, rgba(255,255,255,0.04) 88%);
+  border-left: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    inset 40px 0 70px -56px rgba(30, 50, 70, 0.45),
+    -36px 50px 110px -66px rgba(30, 50, 70, 0.42);
+  opacity: 0;
+  animation: archIn 2.6s var(--ease-out) 0.94s forwards, archBreath 24s ease-in-out 3.5s infinite;
+}
+
+/* 手前のガラス ― 最も明るい反射だけを拾う */
+.arch-near {
+  left: 32%; top: 14%; width: 56%; height: 78%;
+  background: linear-gradient(150deg, rgba(255,255,255,0.62) 0%, rgba(226, 240, 248, 0.24) 40%, rgba(255,255,255,0) 78%);
+  clip-path: polygon(30% 0, 100% 6%, 100% 94%, 0 100%);
+  opacity: 0;
+  animation: archIn 2.4s var(--ease-out) 1.15s forwards, archDrift 34s ease-in-out 3.6s infinite;
+}
+
+/* 面を透過してくる光 */
+.arch-beam {
+  left: 38%; top: -12%; width: 13%; height: 124%;
+  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255, 255, 255, 0.88) 42%, rgba(255,255,255,0));
+  filter: blur(28px);
+  transform: rotate(9deg);
+  opacity: 0;
+  animation: beamIn 2.6s var(--ease) 1.35s forwards, beamBreath 22s ease-in-out 4s infinite;
+}
+
+/* 床 ― 反射と、ごく薄い影 */
+.arch-floor {
+  left: 0; bottom: 0; width: 100%; height: 36%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0), rgba(255, 255, 255, 0.6) 62%),
+    radial-gradient(84% 62% at 42% 100%, rgba(30, 50, 70, 0.11), rgba(30,50,70,0) 74%);
+  opacity: 0;
+  animation: archIn 2.6s var(--ease-out) 1.05s forwards;
+}
+
+@keyframes archIn  { to { opacity: 1; } }
+@keyframes beamIn  { to { opacity: 0.75; } }
+/* 動きは 1〜4px。止まって見えないが、視線を邪魔しない範囲。 */
+@keyframes archDrift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-3px, 2px, 0); }
+}
+@keyframes archBreath {
+  0%, 100% { opacity: 0.94; transform: translate3d(0, 0, 0); }
+  50%      { opacity: 1;    transform: translate3d(2px, -3px, 0); }
+}
+@keyframes beamBreath {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.9; }
+}
+
+/* ============================================================
+   左側 ― ブランドと言葉
+   ============================================================ */
+.hero-inner {
   position: relative; z-index: 2;
   width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
-  display: grid; grid-template-columns: minmax(0, 1fr) clamp(190px, 26vw, 400px);
-  align-items: center; gap: clamp(24px, 4vw, 72px);
 }
-.hero-main { min-width: 0; }
+/* 3行が必ず1行ずつ収まる幅を確保する */
+.hero-main { max-width: min(62vw, 860px); }
 
-.hero-logo-block { margin-bottom: clamp(32px, 5.5vh, 58px); }
+.hero-logo-block { position: relative; display: inline-block; margin-bottom: clamp(32px, 5.5vh, 58px); }
 .hero-logo-img {
   height: clamp(76px, 11.5vh, 124px); width: auto;
   opacity: 0;
-  animation: logoIn 1.8s var(--ease-out) 0.5s forwards;   /* ぼかし＋奥行きから */
+  animation: logoIn 1.9s var(--ease-out) 0.5s forwards;
 }
 @keyframes logoIn {
-  from { opacity: 0; transform: scale(0.94) translateY(18px); filter: blur(11px); }
+  from { opacity: 0; transform: scale(0.96) translateY(16px); filter: blur(12px); }
   to   { opacity: 1; transform: none; filter: blur(0); }
+}
+/* ゴールドの周囲に、ごく薄い暖色の反射 */
+.hero-logo-block::after {
+  content: ""; position: absolute; left: 50%; top: 50%; z-index: -1;
+  width: 168%; height: 178%; transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(201, 162, 75, 0.15), rgba(201,162,75,0) 70%);
+  filter: blur(30px);
+  opacity: 0; animation: fadeIn 2.4s var(--ease) 1.1s forwards;
 }
 
 .hero-title {
   font-family: var(--font-en); font-weight: 200;
-  font-size: clamp(2.5rem, 7.4vw, 6.2rem);
-  line-height: 1.06; letter-spacing: -0.022em;
+  font-size: clamp(2.35rem, 5.9vw, 5.15rem);
+  line-height: 1.12; letter-spacing: -0.02em;
   color: var(--ink);
-  margin-bottom: clamp(36px, 6vh, 66px);
+  margin-bottom: clamp(36px, 6vh, 64px);
 }
-.hero-title .mask-in { animation: maskUp 1.15s var(--ease-out) forwards; transform: translateY(104%); }
-.hero-title .mask:nth-child(1) .mask-in { animation-delay: 1.05s; }
-.hero-title .mask:nth-child(2) .mask-in { animation-delay: 1.25s; }
-.hero-title .mask:nth-child(3) .mask-in { animation-delay: 1.45s; color: #46525F; }
+/* blur + 持ち上げから、柔らかく結像する */
+.hero-line {
+  display: block; white-space: nowrap;
+  opacity: 0; filter: blur(9px); transform: translateY(26px);
+  animation: lineIn 1.3s var(--ease-out) forwards;
+  will-change: opacity, transform, filter;
+}
+.hero-line:nth-child(1) { animation-delay: 1.00s; }
+.hero-line:nth-child(2) { animation-delay: 1.20s; }
+.hero-line:nth-child(3) { animation-delay: 1.40s; color: #46525F; }
+@keyframes lineIn { to { opacity: 1; filter: blur(0); transform: none; } }
 
 .hero-lead {
-  font-size: clamp(1rem, 1.9vw, 1.2rem);
-  line-height: 2.1; letter-spacing: 0.14em; color: var(--sub);
-  opacity: 0; animation: fadeUp 1.2s var(--ease-out) 1.85s forwards;
+  font-size: clamp(1.06rem, 2.1vw, 1.36rem);
+  line-height: 2.05; letter-spacing: 0.16em; color: var(--ink-2);
+  opacity: 0; animation: fadeUp 1.3s var(--ease-out) 1.95s forwards;
 }
-.hero-cta { margin-top: clamp(40px, 6vh, 66px); opacity: 0; animation: fadeUp 1.2s var(--ease-out) 2.1s forwards; }
-
-/* 右側 ― 建築ガラスの面。反射と薄い影を持つ */
-.hero-side { position: relative; align-self: stretch; display: flex; align-items: flex-end; justify-content: flex-end; }
-.hero-glass {
-  position: absolute; right: -8%; top: 3%; width: 122%; height: 94%;
-  border-radius: 3px;
-  background: linear-gradient(146deg, rgba(255, 255, 255, 0.78) 0%, rgba(226, 240, 248, 0.34) 40%, rgba(255,255,255,0.06) 78%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 40px 90px -52px rgba(30, 50, 70, 0.35), inset 0 1px 0 rgba(255,255,255,0.9);
-  opacity: 0;
-  transform: translate3d(calc(var(--mx) * -5px), calc(var(--my) * -3px), 0) scale(0.985);
-  animation: glassIn 2.2s var(--ease-out) 0.95s forwards;
-  will-change: transform;
-}
-.hero-glass::after {                     /* ガラスの端が拾う反射 */
-  content: ""; position: absolute; left: 12%; top: 0; width: 1px; height: 100%;
-  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.95) 40%, transparent);
-}
-@keyframes glassIn { to { opacity: 1; } }
-
-.hero-vertical {
-  position: relative; writing-mode: vertical-rl;
-  font-family: var(--font-en); font-weight: 300;
-  font-size: 0.78rem; letter-spacing: 0.5em; color: var(--sub);
-  opacity: 0; animation: fadeIn 1.6s var(--ease-out) 2.4s forwards;
-}
+.hero-cta { margin-top: clamp(40px, 6vh, 66px); opacity: 0; animation: fadeUp 1.2s var(--ease-out) 2.2s forwards; }
 
 @keyframes fadeIn { to { opacity: 1; } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -320,7 +422,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   display: flex; flex-direction: column; align-items: center; gap: 12px;
   font-family: var(--font-en); font-size: 0.72rem; font-weight: 300;
   letter-spacing: 0.28em; color: var(--sub);
-  opacity: 0; animation: fadeIn 1.4s var(--ease-out) 2.6s forwards;
+  opacity: 0; animation: fadeIn 1.4s var(--ease-out) 2.7s forwards;
+  z-index: 3;
 }
 .scroll-cue-rail { width: 1px; height: 58px; background: rgba(30, 50, 70, 0.14); position: relative; overflow: hidden; }
 .scroll-cue-rail::after {
@@ -665,8 +768,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .philo-col:last-child p:last-child { margin-bottom: 0; }
   .message-layout { grid-template-columns: 1fr; gap: clamp(30px, 4vh, 46px); }
   .contact-layout { grid-template-columns: 1fr; }
-  .hero-grid      { grid-template-columns: 1fr; }
-  .hero-side      { display: none; }
+  /* タブレット: 建築空間は右奥へ退き、言葉が主役に戻る */
+  .hero-main { max-width: min(78vw, 720px); }
+  .hero-arch { width: min(64%, 620px); opacity: 0.8; }
 }
 
 @media (max-width: 768px) {
@@ -698,7 +802,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .field-daylight { animation: none; opacity: 0.95; }
   .hero-sweep { display: none; }
   .hero-halo { animation: haloIn 2.2s var(--ease) 0.15s forwards; transform: translate(-12%, -50%); }
-  .hero-glass { display: none; }
+  /* スマホ: 建築は曲面ガラスと床だけに絞り、blur の重い層は落とす */
+  .hero-main { max-width: 100%; }
+  .hero-line { white-space: normal; }
+  .hero-arch { width: 74%; opacity: 0.62; transform: none; }
+  .arch-far, .arch-near, .arch-beam { display: none; }
+  .arch-mid { animation: archIn 2s var(--ease-out) 0.6s forwards; }
+  .arch-curve { animation: archIn 2.2s var(--ease-out) 0.8s forwards; }
+  .hero-tint { filter: blur(46px); animation-duration: 22s; }
 }
 
 @media (max-width: 480px) {
@@ -730,6 +841,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .reveal { opacity: 1; transform: none; }
   .mask-in { transform: none; }
   .brand-logo.reveal { opacity: 1; transform: none; filter: none; }
-  .hero-logo-img, .hero-lead, .hero-cta, .hero-vertical, .scroll-cue, .hero-halo, .hero-glass { opacity: 1; }
+  .hero-logo-img, .hero-lead, .hero-cta, .scroll-cue, .hero-halo { opacity: 1; }
+  .hero-line { opacity: 1; filter: none; transform: none; }
+  .hero-arch > span { opacity: 1; }
+  .arch-beam { opacity: 0.6; }
+  .hero-logo-block::after { opacity: 1; }
   .hero-sweep { display: none; }
 }

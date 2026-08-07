@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=6">
+<link rel="stylesheet" href="css/style.css?v=7">
 
 <!--
   ============================================================
@@ -157,33 +157,39 @@
     <!-- 背景動画（未配置。assets/videos/rafale-opening.mp4 を置くとPCで自動再生） -->
     <video class="hero-video" id="hero-video" muted loop playsinline disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
 
-    <!-- 言葉のまわりの空気。ゆっくり呼吸する光と、画面を横切る一条の光。 -->
+    <!-- 空気: 白い光・淡いブルーの色味・横切る一条の光が、それぞれ別の速さで動く -->
     <div class="hero-atmos" aria-hidden="true">
       <span class="hero-halo"></span>
+      <span class="hero-tint"></span>
       <span class="hero-sweep"></span>
     </div>
 
-    <div class="hero-grid">
+    <!-- 右側 ― 抽象的な未来建築（斜めのガラス壁・曲面ガラス・床の反射）。
+         写真は使わず、傾けた面と光だけで「建築物の一部」を作る。 -->
+    <div class="hero-arch" aria-hidden="true">
+      <span class="arch-far"></span>
+      <span class="arch-mid"></span>
+      <span class="arch-curve"></span>
+      <span class="arch-near"></span>
+      <span class="arch-beam"></span>
+      <span class="arch-floor"></span>
+    </div>
+
+    <div class="hero-inner">
       <div class="hero-main">
         <div class="hero-logo-block">
           <img src="img/logo-light.png?v=1" alt="Rafale Holdings" class="hero-logo-img" width="736" height="575" fetchpriority="high" decoding="async">
         </div>
 
         <h1 class="hero-title" lang="en">
-          <span class="mask"><span class="mask-in">Driven by Joy.</span></span>
-          <span class="mask"><span class="mask-in">Growing People.</span></span>
-          <span class="mask"><span class="mask-in">Growing Businesses.</span></span>
+          <span class="hero-line">Driven by Joy.</span>
+          <span class="hero-line">Growing People.</span>
+          <span class="hero-line">Growing Businesses.</span>
         </h1>
 
         <p class="hero-lead">楽しさを原動力に。<br class="only-pc">人を育て、事業を育てる。</p>
 
         <a href="#philosophy" class="btn hero-cta">私たちの理念を見る</a>
-      </div>
-
-      <!-- 右側は文字を置かず、ガラス越しの光の空間にする -->
-      <div class="hero-side" aria-hidden="true">
-        <span class="hero-glass"></span>
-        <span class="hero-vertical" lang="en">RAFALE HOLDINGS</span>
       </div>
     </div>
 
@@ -495,6 +501,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=6" defer></script>
+<script src="js/script.js?v=7" defer></script>
 </body>
 </html>
