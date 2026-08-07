@@ -818,6 +818,84 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .reveal.mask .mask-in { transition: transform 1.25s var(--ease-out); }
 .reveal.mask.is-visible .mask-in { transform: none; }
 
+/* ---------- Light Sweep ― 文字の表面を一筋の反射光が通過する ----------
+   文字は複製しない。背景を2枚重ねて文字の形に切り抜いているだけ。
+     下の層 … linear-gradient(currentColor, currentColor) ＝ その要素の文字色そのもの
+     上の層 … 幅の狭い斜めの反射帯。これだけを background-position で左→右へ動かす
+   下地に currentColor を使うので、どの見出しでも元の色は一切変わらない。
+   帯は文字幅の約13%、傾き18度、両端は透明へ抜くので境界は出ない。
+   発動はセクションが現れた 0.62 秒後に1回だけ（付け外しは js/script.js）。 */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .is-swept {
+    background-image:
+      linear-gradient(108deg,
+        transparent 47.8%,
+        var(--sw-warm) 49.3%,
+        var(--sw-hi) 50%,
+        var(--sw-warm) 50.7%,
+        transparent 52.2%),
+      linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-size: 300% 100%, 100% 100%;
+    background-position: 95% 0, 0 0;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textSweep 1.25s cubic-bezier(0.32, 0, 0.16, 1) forwards;
+  }
+  /* 95% → 5% で、帯の中心が文字の左外から右外まで一度だけ抜ける */
+  @keyframes textSweep {
+    from { background-position: 95% 0, 0 0; }
+    to   { background-position: 5% 0, 0 0; }
+  }
+
+  /* HERO だけは元から lineRise を持っているため、その最終状態を書き戻してから
+     反射だけを走らせる（クラスは外さない＝外すと lineRise が再生される）。
+     下地は現在のゴールドのまま、帯だけを明るいシャンパンゴールドにしている。 */
+  .hero-line-in.is-swept {
+    opacity: 1; filter: none; transform: none;
+    background-image:
+      linear-gradient(108deg,
+        transparent 47.8%,
+        var(--sw-warm) 49.3%,
+        var(--sw-hi) 50%,
+        var(--sw-warm) 50.7%,
+        transparent 52.2%),
+      linear-gradient(96deg, #7C5D33 0%, #96764A 46%, #866640 100%);
+    animation: textSweep 1.45s cubic-bezier(0.3, 0, 0.14, 1) forwards;
+  }
+}
+
+/* 反射の色。銀を芯に、その両脇へごく薄いウォームホワイトを添える。 */
+.section-tag                             { --sw-hi: #C2CCD6; --sw-warm: #DED9D1; }
+.section-title,
+.philo-title .mask-in                    { --sw-hi: #56626F; --sw-warm: #5E5A53; }
+.philo-title .mask:nth-child(3) .mask-in { --sw-hi: #7C8794; --sw-warm: #837E77; }
+.hero-line-in                            { --sw-hi: #EBDCB4; --sw-warm: #E2D2A6; }
+
+/* スマホは文字が小さく帯の実寸も短いので、反射だけ一段はっきりさせる。
+   動かすのは背景位置1つのままなので、スクロール性能には影響しない。 */
+@media (max-width: 768px) {
+  .section-tag                             { --sw-hi: #D2DAE2; --sw-warm: #E8E4DC; }
+  .section-title,
+  .philo-title .mask-in                    { --sw-hi: #64707D; --sw-warm: #6C6760; }
+  .philo-title .mask:nth-child(3) .mask-in { --sw-hi: #8A95A1; --sw-warm: #918B84; }
+  .hero-line-in                            { --sw-hi: #F0E4C4; --sw-warm: #E9DCB6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-swept { animation: none; }
+}
+
+/* 強制カラーモードでは背景が無視されるため、切り抜き自体を使わない */
+@media (forced-colors: active) {
+  .is-swept {
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+    animation: none;
+  }
+}
+
 /* ============================================================
    PHILOSOPHY
    ============================================================ */

@@ -155,6 +155,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  /* ---------- Light Sweep ----------
+     見出しが出そろってから、反射光が1回だけ文字を通過する。
+     動かすのはCSS側の background-position だけで、要素は複製しない。
+     observer は一度きり（unobserve）なので、戻ってきても再発動しない。 */
+  const canClipText = window.CSS && CSS.supports &&
+    (CSS.supports('background-clip', 'text') || CSS.supports('-webkit-background-clip', 'text'));
+  const sweepEnabled = canClipText && !prefersReducedMotion;
+
+  // 反射をかける見出し。SAKURAロゴとカード内の英字は対象外。
+  const SWEEP_MATCH = '.section-tag, .section-title';
+  const sweepTargetOf = (el) => {
+    if (el.classList.contains('mask')) return el.closest('.philo-title') ? el.querySelector('.mask-in') : null;
+    return el.matches(SWEEP_MATCH) ? el : null;
+  };
+
   const revealTargets = document.querySelectorAll('.reveal');
   if (revealTargets.length) {
     const observer = new IntersectionObserver((entries) => {
@@ -164,10 +179,37 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.unobserve(el);
         const delay = Number(el.dataset.revealDelay || 0);
         window.setTimeout(() => el.classList.add('is-visible'), delay);
+
+        const sweep = sweepEnabled ? sweepTargetOf(el) : null;
+        if (sweep) {
+          window.setTimeout(() => {
+            sweep.classList.add('is-swept');
+            // 走り終えたら元の描画へ戻す（HEROだけは戻さない ― CSS側の注記参照）
+            sweep.addEventListener('animationend', () => sweep.classList.remove('is-swept'), { once: true });
+          }, delay + 620);
+        }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
 
     revealTargets.forEach((el) => observer.observe(el));
+  }
+
+  /* HERO の3行は、既存の表示アニメーション(lineRise)が終わってから
+     上の行→下の行の順に、ごく短い間隔で反射を流す。 */
+  const heroLines = document.querySelectorAll('.hero-line-in');
+  if (sweepEnabled && heroLines.length) {
+    let started = false;
+    const startHeroSweep = () => {
+      if (started) return;
+      started = true;
+      heroLines.forEach((line, i) => {
+        window.setTimeout(() => line.classList.add('is-swept'), i * 200);
+      });
+    };
+    // 通常は最後の行が出終わった瞬間。届かなかった場合の保険としてタイマーも置く。
+    heroLines[heroLines.length - 1]
+      .addEventListener('animationend', startHeroSweep, { once: true });
+    window.setTimeout(startHeroSweep, 3600);
   }
 
   /* ---------- マウスに対するごく弱い反応（PCのみ） ----------
