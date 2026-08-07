@@ -1297,13 +1297,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   transition: transform 0.9s var(--ease-out);
 }
 .biz-row:hover .biz-name { transform: translateX(6px); transition-delay: 0s; }
+/* 英語サブタイトル ― 01〜09 すべてに付く。日本語事業名の補助情報として、
+   一段小さく・細く・薄いシルバーグレーで置く。
+   順位は 日本語（#111820 / 500）→ 英語（#7B8794 / 300）→ 説明（#414B55 / 300）。
+   色はこれ以上薄くしない ― #8A96A2 まで薄くすると地とのコントラストが
+   2.9:1 まで落ち、小さい字では読み取りにくくなる。
+   .biz-name の中にあるので、説明文との間隔は 9行すべて自動的に揃う。 */
 .biz-en {
-  display: block; margin-top: 10px;
-  font-family: var(--font-en); font-weight: 400;
-  font-size: 0.8rem; letter-spacing: 0.14em; color: var(--label);
+  display: block; margin-top: clamp(8px, 1vh, 11px);
+  font-family: var(--font-en); font-weight: 300;
+  font-size: clamp(0.74rem, 1.05vw, 0.82rem);
+  line-height: 1.5; letter-spacing: 0.14em; color: #7B8794;
 }
 .biz-desc {
-  margin-top: clamp(12px, 1.6vh, 18px); max-width: 740px;
+  margin-top: clamp(10px, 1.3vh, 15px); max-width: 740px;
   font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.15; color: var(--sub);
   transition: transform 0.9s var(--ease-out);
 }
@@ -1875,6 +1882,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-title { padding-right: 8%; }
   .scroll-cue--left { bottom: 10px; }
   .biz-row { grid-template-columns: 38px minmax(0, 1fr); gap: 14px; padding-left: 16px; padding-right: 16px; margin-left: -16px; }
+  /* 英語が1行増えるので、上下の間隔を締めて縦に伸びないようにする。
+     いちばん長い Recruitment & Human Resources でも1行に収まる字幅。 */
+  .biz-en   { margin-top: 7px; font-size: 0.72rem; letter-spacing: 0.11em; }
+  .biz-desc { margin-top: 9px; }
   .philo-title { font-size: clamp(1.72rem, 8.4vw, 2.4rem); }
   .philo-title .mask:nth-child(2) .mask-in,
   .philo-title .mask:nth-child(3) .mask-in { padding-left: 0; }
