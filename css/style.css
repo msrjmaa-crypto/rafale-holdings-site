@@ -1241,17 +1241,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .field-lamps { transform: translate3d(0, calc(var(--sp, 0) * 10px), 0); }
 
   /* Silver ― 主役。13秒で左外から右外まで通過する。
-     地より暗いので「壁を影が横切る」ように読める。
-     opacity は既に上限なので、地との明度差そのものを約1.3倍にして存在感を上げた
-     （地 #F1EBE6 との差 55 → 73）。中心の濃度も一段上げ、blur を少し詰めている。 */
+     以前は地より暗い色だったので「影が横切る」ように見えていた。
+     ただし白い地の上では、純白を重ねても明るさは +8〜24 しか稼げず、
+     明るくするだけでは動きが読めない。そこで実際の光が面に当たったときと
+     同じ作り方にした ―― 芯は白く持ち上げ、その外側だけがごくわずかに沈む
+     （周辺減光）。芯と外周の差 11〜19 で面が読め、芯は必ず地より明るいので
+     影には見えない。 */
   .field-lamp--c {
-    left: -56%; top: 26%; bottom: auto; width: 60%; height: 46%;
+    left: -56%; top: 22%; bottom: auto; width: 60%; height: 54%;
     background: radial-gradient(closest-side,
-      rgba(168, 184, 201, 1) 0%,
-      rgba(168, 184, 201, 0.82) 30%,
-      rgba(168, 184, 201, 0.36) 58%,
-      rgba(168, 184, 201, 0) 80%);
-    filter: blur(26px);
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(252, 254, 255, 0.7) 26%,
+      rgba(228, 236, 245, 0.34) 58%,
+      rgba(228, 236, 245, 0) 84%);
+    filter: blur(32px);
     animation: lampCsp 13s linear infinite;
   }
   @keyframes lampCsp {
