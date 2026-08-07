@@ -627,15 +627,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ---- Signature R ---------------------------------------------------
-   3本のストロークが順に置かれて1つのサインになる。
-   1本につき body / mid / core の3層を重ね、3層とも通る所は太く、
-   core だけの所は細い ―― 筆圧差と、筆筋が束になった質感を同時に出す。 */
+   置かれる順は ループ → 縦のストローク → 脚 → 補助。
+   1本につき body / mid / core を重ね、3層とも通る所は太く、
+   core だけの所は細い ―― これで筆圧差と束の厚みが同時に出る。 */
 .hero-sign {
   position: absolute; right: 4%; top: 50%;
-  height: 72%; aspect-ratio: 430 / 530;
+  height: 76%; aspect-ratio: 540 / 730;
   transform: translate3d(calc(var(--mx) * -4px), calc(-50% + var(--my) * -3px), 0);
   pointer-events: none;
   will-change: transform;
+  /* 中央付近で書き始め、描き進むにつれて右へ寄っていく。
+     3秒かけて 19vw ぶんだけなので、線を引く動きの方が主役に見える。 */
+  animation: signSettle 3s cubic-bezier(0.22, 0.55, 0.28, 1) 1.8s forwards;
+}
+@keyframes signSettle {
+  from { transform: translate3d(calc(var(--mx) * -4px - 19vw), calc(-50% + var(--my) * -3px), 0); }
+  to   { transform: translate3d(calc(var(--mx) * -4px), calc(-50% + var(--my) * -3px), 0); }
 }
 .r-sign {
   display: block; width: 100%; height: 100%; overflow: visible;
@@ -656,75 +663,83 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 @keyframes inkGrow { to { stroke-dasharray: var(--len) 2000; } }
 
-/* 層ごとの太さ・色・濃さ。body が最も太くシャンパン寄り、core が細く明るい */
-.loop-body, .stem-body, .leg-body { stroke: url(#ink-body); opacity: 0.34; }
-.loop-mid,  .stem-mid,  .leg-mid  { stroke: url(#ink-mid);  opacity: 0.44; }
-.loop-core, .stem-core, .leg-core { stroke: url(#ink-core); opacity: 0.66; }
+/* 層ごとの色と濃さ。body が最も太くシャンパン寄り、core が細く明るい */
+.loop-body, .stem-body, .leg-body { stroke: url(#ink-body); opacity: 0.4; }
+.loop-mid,  .stem-mid,  .leg-mid  { stroke: url(#ink-mid);  opacity: 0.48; }
+.loop-core, .stem-core, .leg-core { stroke: url(#ink-core); opacity: 0.68; }
+.hl-main, .hl-stem, .hair         { stroke: url(#ink-hl);   opacity: 0.52; }
 
-/* 1本目: 上部の大きなループ 1.80-2.60s（始まりはゆっくり） */
-.loop-body { stroke-width: 34; stroke-dashoffset: -180; --len: 580;
-             animation-duration: 0.464s; animation-delay: 1.944s;
+/* ── 1本目の前半: 上部の巨大なループ 1.80–2.60s（入りはゆっくり） ── */
+.loop-body { stroke-width: 56; stroke-dashoffset: -100; --len: 370;
+             animation-duration: 0.53s; animation-delay: 1.96s;
              animation-timing-function: cubic-bezier(0.36, 0.02, 0.34, 1); }
-.loop-mid  { stroke-width: 19; stroke-dashoffset: -60;  --len: 840;
-             animation-duration: 0.672s; animation-delay: 1.848s;
+.loop-mid  { stroke-width: 32; stroke-dashoffset: -30;  --len: 510;
+             animation-duration: 0.73s; animation-delay: 1.84s;
              animation-timing-function: cubic-bezier(0.34, 0.02, 0.36, 1); }
-.loop-core { stroke-width: 7;  stroke-dashoffset: 0;    --len: 1000;
-             animation-duration: 0.80s;  animation-delay: 1.80s;
+.loop-core { stroke-width: 12; stroke-dashoffset: 0;    --len: 560;
+             animation-duration: 0.80s; animation-delay: 1.80s;
              animation-timing-function: cubic-bezier(0.32, 0.02, 0.38, 1); }
 
-/* 2本目: 中央の強い縦の筆筋 2.60-3.50s（わずかに減速） */
-.stem-body { stroke-width: 30; stroke-dashoffset: -120; --len: 620;
-             animation-duration: 0.558s; animation-delay: 2.708s;
+/* ── 2本目: 中央の力強い縦ストローク 2.60–3.50s（わずかに減速） ── */
+.stem-body { stroke-width: 50; stroke-dashoffset: -110; --len: 590;
+             animation-duration: 0.53s; animation-delay: 2.70s;
              animation-timing-function: cubic-bezier(0.4, 0, 0.42, 1); }
-.stem-mid  { stroke-width: 17; stroke-dashoffset: -40;  --len: 880;
-             animation-duration: 0.792s; animation-delay: 2.636s;
+.stem-mid  { stroke-width: 29; stroke-dashoffset: -40;  --len: 860;
+             animation-duration: 0.77s; animation-delay: 2.64s;
              animation-timing-function: cubic-bezier(0.4, 0, 0.42, 1); }
-.stem-core { stroke-width: 6;  stroke-dashoffset: 0;    --len: 1000;
-             animation-duration: 0.90s;  animation-delay: 2.60s;
+.stem-core { stroke-width: 11; stroke-dashoffset: 0;    --len: 1000;
+             animation-duration: 0.90s; animation-delay: 2.60s;
              animation-timing-function: cubic-bezier(0.38, 0, 0.44, 1); }
 
-/* 3本目: 右下へ流れる大きな脚 3.50-4.40s（加速して抜ける） */
-.leg-body  { stroke-width: 26; stroke-dashoffset: -90;  --len: 520;
-             animation-duration: 0.468s; animation-delay: 3.581s;
+/* ── 1本目の後半: 右下へ伸びる大きな脚 3.50–4.40s（加速して抜ける） ── */
+.leg-body  { stroke-width: 46; stroke-dashoffset: -600; --len: 300;
+             animation-duration: 0.44s; animation-delay: 3.61s;
              animation-timing-function: cubic-bezier(0.5, 0, 0.86, 0.6); }
-.leg-mid   { stroke-width: 14; stroke-dashoffset: -30;  --len: 820;
-             animation-duration: 0.738s; animation-delay: 3.527s;
+.leg-mid   { stroke-width: 26; stroke-dashoffset: -560; --len: 400;
+             animation-duration: 0.72s; animation-delay: 3.54s;
              animation-timing-function: cubic-bezier(0.5, 0, 0.86, 0.6); }
-.leg-core  { stroke-width: 5;  stroke-dashoffset: 0;    --len: 1000;
-             animation-duration: 0.90s;  animation-delay: 3.50s;
+.leg-core  { stroke-width: 10; stroke-dashoffset: -540; --len: 460;
+             animation-duration: 0.90s; animation-delay: 3.50s;
              animation-timing-function: cubic-bezier(0.48, 0, 0.88, 0.58); }
 
-/* 4本目: 脚に沿う細い補助の筆筋 4.40-4.80s */
-.hair { stroke: url(#ink-core); opacity: 0.5; stroke-width: 3.4;
-        stroke-dashoffset: 0; --len: 1000;
+/* ── 太い筆跡の中を走る細い光。線の内側で光っているように見せる ── */
+.hl-main { stroke-width: 4.5; stroke-dashoffset: 0; --len: 1000;
+           animation-duration: 2.60s; animation-delay: 1.80s;
+           animation-timing-function: cubic-bezier(0.34, 0.06, 0.5, 1); }
+.hl-stem { stroke-width: 4;   stroke-dashoffset: 0; --len: 1000;
+           animation-duration: 0.90s; animation-delay: 2.60s;
+           animation-timing-function: cubic-bezier(0.38, 0, 0.44, 1); }
+
+/* ── 脚に沿う細い補助の筆筋 4.40–4.80s ── */
+.hair { stroke-width: 5; stroke-dashoffset: 0; --len: 1000;
         animation-duration: 0.40s; animation-delay: 4.40s;
         animation-timing-function: cubic-bezier(0.42, 0, 0.7, 0.5); }
 
-/* 線のまわりの空気。3本まとめて1回だけぼかす。発光にはしない */
+/* 線のまわりの空気。2本まとめて1回だけぼかす。発光にはしない */
 .r-glow {
   fill: none;
   stroke: #DED6C6;
-  stroke-width: 40; stroke-linecap: round; stroke-linejoin: round;
-  filter: blur(14px);
+  stroke-width: 62; stroke-linecap: round; stroke-linejoin: round;
+  filter: blur(18px);
   opacity: 0;
   animation: inkGlow 2.6s var(--ease) 2.6s forwards;
 }
-@keyframes inkGlow { to { opacity: 0.2; } }
+@keyframes inkGlow { to { opacity: 0.22; } }
 
 /* 完成後の反射 ― 5.3秒に1度目、以後20秒ごと。
    通った瞬間だけシルバーとシャンパンが強く見える程度で、光らせはしない。 */
 .r-sheen {
   fill: none;
-  stroke: #FFFBF0;
-  stroke-width: 9; stroke-linecap: round;
+  stroke: #FFFCF2;
+  stroke-width: 15; stroke-linecap: round;
   stroke-dasharray: 90 910;
   opacity: 0;
   animation: sheenRun 20s linear 5.3s infinite;
 }
 @keyframes sheenRun {
   0%   { stroke-dashoffset: 0;     opacity: 0; }
-  4%   { opacity: 0.68; }
-  22%  { opacity: 0.68; }
+  4%   { opacity: 0.7; }
+  22%  { opacity: 0.7; }
   30%  { stroke-dashoffset: -1000; opacity: 0; }
   100% { stroke-dashoffset: -1000; opacity: 0; }
 }
@@ -815,7 +830,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   /* Qwigley は1ウェイトしかないので font-weight では太くできない。
      字の輪郭そのものを 0.8px ぶん太らせている ―― 色はグラデーションの
      中間色と同じなので、縁取りには見えず、線が太くなるだけ。 */
-  -webkit-text-stroke: 0.8px #8A6A3C;
+  -webkit-text-stroke: 1.15px #8A6A3C;
   paint-order: stroke fill;
   opacity: 0; filter: blur(10px); transform: translateY(26px);
   animation: lineRise 0.85s var(--ease-out) forwards;
@@ -1695,27 +1710,35 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
      右上〜右中央を大きく使い、コピーへ向かう左下側だけを斜めに
      透かす。ループと縦の筆筋（R と分かる部分）は全く弱めない。 */
   .hero-sign {
-    right: -2%; top: 12%; height: 34%;
+    right: -3%; top: 12%; height: 34%;
     transform: translate3d(0, 0, 0);
+    /* スマホは中央やや右から書き始め、22vw ぶん右へ寄っていく */
+    animation: signSettleSp 3s cubic-bezier(0.22, 0.55, 0.28, 1) 1.8s forwards;
     -webkit-mask-image: linear-gradient(158deg, #000 0%, #000 56%, rgba(0,0,0,0.42) 80%, transparent 100%);
             mask-image: linear-gradient(158deg, #000 0%, #000 56%, rgba(0,0,0,0.42) 80%, transparent 100%);
   }
-  /* 画面が狭いぶん線は少し細く。ただし束の重なりはそのまま残す */
-  .loop-body, .stem-body, .leg-body { opacity: 0.32; }
-  .loop-mid,  .stem-mid,  .leg-mid  { opacity: 0.42; }
-  .loop-core, .stem-core, .leg-core { opacity: 0.66; }
-  .loop-body { stroke-width: 28; }
-  .loop-mid  { stroke-width: 16; }
-  .loop-core { stroke-width: 6; }
-  .stem-body { stroke-width: 25; }
-  .stem-mid  { stroke-width: 14; }
-  .stem-core { stroke-width: 5.2; }
-  .leg-body  { stroke-width: 21; }
-  .leg-mid   { stroke-width: 12; }
-  .leg-core  { stroke-width: 4.4; }
-  .hair      { stroke-width: 2.8; }
-  .r-glow  { stroke-width: 32; filter: blur(11px); }
-  .r-sheen { stroke-width: 7.4; }
+  @keyframes signSettleSp {
+    from { transform: translate3d(-22vw, 0, 0); }
+    to   { transform: translate3d(0, 0, 0); }
+  }
+  /* 画面が狭いぶん線は少し細く。ただし束の重なりと厚みは残す */
+  .loop-body, .stem-body, .leg-body { opacity: 0.38; }
+  .loop-mid,  .stem-mid,  .leg-mid  { opacity: 0.46; }
+  .loop-core, .stem-core, .leg-core { opacity: 0.68; }
+  .loop-body { stroke-width: 48; }
+  .loop-mid  { stroke-width: 28; }
+  .loop-core { stroke-width: 10.5; }
+  .stem-body { stroke-width: 43; }
+  .stem-mid  { stroke-width: 25; }
+  .stem-core { stroke-width: 9.5; }
+  .leg-body  { stroke-width: 39; }
+  .leg-mid   { stroke-width: 22; }
+  .leg-core  { stroke-width: 8.6; }
+  .hl-main { stroke-width: 3.8; }
+  .hl-stem { stroke-width: 3.4; }
+  .hair    { stroke-width: 4.2; }
+  .r-glow  { stroke-width: 52; filter: blur(14px); }
+  .r-sheen { stroke-width: 12.5; }
 
   /* 右下の光 ― PC とほぼ同じ強さで残す。ここを弱めると
      スマホでは何も起きていないように見えてしまう。 */
@@ -1771,7 +1794,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-line:nth-child(1) { --ly: -5px; }
   .hero-line:nth-child(2) { --ly: -8px; }
   .hero-line:nth-child(3) { --ly: -10px; }
-  .hero-line-in { filter: blur(7px); transform: translateY(22px); -webkit-text-stroke-width: 0.55px; }
+  .hero-line-in { filter: blur(7px); transform: translateY(22px); -webkit-text-stroke-width: 0.8px; }
   .lead-line { filter: blur(5px); transform: translateY(14px); }
 
   /* 光は残しつつ、blur を伴う層の枚数を減らす（iPhone のスクロール優先） */

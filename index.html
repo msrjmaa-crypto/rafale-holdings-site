@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=44">
+<link rel="stylesheet" href="css/style.css?v=45">
 
 <!--
   ============================================================
@@ -203,77 +203,98 @@
     </div>
 
     <!-- 右側 ― Rafale Signature R。
-         一筆ではなく、3本のストロークが順に置かれて1つのサインになる。
-           r-loop … 上部の大きなループ      1.80–2.60s
-           r-stem … 中央の強い縦の筆筋      2.60–3.50s
-           r-leg  … 右下へ流れる大きな脚    3.50–4.40s
-           r-hair … 脚に沿う細い補助の筆筋  4.40–4.80s
-         1本ごとに body / mid / core の3層を重ねている。3層とも通る所は
-         太く、core だけの所は細い ―― これで筆圧差と、筆筋が束になった
-         質感が同時に出る。色は層ごとに変え、シャンパン・シルバー・
-         ペールブルーが混ざるようにしてある。 -->
+         参考画像の構造に合わせ、線は次の3本で構成している。
+           r-main … 左下から入り、上部の巨大で横長なループを回り、
+                    ふところを閉じてから、そのまま右下へ長い脚として抜ける。
+                    ループと脚が1本で繋がっているのが参考画像の特徴。
+           r-stem … その上を横切る、中央の力強い縦のストローク。
+                    r-main のふところの戻りと交差して R の形になる。
+           r-hair … 脚に沿う細い補助の筆筋。
+         1本につき body / mid / core の3層＋細いハイライトを重ねる。
+         3層とも通る所は太く、core だけの所は細い ―― 筆圧差と、
+         筆筋が束になった厚みが同時に出る。
+         描画中は器（.hero-sign）が中央付近から右へゆっくり寄っていく。 -->
     <div class="hero-sign" aria-hidden="true">
-      <svg class="r-sign" viewBox="0 0 430 530" fill="none" preserveAspectRatio="xMidYMid meet" role="presentation">
+      <svg class="r-sign" viewBox="0 0 540 730" fill="none" preserveAspectRatio="xMidYMid meet" role="presentation">
         <defs>
-          <path id="r-loop" pathLength="1000"
-                d="M 58 388 C 62 356, 70 330, 84 310
-                   C 96 214, 148 116, 224 92
-                   C 300 68, 366 112, 364 186
-                   C 362 258, 300 314, 226 332"/>
+          <path id="r-main" pathLength="1000"
+                d="M 18 336
+                   C 24 300, 40 256, 68 214
+                   C 112 120, 190 40, 284 16
+                   C 374 -6, 458 38, 492 124
+                   C 520 194, 502 272, 448 322
+                   C 396 370, 300 398, 200 392
+                   C 268 428, 340 486, 396 552
+                   C 442 606, 492 664, 536 706"/>
           <path id="r-stem" pathLength="1000"
-                d="M 268 132 C 258 224, 240 322, 222 402
-                   C 214 442, 202 476, 186 502"/>
-          <path id="r-leg" pathLength="1000"
-                d="M 172 300 C 234 318, 292 362, 336 416
-                   C 368 456, 396 482, 424 494"/>
+                d="M 250 180
+                   C 240 280, 226 380, 208 470
+                   C 192 552, 168 626, 140 678
+                   C 132 692, 126 700, 120 706"/>
           <path id="r-hair" pathLength="1000"
-                d="M 186 322 C 246 342, 300 386, 342 438
-                   C 372 474, 400 496, 428 506"/>
+                d="M 214 410
+                   C 282 446, 352 502, 406 566
+                   C 450 618, 496 672, 538 714"/>
 
-          <!-- 太い層はシャンパン寄り、細い芯はウォームホワイト寄り。
-               1色のグレーにならないよう、層ごとに違う配合にしている。 -->
-          <linearGradient id="ink-body" x1="0.1" y1="0" x2="0.9" y2="1">
-            <stop offset="0"    stop-color="#CDBE9E"/>
-            <stop offset="0.34" stop-color="#E6DAC0"/>
-            <stop offset="0.66" stop-color="#BFCCDA"/>
-            <stop offset="1"    stop-color="#D3C6AC"/>
+          <!-- 太い層はシャンパン寄り、芯はウォームホワイト寄り。
+               層ごとに配合を変えて、1色のグレーにならないようにしている。 -->
+          <linearGradient id="ink-body" x1="0.08" y1="0" x2="0.92" y2="1">
+            <stop offset="0"    stop-color="#C9B994"/>
+            <stop offset="0.26" stop-color="#E8DCBE"/>
+            <stop offset="0.52" stop-color="#B8C7D8"/>
+            <stop offset="0.78" stop-color="#E3D5B4"/>
+            <stop offset="1"    stop-color="#C4B393"/>
           </linearGradient>
-          <linearGradient id="ink-mid" x1="0.15" y1="0.1" x2="0.85" y2="0.95">
-            <stop offset="0"    stop-color="#EDE3CE"/>
-            <stop offset="0.3"  stop-color="#C3D0DE"/>
-            <stop offset="0.58" stop-color="#F1E9D8"/>
-            <stop offset="1"    stop-color="#C8D5E2"/>
+          <linearGradient id="ink-mid" x1="0.16" y1="0.06" x2="0.86" y2="0.96">
+            <stop offset="0"    stop-color="#F2E8D2"/>
+            <stop offset="0.28" stop-color="#BECDDD"/>
+            <stop offset="0.55" stop-color="#F5EDDB"/>
+            <stop offset="0.8"  stop-color="#C6D4E3"/>
+            <stop offset="1"    stop-color="#EFE4CC"/>
           </linearGradient>
           <linearGradient id="ink-core" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0"    stop-color="#FFFBF0"/>
-            <stop offset="0.36" stop-color="#F6EEDA"/>
-            <stop offset="0.7"  stop-color="#E8F0F7"/>
-            <stop offset="1"    stop-color="#FBF6E8"/>
+            <stop offset="0"    stop-color="#FFFCF3"/>
+            <stop offset="0.3"  stop-color="#F8F0DC"/>
+            <stop offset="0.62" stop-color="#EDF4FA"/>
+            <stop offset="1"    stop-color="#FFFAEC"/>
+          </linearGradient>
+          <!-- 太い筆跡の中を走る、細い光 -->
+          <linearGradient id="ink-hl" x1="0.1" y1="0" x2="0.9" y2="1">
+            <stop offset="0"    stop-color="#FFFFFF"/>
+            <stop offset="0.34" stop-color="#FFF7E4"/>
+            <stop offset="0.68" stop-color="#F4FAFF"/>
+            <stop offset="1"    stop-color="#FFFDF4"/>
           </linearGradient>
         </defs>
 
-        <!-- 線のまわりの空気。1枚にまとめてぼかしを1回だけ掛ける -->
+        <!-- 線のまわりの空気。2本まとめて1回だけぼかす。発光にはしない -->
         <g class="r-glow">
-          <use href="#r-loop"/><use href="#r-stem"/><use href="#r-leg"/>
+          <use href="#r-main"/><use href="#r-stem"/>
         </g>
 
-        <use class="r-ink loop-body" href="#r-loop"/>
-        <use class="r-ink loop-mid"  href="#r-loop"/>
-        <use class="r-ink loop-core" href="#r-loop"/>
+        <!-- 1本目の前半: 上部の巨大なループ -->
+        <use class="r-ink loop-body" href="#r-main"/>
+        <use class="r-ink loop-mid"  href="#r-main"/>
+        <use class="r-ink loop-core" href="#r-main"/>
 
+        <!-- 2本目: 中央の力強い縦ストローク -->
         <use class="r-ink stem-body" href="#r-stem"/>
         <use class="r-ink stem-mid"  href="#r-stem"/>
         <use class="r-ink stem-core" href="#r-stem"/>
 
-        <use class="r-ink leg-body" href="#r-leg"/>
-        <use class="r-ink leg-mid"  href="#r-leg"/>
-        <use class="r-ink leg-core" href="#r-leg"/>
+        <!-- 1本目の後半: 右下へ伸びる大きな脚 -->
+        <use class="r-ink leg-body" href="#r-main"/>
+        <use class="r-ink leg-mid"  href="#r-main"/>
+        <use class="r-ink leg-core" href="#r-main"/>
 
-        <use class="r-ink hair" href="#r-hair"/>
+        <!-- 太い筆跡の中を走る細いハイライトと、脚に沿う補助の筆筋 -->
+        <use class="r-ink hl-main" href="#r-main"/>
+        <use class="r-ink hl-stem" href="#r-stem"/>
+        <use class="r-ink hair"    href="#r-hair"/>
 
         <!-- 完成後、表面を反射が1回通る（以後20秒ごと） -->
         <g class="r-sheen">
-          <use href="#r-loop"/><use href="#r-stem"/><use href="#r-leg"/>
+          <use href="#r-main"/><use href="#r-stem"/>
         </g>
       </svg>
     </div>
