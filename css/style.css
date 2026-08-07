@@ -683,8 +683,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 #business::before {          /* 白 〜 薄いグレー */
   background: linear-gradient(180deg, rgba(242, 245, 247, 0) 0%, rgba(238, 241, 244, 0.9) 40%, rgba(242, 245, 247, 0) 100%);
 }
-#message::before {           /* 白 ＋ 大きな余白 */
-  background: radial-gradient(56% 42% at 78% 24%, rgba(224, 238, 246, 0.6), rgba(224,238,246,0) 74%);
+/* BRANDS の黒から抜けてきた照明が、そのまま MESSAGE の白へ移り変わる。
+   新しい色は足さず、既にある Silver / Pale Blue / Warm White だけで
+   Charcoal → Silver → Pale Blue → White の階調を作り、境界を出さない。 */
+#message::before {
+  background:
+    linear-gradient(180deg,
+      rgba(52, 68, 88, 0.10) 0%,      /* 上端はまだ黒の余韻 */
+      rgba(140, 152, 166, 0.07) 7%,   /* Charcoal → Silver */
+      rgba(198, 213, 226, 0.09) 15%,  /* Silver → Pale Blue */
+      rgba(232, 241, 247, 0.06) 24%,
+      rgba(247, 248, 250, 0) 36%),
+    radial-gradient(52% 40% at 76% 30%, rgba(224, 238, 246, 0.52), rgba(224,238,246,0) 74%),
+    radial-gradient(46% 34% at 14% 64%, rgba(250, 246, 240, 0.66), rgba(250,246,240,0) 76%);
 }
 #company::before, #contact::before {
   background: linear-gradient(180deg, rgba(240, 243, 246, 0.7) 0%, rgba(247, 248, 250, 0) 46%);
@@ -907,22 +918,46 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    MESSAGE ― 白へ戻る
    ============================================================ */
 .message-layout {
-  display: grid; grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
+  display: grid; grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
   gap: clamp(40px, 5vw, 104px); align-items: start;
 }
-.message-head .section-title { margin-bottom: 18px; }
+/* 導入の3つは、ラベル → 主役 → 補助 と明確に差をつける。
+   「代表メッセージ」が主役、英語は添え物まで下げる（同じ情報の繰り返しに見せない） */
+.message-head .section-title { margin-bottom: 14px; }
 .message-en {
-  font-family: var(--font-en); font-weight: 300;
-  font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.3; color: var(--label);
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.8rem; line-height: 1.7;
+  letter-spacing: 0.22em; color: var(--label); opacity: 0.86;
 }
+
+/* 冒頭の言葉 ― 囲わず、余白だけで Statement にする */
 .message-quote {
   font-family: var(--font-jp); font-weight: 400;
-  font-size: clamp(1.3rem, 3vw, 1.95rem);
-  line-height: 1.9; letter-spacing: 0.06em; color: var(--ink);
-  margin-bottom: clamp(34px, 4.6vh, 52px);
+  font-size: clamp(1.34rem, 2.9vw, 1.92rem);
+  line-height: 2.0; letter-spacing: 0.07em; color: var(--ink);
+  max-width: 20em;
+  margin-bottom: clamp(52px, 7vh, 84px);
 }
-.message-body p { font-size: clamp(0.96rem, 1.7vw, 1.04rem); line-height: 2.4; color: var(--sub); margin-bottom: clamp(24px, 3vh, 34px); }
-.message-sign { margin-top: clamp(36px, 5vh, 54px); text-align: right; color: var(--ink-2); letter-spacing: 0.12em; }
+
+/* 本文 ― 1行を長くしすぎない。文章は変えず、呼吸だけ作る */
+.message-body p {
+  font-size: clamp(0.96rem, 1.7vw, 1.04rem);
+  line-height: 2.5; color: var(--sub);
+  max-width: 34em;
+  margin-bottom: clamp(30px, 3.8vh, 42px);
+}
+.message-sign {
+  margin-top: clamp(44px, 6vh, 66px);
+  max-width: 34em; text-align: right;
+  color: var(--ink-2); letter-spacing: 0.12em;
+}
+
+/* 出現 ― 12〜18px 持ち上げ、ごく弱い blur から。順番は data-reveal-delay で制御 */
+#message .reveal {
+  transform: translateY(16px); filter: blur(4px);
+  transition: opacity 1.05s var(--ease-out), transform 1.05s var(--ease-out), filter 1.05s var(--ease-out);
+}
+#message .reveal.is-visible { transform: none; filter: blur(0); }
 
 /* ============================================================
    COMPANY
@@ -1003,7 +1038,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .philo-body     { grid-template-columns: 1fr; gap: 0; }
   .philo-col p:last-child { margin-bottom: clamp(32px, 4.4vh, 50px); }
   .philo-col:last-child p:last-child { margin-bottom: 0; }
-  .message-layout { grid-template-columns: 1fr; gap: clamp(30px, 4vh, 46px); }
+  /* 1カラムになると導入と本文が近づくので、その間だけ間隔を取り直す */
+  .message-layout { grid-template-columns: 1fr; gap: clamp(34px, 4.6vh, 52px); }
   .contact-layout { grid-template-columns: 1fr; }
   /* タブレット: 建築空間は右奥へ退き、言葉が主役に戻る */
   .hero-main { max-width: min(78vw, 720px); }
@@ -1031,7 +1067,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
   .info-row { grid-template-columns: 1fr; gap: 8px; }
   .info-row dt { font-size: 0.8rem; }
-  .message-sign { text-align: left; }
+  /* スマホ: 縦に伸びすぎないよう、Statement と本文の余白を少し戻す。
+     1行あたりの文字数は max-width（em 指定）が効くので詰まりすぎない。 */
+  .message-sign { text-align: left; margin-top: clamp(34px, 4.6vh, 48px); }
+  .message-quote { font-size: clamp(1.2rem, 5.4vw, 1.5rem); line-height: 1.95; margin-bottom: clamp(38px, 5vh, 52px); }
+  .message-body p { line-height: 2.35; margin-bottom: clamp(26px, 3.2vh, 34px); }
+  .message-en { font-size: 0.74rem; letter-spacing: 0.18em; }
   .section--brand { min-height: 118svh; }
 
   /* スマホ: blur を伴う重い層を落とし、光だけ残す */

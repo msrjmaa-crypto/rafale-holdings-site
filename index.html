@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=22">
+<link rel="stylesheet" href="css/style.css?v=23">
 
 <!--
   ============================================================
@@ -367,21 +367,23 @@
   <section class="section" id="message">
     <div class="section-inner">
       <header class="section-head">
-        <p class="section-tag reveal" lang="en">MESSAGE</p>
+        <p class="section-tag reveal" lang="en" data-reveal-delay="0">MESSAGE</p>
       </header>
 
+      <!-- data-reveal-delay: ラベル → 見出し → 英語 → 冒頭の言葉 → 本文 の順に
+           0.11秒ずつ置いて現れる。表示は一度だけ（js/script.js の Observer）。 -->
       <div class="message-layout">
         <div class="message-head">
-          <h2 class="section-title reveal">代表メッセージ</h2>
-          <p class="message-en reveal" lang="en">Representative<br>Message</p>
+          <h2 class="section-title reveal" data-reveal-delay="110">代表メッセージ</h2>
+          <p class="message-en reveal" lang="en" data-reveal-delay="220">Representative Message</p>
         </div>
 
         <div class="message-body">
-          <p class="message-quote reveal">"会社にとって最も大切な財産は、「人」です。"</p>
-          <p class="reveal">どれほど優れた仕組みや事業があっても、人が成長しなければ、企業は成長し続けることはできません。だから私たちは、人を大切にする経営を貫きます。</p>
-          <p class="reveal">社員、お客様、取引先、そして地域社会。関わるすべての人との信頼を積み重ねながら、人が輝き、事業が育ち、新しい価値が生まれる企業を目指します。</p>
-          <p class="reveal">楽しさを原動力に。人を育て、事業を育てる。この理念を胸に、未来へ挑戦し続けます。</p>
-          <p class="message-sign reveal">代表取締役　富原 盛哉</p>
+          <p class="message-quote reveal" data-reveal-delay="340">"会社にとって最も大切な財産は、「人」です。"</p>
+          <p class="reveal" data-reveal-delay="470">どれほど優れた仕組みや事業があっても、人が成長しなければ、企業は成長し続けることはできません。だから私たちは、人を大切にする経営を貫きます。</p>
+          <p class="reveal" data-reveal-delay="560">社員、お客様、取引先、そして地域社会。関わるすべての人との信頼を積み重ねながら、人が輝き、事業が育ち、新しい価値が生まれる企業を目指します。</p>
+          <p class="reveal" data-reveal-delay="650">楽しさを原動力に。人を育て、事業を育てる。この理念を胸に、未来へ挑戦し続けます。</p>
+          <p class="message-sign reveal" data-reveal-delay="760">代表取締役　富原 盛哉</p>
         </div>
       </div>
     </div>
