@@ -842,7 +842,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-size: clamp(3.4rem, 7.3vw, 6.8rem);
   line-height: 1.12;
   letter-spacing: 0.015em;
-  margin-bottom: clamp(30px, 4.6vh, 50px);
+  /* 日本語コピーを外したぶん、ここと CTA の上で受け直している。
+     空白をそのまま残さず、かといって詰めすぎない量にした。 */
+  margin-bottom: clamp(40px, 6vh, 66px);
 }
 .hero-line {
   display: block; white-space: nowrap;
@@ -875,24 +877,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hero-line:nth-child(3) .hero-line-in { animation-delay: 2.70s; }
 @keyframes lineRise { to { opacity: 1; filter: blur(0); transform: none; } }
 
-/* ---- 日本語 ---- */
-.hero-lead {
-  font-size: clamp(0.9rem, 1.35vw, 1rem);
-  line-height: 2.25; letter-spacing: 0.26em; color: #33393F;
-}
-.lead-line {
-  display: block;
-  opacity: 0; filter: blur(6px); transform: translateY(16px);
-  animation: leadIn 0.9s var(--ease-out) forwards;
-}
-.lead-line:nth-child(1) { animation-delay: 3.16s; }
-.lead-line:nth-child(2) { animation-delay: 3.30s; }
-@keyframes leadIn { to { opacity: 1; filter: blur(0); transform: none; } }
-
 /* ---- CTA ― ボタンではなく導線。前より幅28%・高さ20%小さく ---- */
 .hero-cta {
   display: inline-flex; align-items: center; justify-content: space-between; gap: 22px;
-  margin-top: clamp(28px, 4.2vh, 44px);
+  margin-top: clamp(34px, 5.2vh, 56px);
   min-width: 180px; min-height: 43px; padding: 11px 18px;
   border: 1px solid rgba(170, 138, 86, 0.38);
   border-radius: 0;
@@ -900,7 +888,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   color: #7A6136;
   font-family: var(--font-jp); font-weight: 300;
   font-size: 0.74rem; letter-spacing: 0.14em;
-  opacity: 0; animation: ctaIn 0.9s var(--ease-out) 3.56s forwards;
+  opacity: 0; animation: ctaIn 0.9s var(--ease-out) 3.30s forwards;
   transition: background 0.7s var(--ease), border-color 0.7s var(--ease), color 0.6s var(--ease);
   box-shadow: none;
 }
@@ -930,7 +918,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .scroll-cue--left {
   left: var(--gutter); transform: translateY(10px);
-  animation: cueInLeft 1s var(--ease-out) 3.80s forwards;
+  animation: cueInLeft 1s var(--ease-out) 3.58s forwards;
 }
 @keyframes cueInLeft { to { opacity: 1; transform: translateY(0); } }
 .scroll-cue-rail { width: 1px; height: 72px; margin-left: 2px; background: rgba(52, 68, 88, 0.16); position: relative; overflow: hidden; }
@@ -1766,7 +1754,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
      右上〜右中央を大きく使い、コピーへ向かう左下側だけを斜めに
      透かす。ループと縦の筆筋（R と分かる部分）は全く弱めない。 */
   .hero-sign {
-    right: 10%; top: 12%; height: 35%;
+    /* HERO が日本語コピー2行ぶん短くなったので、R の実寸が変わらないよう
+       割合を上げ直している（35%→37%）。形・太さ・演出はそのまま。 */
+    right: 10%; top: 13%; height: 37%;
     transform: translate3d(0, 0, 0);
     /* スマホは中央やや右から書き始め、18vw ぶん右へ寄っていく */
     animation: signSettleSp 3s cubic-bezier(0.18, 0.66, 0.3, 1) 1.8s forwards;
@@ -1843,7 +1833,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     margin-bottom: clamp(24px, 3.6vh, 34px);
   }
   .hero-line { white-space: normal; clip-path: inset(-0.3em -0.28em -0.05em -0.28em); }
-  .hero-lead { line-height: 2.1; letter-spacing: 0.22em; }
 
   /* 文字の動きは残すが、量と重さを落とす（マウス追従なし・視差は最大10px・blurも軽く） */
   .hero-line { --lx: 0px; }
@@ -1851,7 +1840,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-line:nth-child(2) { --ly: -8px; }
   .hero-line:nth-child(3) { --ly: -10px; }
   .hero-line-in { filter: blur(7px); transform: translateY(22px); -webkit-text-stroke-width: 0.8px; }
-  .lead-line { filter: blur(5px); transform: translateY(14px); }
 
   /* 光は残しつつ、blur を伴う層の枚数を減らす（iPhone のスクロール優先） */
   .hero-silver { display: none; }
@@ -1910,9 +1898,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .reveal { opacity: 1; transform: none; }
   .mask-in { transform: none; }
   .brand-logo.reveal { opacity: 1; transform: none; filter: none; }
-  .hero-logo-img, .hero-lead, .hero-cta, .scroll-cue, .hero-halo { opacity: 1; }
+  .hero-logo-img, .hero-cta, .scroll-cue, .hero-halo { opacity: 1; }
   .hero-line { transform: none; clip-path: none; }
-  .hero-line-in, .lead-line { opacity: 1; filter: none; transform: none; }
+  .hero-line-in { opacity: 1; filter: none; transform: none; }
   .logo-img, .main-nav li, .hamburger { opacity: 1; transform: none; }
   /* サインは描く動きを止め、最初から描き終わった状態で見せる */
   .r-ink { stroke-dasharray: var(--len) 2000; }
