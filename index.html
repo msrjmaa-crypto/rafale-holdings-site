@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/style.css?v=42">
 
 <!--
   ============================================================
@@ -192,33 +192,45 @@
       <span class="hero-rays"></span>
     </div>
 
+    <!-- 右下から流れる光 ― R を書く筆に連動して立ち上がる。
+         別々の装飾にせず、外側の器（.hero-flow）が R の進みに合わせて
+         明るさ・広がり・流れを増し、終筆でピークを迎える。
+         中の2枚は完成後もごくゆっくり呼吸し、背景の Liquid Silk へ馴染む。 -->
+    <div class="hero-flow" aria-hidden="true">
+      <span class="hero-flow-a"></span>
+      <span class="hero-flow-b"></span>
+    </div>
+
     <!-- 右側 ― Rafale Signature R。
-         その場でサインしたような一筆書きの R を、1.8秒から3.8秒かけて描く。
-         線は1本の path（#r-stroke）だけで、それを <use> で重ねている。
+         その場でサインしたような一筆書きの R を、1.8秒から4.8秒まで
+         約3秒かけて描く。線は1本の path（#r-stroke）だけで、それを
+         <use> で重ねている。
          ・r-seg 1〜7 … 同じ線の別々の区間を、別々の太さで描く。
-                        重ねているので継ぎ目は出ず、筆圧の変化として読める。
-                        始筆 13 → 細く 7.5 → 曲線 11 → 払い 2.4。
+                        重ねているので継ぎ目は出ず、筆圧として読める。
+                        始筆 15 → 細く 9.5 → 輪で最も太く 16 → 払い 2.8。
          ・r-glow      … ごく淡い滲み（ネオンにはしない）
-         ・r-sheen     … 完成後、線の上を1本の反射が20秒ごとに走る
-         pathLength="1000" にしてあるので、区間はすべて 0〜1000 で指定できる。 -->
+         ・r-sheen     … 完成後、線の上を反射が1本走る（5.3秒／以後20秒ごと）
+         pathLength="1000" なので、区間はすべて 0〜1000 で指定できる。 -->
     <div class="hero-sign" aria-hidden="true">
-      <svg class="r-sign" viewBox="0 0 300 380" fill="none" preserveAspectRatio="xMidYMid meet" role="presentation">
+      <svg class="r-sign" viewBox="0 0 320 380" fill="none" preserveAspectRatio="xMidYMid meet" role="presentation">
         <defs>
-          <!-- 下から立ち上がり、上で右へ返し、ふところを閉じて、脚が長く抜ける。
-               わざと左右対称にせず、わずかな揺らぎを残している。 -->
+          <!-- 下から立ち上がり、上で大きな輪を回し、ふところを閉じて、
+               脚から長い払いが右下へ抜ける。左右対称にはしていない。 -->
           <path id="r-stroke" pathLength="1000"
-                d="M 64 332
-                   C 59 252, 57 158, 68 72
-                   C 73 41, 97 25, 132 30
-                   C 178 37, 199 68, 187 102
-                   C 178 130, 149 148, 110 152
-                   C 147 170, 176 210, 205 251
-                   C 226 280, 251 301, 288 313"/>
-          <linearGradient id="r-ink" x1="0" y1="0" x2="1" y2="0.9">
-            <stop offset="0"    stop-color="#C6D2DE"/>
-            <stop offset="0.34" stop-color="#E4E0D5"/>
-            <stop offset="0.62" stop-color="#C9D5E0"/>
-            <stop offset="1"    stop-color="#DCE4EC"/>
+                d="M 74 336
+                   C 68 262, 66 172, 78 96
+                   C 84 54, 118 26, 162 30
+                   C 214 35, 246 72, 236 116
+                   C 226 158, 184 180, 132 176
+                   C 168 196, 196 232, 222 268
+                   C 246 300, 276 318, 314 326"/>
+          <!-- シャンパンゴールドとシルバーが混ざる。強い金にはしない。 -->
+          <linearGradient id="r-ink" x1="0.08" y1="0" x2="0.92" y2="1">
+            <stop offset="0"    stop-color="#D6C9AC"/>
+            <stop offset="0.22" stop-color="#EFE7D5"/>
+            <stop offset="0.46" stop-color="#C7D3DF"/>
+            <stop offset="0.68" stop-color="#E9E2D2"/>
+            <stop offset="1"    stop-color="#CAD6E1"/>
           </linearGradient>
         </defs>
 
