@@ -16,3 +16,6 @@ desktop.ini
 
 # ---- デザイン参考画像（サイトには載せない） ----
 reference/
+
+# ---- Wrangler のローカルキャッシュ（アカウントIDを含むため公開しない） ----
+.wrangler/

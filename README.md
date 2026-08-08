@@ -86,12 +86,12 @@ GitHub リポジトリと連携して公開します。ビルドは不要なの�
 - **ブランドムービー（約12秒）** … `assets/videos/rafale-opening.mp4`（任意で `.webm`）を配置。
   未配置の間はコード生成のオープニング演出が自動表示されます
 - **ブランド追加** … `index.html` の `#brands` 内 `<article class="brand-card">` を複製
-- **お問い合わせ送信機能** … 現在フォームは送信先未接続（送信しても実際には届きません）。
-  Formspree 等の外部フォームサービスに接続してください（`js/script.js` のフォーム送信箇所）
+- ~~**お問い合わせ送信機能**~~ … 対応済み。`functions/api/contact.js` から Resend 経由で
+  `info@rafale-hd.jp` へ送信します（APIキーは Cloudflare の環境変数 `RESEND_API_KEY`）
 - **独自ドメイン** … 現在 `rafale-holdings.co.jp` を仮設定。確定後に
   `index.html`（canonical / og:url / og:image / 構造化データ）・`sitemap.xml`・`robots.txt` を更新
 - **電話番号** … 現在「只今準備中です」（`index.html` の CONTACT）
-- **ブランドサイトURL** … 現在 `href="#"`（`index.html` の BRANDS）
+- ~~**ブランドサイトURL**~~ … 対応済み。SAKURA Poker Lounge（`https://sakura-poker.jp/`）
 - **Google Analytics (GA4)** … `index.html` の `<head>` 内コメントを外し測定IDを設定
 - **Google Search Console** … 同 `<head>` 内コメントの確認メタタグ、または確認用HTMLを設置
 
