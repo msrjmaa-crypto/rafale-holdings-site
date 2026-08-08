@@ -88,8 +88,10 @@ GitHub リポジトリと連携して公開します。ビルドは不要なの�
 - **ブランド追加** … `index.html` の `#brands` 内 `<article class="brand-card">` を複製
 - ~~**お問い合わせ送信機能**~~ … 対応済み。`functions/api/contact.js` から Resend 経由で
   `info@rafale-hd.jp` へ送信します（APIキーは Cloudflare の環境変数 `RESEND_API_KEY`）
-- **独自ドメイン** … 現在 `rafale-holdings.co.jp` を仮設定。確定後に
-  `index.html`（canonical / og:url / og:image / 構造化データ）・`sitemap.xml`・`robots.txt` を更新
+- ~~**独自ドメイン**~~ … 確定済み。本番は `https://rafale-hd.jp/`。
+  canonical / og:url / og:image / 構造化データ・`sitemap.xml`・`robots.txt` すべて
+  このドメインを指しています。将来ドメインを変える場合はこの4か所を同時に更新すること
+  （`rafale-holdings.co.jp` はDNS未設定のため使用不可）
 - **電話番号** … 現在「只今準備中です」（`index.html` の CONTACT）
 - ~~**ブランドサイトURL**~~ … 対応済み。SAKURA Poker Lounge（`https://sakura-poker.jp/`）
 - **Google Analytics (GA4)** … `index.html` の `<head>` 内コメントを外し測定IDを設定
