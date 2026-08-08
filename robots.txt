@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.rafale-holdings.co.jp/sitemap.xml
+Sitemap: https://rafale-hd.jp/sitemap.xml

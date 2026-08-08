@@ -1,1359 +1,1944 @@
+/* ============================================================
+   Rafale Holdings ― Luxury × Future × Human
+   ------------------------------------------------------------
+   白い未来建築のロビーに朝の光が差している空間。
+   ・未来感は黒や機械ではなく、白・自然光・ガラス・透明感で作る。
+   ・線は情報を読む場所だけ。区切りは余白と光で行う。
+   ・動きはゆっくり（出現 0.7〜1.4s／背景光 15〜30s）。
+   ・ゴールドは Rafale のロゴと、BRANDS（SAKURA）の中だけ。
+   ・スクロールのドラマ: LIGHT → LIGHT → LIGHT → BLACK(SAKURA) → LIGHT
+   ============================================================ */
+
 :root {
-  --color-black: #0a0a0a;
-  --color-black-soft: #121212;
-  --color-panel: #161513;
-  --color-gold: #c9a24b;
-  --color-gold-light: #e6c877;
-  --color-gold-deep: #8a6d2c;
-  --color-white: #f5f3ee;
+  /* paper */
+  --paper:    #F7F8FA;
+  --paper-2:  #F2F5F7;
+  --white:    #FFFFFF;
 
-  --color-text: #ccc7bd;
-  --color-text-muted: #a8a29a;
-  --color-border: rgba(201, 162, 75, 0.25);
-  --font-serif: 'Shippori Mincho', serif;
-  --font-sans: 'Noto Sans JP', sans-serif;
-  --header-height: 84px;
-  --max-width: 1120px;
+  /* ink ―――――――――――――――――――――――――――――――――――
+     黒背景版は本文 #A2ADB9 on #0C1017 ＝ コントラスト 8.4:1 だった。
+     白地で同じ読みやすさにするには本文を #4B5560 まで濃くする必要がある
+     （#66717D では 4.8:1 しかなく、細く弱く見えていた）。
+     ラベルや補助文字だけは従来の明度を --label として残す。 */
+  --ink:   #111820;   /* 見出し */
+  --ink-2: #202832;   /* 準見出し・強い本文 */
+  --sub:   #414B55;   /* 本文（旧 #66717D）― 黒背景版と同じ 8.4:1 になる濃さ */
+  --label: #6B7681;   /* 小さなラベル・番号・補助 */
 
-  --measure: 40rem;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --line: rgba(30, 50, 70, 0.10);
+
+  /* accent ― 淡いブルー / ブルーグレー / シルバー（強い青は使わない） */
+  --sky:    #DCEAF2;
+  --sky-2:  #C7D7E2;
+  --silver: #AEBCC7;
+
+  /* brand gold ― ロゴと SAKURA の面のみ */
+  --gold:      #C9A24B;
+  --gold-soft: #E3C888;
+
+  --font-en: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-jp: 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* 日本語見出し専用。本文の --font-jp とは分けてある。
+     Noto Sans JP は軽いウェイトだと骨格が柔らかく、丸みのある印象が出る。
+     見出しだけ各OSの端正なゴシックを先に置く ―― どれも直線的でクセがなく、
+     外部フォントを増やさずに済む。
+       Apple   … ヒラギノ角ゴ
+       Windows … 游ゴシック（Medium を先に指定して、Chrome での痩せを避ける）
+       その他   … Noto Sans JP（Android の標準でもあるので見え方は変わらない） */
+  --font-jp-title:
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans',
+    'Yu Gothic Medium', 'Yu Gothic', YuGothic,
+    'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --ease:     cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.30, 1);
+
+  --shell:  min(1280px, 100%);
+  --gutter: clamp(24px, 5.5vw, 76px);
+
+  --mx: 0;
+  --my: 0;
+  --sy: 0;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-html, body { overflow-x: hidden; overflow-x: clip; max-width: 100%; }
+*, *::before, *::after { box-sizing: border-box; }
+/* 横スクロールを作らない。clip は「スクロール領域を作らずに切る」ので、
+   clip はスクロール領域を作らないので、sticky や固定要素の挙動を変えない。
+   clip 非対応の古い環境向けに body 側の overflow-x: hidden も残す。 */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
 
 body {
-  background: var(--color-black);
-  color: var(--color-white);
-  font-family: var(--font-sans);
-  font-weight: 300;
-  line-height: 1.9;
+  position: relative;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink-2);
+  font-family: var(--font-jp);
+  font-weight: 400;
+  font-size: 1.02rem;
+  line-height: 2.05;
+  letter-spacing: 0.045em;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-img, svg, video, iframe, table { max-width: 100%; }
-
-img, svg { display: block; max-width: 100%; }
-
+img, svg, video { display: block; max-width: 100%; }
+img, video { height: auto; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
 a { color: inherit; text-decoration: none; }
-
-ul { list-style: none; }
-
-.only-pc { display: inline; }
-
-.bg-ambient {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(60vw 46vh at 50% 40%, rgba(201, 162, 75, 0.05), transparent 60%),
-    radial-gradient(90vw 70vh at 50% 42%, rgba(201, 162, 75, 0.025), transparent 70%);
-  transform: translateZ(0);
-}
+button, input, textarea { font: inherit; color: inherit; }
+::selection { background: rgba(150, 190, 220, 0.28); color: var(--ink); }
 
 .skip-link {
-  position: fixed;
-  top: -60px;
-  left: 16px;
-  z-index: 1000;
-  background: var(--color-gold);
-  color: var(--color-black);
-  padding: 12px 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  border-radius: 2px;
+  position: fixed; top: -80px; left: 16px; z-index: 1000;
+  padding: 12px 20px; border-radius: 2px;
+  background: var(--ink); color: var(--white);
+  font-size: 0.86rem; font-weight: 500;
   transition: top 0.25s var(--ease);
 }
-
-.skip-link:focus {
-  top: 16px;
+.skip-link:focus { top: 16px; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 1px solid #7FA6C4; outline-offset: 3px;
 }
 
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--color-gold-light);
-  outline-offset: 3px;
-}
+.only-pc { display: inline; }
+.only-sp { display: none; }
 
 .scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-gold-deep), var(--color-gold-light));
-  z-index: 200;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.1s linear;
+  position: fixed; top: 0; left: 0; z-index: 90;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, rgba(120,160,195,0.25), #8FB2CC);
+  transform: scaleX(0); transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* ============================================================
+   ページ全体の地
+   HERO から CONTACT まで、1枚のグラデーションで途切れずに続く。
+   セクションごとに平らな帯を敷くと「面が切り替わった」ように見えるので、
+   帯はここへ一本化し、各セクションには光の溜まりだけを残してある。
+   区切りの位置（--b1〜--b6）は js/script.js が実測して入れるので、
+   文章量やビューポートが変わっても継ぎ目は出ない。
+   BRANDS の黒は .brand-shift が上に重なる。その上下端は透明なので、
+   この地とそのまま繋がり、白→シルバー→黒→シルバー→白と沈んで戻る。
+   ============================================================ */
+.page-tone {
+  position: absolute; inset: 0; z-index: -3;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    #F5F1EB 0%,                 /* HERO      ― Warm White */
+    #F2F1EE var(--b1, 13%),     /* PHILOSOPHY 上端 */
+    #EDF1F6 var(--b2, 30%),     /* BUSINESS   上端 ― Pale Blue */
+    #E7ECF2 var(--b2b, 42%),    /* BUSINESS   後半 */
+    #DDE3EA var(--b3, 52%),     /* BRANDS     上端 ― Silver Gray が混ざる */
+    #E2E7ED var(--b4, 66%),     /* MESSAGE    上端 ― 黒から戻ってくる */
+    #F1F0EC var(--b5, 78%),     /* COMPANY    上端 ― Warm White へ */
+    #ECEFF3 var(--b6, 89%),     /* CONTACT    上端 */
+    #E7EAEE 100%);              /* 最下部 ― 静かに沈めて終える */
+}
+
+/* ============================================================
+   FIELD ― 白い空間（固定背景）
+   ============================================================ */
+.field {
+  position: fixed; inset: 0; z-index: -2;
+  overflow: hidden; pointer-events: none;
+  contain: layout paint;
+  /* 地色は .page-tone が持つ。ここは光だけを浮かせる層にする */
+  background: transparent;
+}
+
+/* 朝の光が入るロビー ― 上と右奥から柔らかく差す */
+.field-sky {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(96% 68% at 62% -12%, #FFFFFF 0%, rgba(255,255,255,0) 58%),
+    radial-gradient(54% 44% at 12% 18%, rgba(220, 234, 242, 0.85) 0%, rgba(220,234,242,0) 70%),
+    linear-gradient(178deg, var(--white) 0%, var(--paper) 44%, var(--paper-2) 100%);
+}
+
+/* 自然光そのもの ― 20秒かけて非常にゆっくり動き、明度がわずかに呼吸する */
+.field-daylight {
+  position: absolute; left: 50%; top: -22%;
+  width: min(1500px, 130vw); height: min(1200px, 116vh);
+  transform: translateX(-50%);
+  background:
+    radial-gradient(closest-side, rgba(255, 255, 255, 0.95) 0%, rgba(255,255,255,0) 72%),
+    radial-gradient(closest-side at 58% 62%, rgba(214, 234, 246, 0.55) 0%, rgba(214,234,246,0) 74%);
+  /* 28秒 ― Warm White(24s) と同じ固定背景にいるので、周期をずらして同期させない */
+  animation: daylight 28s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes daylight {
+  0%, 100% { transform: translateX(-50%) translate3d(0, 0, 0);        opacity: 0.86; }
+  50%      { transform: translateX(-50%) translate3d(-3%, 2.5%, 0);   opacity: 1; }
+}
+
+/* ============================================================
+   MOVING LIGHT ― サイト共通の常時モーション
+   ------------------------------------------------------------
+   Warm White / Pale Blue / Silver の3つの光が、それぞれ違う速さで
+   空間を巡回する。粒子でも線でもなく「大きくぼかした面」だけ。
+   固定背景の中にあるので、どのセクションへスクロールしても
+   同じ光が引き継がれ、BRANDS の黒い階調に入ると自然に隠れる。
+   動かすのは transform と opacity のみ（blur は初期化時に1度だけ）。
+   ============================================================ */
+.field-lamps {
+  position: absolute; inset: 0;
+  /* 照明の位置だけがスクロールでわずかに動く（最大16px） */
+  transform: translate3d(0, calc(var(--sp, 0) * 16px), 0);
   will-change: transform;
 }
+.field-lamp { position: absolute; display: block; will-change: transform, opacity; }
 
+/* Warm White ― 24秒 */
+.field-lamp--a {
+  left: -14%; top: -12%; width: 62%; height: 76%;
+  background: radial-gradient(closest-side, rgba(250, 244, 234, 0.74), rgba(250,244,234,0) 72%);
+  filter: blur(64px);
+  animation: lampA 24s ease-in-out infinite;
+}
+@keyframes lampA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);       opacity: 0.72; }
+  50%      { transform: translate3d(9%, 6%, 0) scale(1.08);  opacity: 1; }
+}
+
+/* Pale Blue ― 31秒 */
+.field-lamp--b {
+  right: -12%; top: -8%; width: 56%; height: 72%;
+  background: radial-gradient(closest-side, rgba(216, 232, 244, 0.6), rgba(216,232,244,0) 74%);
+  filter: blur(70px);
+  animation: lampB 31s ease-in-out infinite;
+}
+@keyframes lampB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 0.58; }
+  50%      { transform: translate3d(-6%, 8%, 0) scale(1.1);   opacity: 0.92; }
+}
+
+/* Silver ― 37秒 */
+.field-lamp--c {
+  left: 16%; bottom: -18%; width: 68%; height: 64%;
+  background: radial-gradient(closest-side, rgba(206, 214, 222, 0.5), rgba(206,214,222,0) 76%);
+  filter: blur(76px);
+  animation: lampC 37s ease-in-out infinite;
+}
+@keyframes lampC {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 0.5; }
+  50%      { transform: translate3d(-7%, -5%, 0) scale(1.06); opacity: 0.86; }
+}
+
+/* Architectural Reflection ― ガラス面の反射が45秒かけて空間を横切る。
+   カードにはせず、傾いた帯を大きくぼかしただけ。 */
+.field-pane {
+  position: absolute; top: -20%; left: -34%;
+  width: 40%; height: 140%;
+  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 255, 255, 0.46) 46%, rgba(255,255,255,0) 82%);
+  filter: blur(38px);
+  animation: paneDrift 45s linear infinite;
+  will-change: transform, opacity;
+}
+@keyframes paneDrift {
+  0%   { transform: translateX(0) skewX(-6deg);    opacity: 0; }
+  12%  { opacity: 0.66; }
+  84%  { opacity: 0.66; }
+  100% { transform: translateX(320%) skewX(-6deg); opacity: 0; }
+}
+
+/* ============================================================
+   Liquid Silk ― 奥の巨大な曲面に光が当たり、白とシルバーの面が
+   ゆっくり形を変えながら流れていく層。
+   ・帯は画面幅の 40〜56%。細い光線は作らない
+   ・1枚の中に「山（白）＝ +8」と「谷（シルバー）＝ -12」を持たせ、
+     その差 20 で絹の折り目としての立体感を出す（単独の暗い塊にはしない）
+   ・ぼかしは使わない。グラデーションの裾を長く取れば同じ柔らかさが
+     出るうえ、動かすのが transform と opacity だけで済む
+   ・往復させず一方向に流す。両端で消えるので折り返しは見えない
+   ・スクロールが進むほど振幅を落とし、BRANDS の黒へ静かに吸収させる
+     （黒側は .brand-shift の不透明部分がこの層を覆うので、何も足さない）
+   ============================================================ */
+.field-silk {
+  position: absolute; inset: 0;
+  /* HERO が最も強く、下へ進むほど穏やかになる */
+  opacity: calc(1 - var(--sp, 0) * 0.45);
+}
+.field-silk-band {
+  position: absolute; top: -26%; height: 152%;
+  will-change: transform, opacity;
+}
+
+/* 中景 ― 主役。いちばんはっきり見える白〜シルバーの面 */
+.field-silk-band--1 {
+  left: -34%; width: 52%;
+  background: linear-gradient(101deg,
+    rgba(255, 255, 255, 0)    0%,
+    rgba(255, 255, 255, 0.28) 15%,
+    rgba(255, 255, 255, 0.60) 32%,
+    rgba(154, 167, 182, 0.17) 52%,
+    rgba(255, 255, 255, 0.44) 71%,
+    rgba(255, 255, 255, 0.13) 87%,
+    rgba(255, 255, 255, 0)    100%);
+  animation: silkFlowA 12s linear infinite;
+}
+@keyframes silkFlowA {
+  0%   { transform: translate3d(0, 0, 0) scale(1, 1);           opacity: 0; }
+  11%  { opacity: 0.96; }
+  34%  { transform: translate3d(76%, 3%, 0) scale(1.3, 1.05);   opacity: 1; }
+  64%  { transform: translate3d(158%, -2%, 0) scale(0.88, 0.98); opacity: 1; }
+  89%  { opacity: 0.9; }
+  100% { transform: translate3d(252%, 2%, 0) scale(1.16, 1.03);  opacity: 0; }
+}
+
+/* 中景の2枚目 ― 少し奥。ゆっくりで、谷も浅い */
+.field-silk-band--2 {
+  left: -40%; width: 56%;
+  background: linear-gradient(97deg,
+    rgba(255, 255, 255, 0)    0%,
+    rgba(255, 255, 255, 0.22) 18%,
+    rgba(255, 255, 255, 0.46) 36%,
+    rgba(163, 176, 190, 0.11) 55%,
+    rgba(255, 255, 255, 0.32) 73%,
+    rgba(255, 255, 255, 0)    100%);
+  animation: silkFlowB 16.5s linear -6.4s infinite;
+}
+@keyframes silkFlowB {
+  0%   { transform: translate3d(0, 4%, 0) scale(1, 1);           opacity: 0; }
+  13%  { opacity: 0.82; }
+  40%  { transform: translate3d(70%, -3%, 0) scale(1.34, 1.06);  opacity: 0.94; }
+  70%  { transform: translate3d(146%, 4%, 0) scale(0.9, 0.97);   opacity: 0.9; }
+  90%  { opacity: 0.7; }
+  100% { transform: translate3d(236%, 1%, 0) scale(1.1, 1.02);   opacity: 0; }
+}
+
+/* 前景 ― 手前を速く抜ける、薄いシルバーの反射面。谷は作らない */
+.field-silk-band--3 {
+  left: -28%; width: 40%;
+  background: linear-gradient(107deg,
+    rgba(255, 255, 255, 0)    0%,
+    rgba(255, 255, 255, 0.34) 30%,
+    rgba(226, 234, 242, 0.5)  50%,
+    rgba(255, 255, 255, 0.24) 72%,
+    rgba(255, 255, 255, 0)    100%);
+  animation: silkFlowC 10.5s linear -3.1s infinite;
+}
+@keyframes silkFlowC {
+  0%   { transform: translate3d(0, -3%, 0) scale(1, 1);          opacity: 0; }
+  15%  { opacity: 0.62; }
+  45%  { transform: translate3d(96%, 2%, 0) scale(1.2, 1.04);    opacity: 0.7; }
+  75%  { transform: translate3d(192%, -1%, 0) scale(0.94, 0.99); opacity: 0.6; }
+  100% { transform: translate3d(292%, 2%, 0) scale(1.08, 1.02);  opacity: 0; }
+}
+
+/* スマホは画面が狭いぶん帯を広く取り、谷も少し深くして面の存在感を保つ。
+   ぼかしを使っていないので、枚数が増えてもスクロールは重くならない。 */
+@media (max-width: 768px) {
+  .field-silk-band--1 {
+    left: -36%; width: 62%;
+    background: linear-gradient(101deg,
+      rgba(255, 255, 255, 0)    0%,
+      rgba(255, 255, 255, 0.32) 15%,
+      rgba(255, 255, 255, 0.66) 32%,
+      rgba(150, 164, 180, 0.21) 52%,
+      rgba(255, 255, 255, 0.5)  71%,
+      rgba(255, 255, 255, 0.15) 87%,
+      rgba(255, 255, 255, 0)    100%);
+  }
+  .field-silk-band--2 {
+    left: -42%; width: 66%;
+    background: linear-gradient(97deg,
+      rgba(255, 255, 255, 0)    0%,
+      rgba(255, 255, 255, 0.26) 18%,
+      rgba(255, 255, 255, 0.52) 36%,
+      rgba(159, 172, 187, 0.14) 55%,
+      rgba(255, 255, 255, 0.36) 73%,
+      rgba(255, 255, 255, 0)    100%);
+  }
+  .field-silk-band--3 { left: -30%; width: 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field-silk-band { animation: none; opacity: 0.5; }
+}
+
+/* 床に落ちる、ごく薄い影 */
+.field-floor {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40vh;
+  background: linear-gradient(180deg, rgba(30, 50, 70, 0) 0%, rgba(30, 50, 70, 0.035) 72%, rgba(30, 50, 70, 0.06) 100%);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
 .site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--header-height);
-  z-index: 100;
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  transition: background 0.5s var(--ease), border-color 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  position: fixed; top: 0; left: 0; z-index: 80; width: 100%;
+  /* ロゴ背後の暖色（.logo::after は width:200%）が左へ数px出るので横だけ切る */
+  overflow-x: clip;
+  padding: 24px 0;
+  transition: background 0.7s var(--ease), padding 0.6s var(--ease), box-shadow 0.7s var(--ease);
 }
-
+/* スクロール中は「半透明のガラス板」にする。
+   0.82 では裏の本文が読めてしまっていたので、不透明度を 0.90 まで上げ、
+   最小限の backdrop-blur を併用して背後の文字を判別不能にする。
+   ベタ白にはせず、境界線と影は従来のまま（強くしない）。 */
 .site-header.is-scrolled {
-  background: rgba(9, 8, 7, 0.86);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-image: linear-gradient(90deg, transparent, var(--color-border) 20%, var(--color-border) 80%, transparent) 1;
-  box-shadow: 0 16px 40px -24px rgba(0, 0, 0, 0.85);
+  padding: 14px 0;
+  background: rgba(250, 249, 247, 0.95);
+  -webkit-backdrop-filter: blur(18px) saturate(1.06);
+          backdrop-filter: blur(18px) saturate(1.06);
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -34px rgba(30, 50, 70, 0.28);
 }
-
+/* backdrop-filter が使えない環境では、不透明度だけで遮蔽する */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header.is-scrolled { background: rgba(250, 249, 247, 0.985); }
+}
 .header-inner {
-  max-width: var(--max-width);
-  height: 100%;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 
-.logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.16em;
-  color: var(--color-white);
-  transition: color 0.4s var(--ease);
-}
-
-.logo:hover { color: var(--color-gold-light); }
-
-.logo span { color: var(--color-gold); transition: color 0.4s var(--ease); }
-
-.logo-mark {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: var(--color-gold);
-  stroke-width: 1.4;
-  flex-shrink: 0;
-  transition: transform 0.5s var(--ease), stroke 0.4s var(--ease);
-}
-
-.logo:hover .logo-mark {
-  stroke: var(--color-gold-light);
-  transform: rotate(135deg);
-}
-
+.logo, .hamburger { position: relative; z-index: 2; }
+.logo { display: inline-flex; align-items: center; }
 .logo-img {
-  height: 50px;
-  width: auto;
-  display: block;
-  transition: opacity 0.35s var(--ease);
+  height: 46px; width: auto;
+  transition: height 0.6s var(--ease), opacity 0.5s var(--ease);
+  opacity: 0;
+  /* ぼけ＋わずかな縮小から静かに結像する（発光はさせない） */
+  animation: logoResolve 1.6s var(--ease-out) 0.25s forwards;
+}
+@keyframes logoResolve {
+  from { opacity: 0; transform: scale(0.96); filter: blur(10px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
 }
 
+/* 白い壁にゴールドの色がわずかに反射している、という程度の暖色。
+   光量は固定し、大きさだけが 26 秒かけて呼吸する。 */
+.logo::after {
+  content: ""; position: absolute; left: 50%; top: 50%; z-index: -1;
+  width: 200%; height: 220%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(201, 162, 75, 0.14), rgba(201,162,75,0) 72%);
+  filter: blur(24px);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: fadeIn 1.8s var(--ease) 0.9s forwards, logoWarmBreath 26s ease-in-out 3s infinite;
+}
+@keyframes logoWarmBreath {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.14); }
+}
+
+/* ロゴのあと、ナビが1項目ずつ静かに現れる（opacity と 5px だけ） */
+.main-nav li { opacity: 0; animation: navIn 0.9s var(--ease-out) forwards; }
+.main-nav li:nth-child(1) { animation-delay: 0.62s; }
+.main-nav li:nth-child(2) { animation-delay: 0.68s; }
+.main-nav li:nth-child(3) { animation-delay: 0.74s; }
+.main-nav li:nth-child(4) { animation-delay: 0.80s; }
+.main-nav li:nth-child(5) { animation-delay: 0.86s; }
+.main-nav li:nth-child(6) { animation-delay: 0.92s; }
+.hamburger { opacity: 0; animation: navIn 0.9s var(--ease-out) 0.62s forwards; }
+@keyframes navIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.site-header.is-scrolled .logo-img { height: 35px; }
 .logo:hover .logo-img { opacity: 0.82; }
 
-.main-nav ul {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-}
-
+.main-nav ul { display: flex; align-items: center; gap: clamp(20px, 2.6vw, 38px); }
 .nav-link {
-  font-size: 0.86rem;
-  letter-spacing: 0.06em;
-  position: relative;
-  padding-bottom: 6px;
-  transition: color 0.35s var(--ease), letter-spacing 0.35s var(--ease);
+  position: relative; padding: 6px 0;
+  font-weight: 400; font-size: 0.86rem; letter-spacing: 0.1em; color: var(--ink-2);
+  transition: color 0.5s var(--ease);
 }
-
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-gold-light), transparent);
-  transform: translateX(-50%);
-  transition: width 0.4s var(--ease);
-}
-
-.nav-link:hover {
-  color: var(--color-gold-light);
-  letter-spacing: 0.09em;
-}
-
-.nav-link:hover::after { width: 100%; }
-
+.nav-link:hover { color: var(--ink); }
+/* 参考画像に合わせ、細い枠だけのボタン（塗りは持たせない） */
 .nav-cta {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  border: 1px solid var(--color-gold);
-  padding: 0 22px;
-  border-radius: 2px;
-  color: var(--color-gold-light);
-  overflow: hidden;
-  transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+  padding: 11px 26px; border-radius: 0; color: var(--ink);
+  border: 1px solid rgba(30, 50, 70, 0.16);
+  background: rgba(255, 255, 255, 0.32);
+  transition: background 0.6s var(--ease), border-color 0.6s var(--ease);
 }
+.nav-cta:hover { background: rgba(246, 241, 232, 0.7); border-color: rgba(184, 145, 84, 0.42); }
 
-.nav-cta::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 35%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-  transform: skewX(-20deg);
-  transition: left 0.7s var(--ease);
-  pointer-events: none;
-}
-
-.nav-cta:hover {
-  background: var(--color-gold);
-  color: var(--color-black);
-  border-color: var(--color-gold-light);
-}
-
-.nav-cta:hover::after { left: 130%; }
-
-.hamburger {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  width: 44px;
-  height: 44px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
+.hamburger { display: none; width: 46px; height: 46px; padding: 0; background: none; border: none; cursor: pointer; }
 .hamburger span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--color-gold-light);
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  position: absolute; left: 12px; width: 22px; height: 1px; background: var(--ink);
+  transition: transform 0.5s var(--ease), opacity 0.35s var(--ease);
 }
-
-.hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger span:nth-child(1) { top: 17px; }
+.hamburger span:nth-child(2) { top: 23px; }
+.hamburger span:nth-child(3) { top: 29px; }
+.hamburger.is-open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .hamburger.is-open span:nth-child(2) { opacity: 0; }
-.hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.hamburger.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
+/* ============================================================
+   HERO ― reference/rafale-hero-reference.png の再構築
+   ------------------------------------------------------------
+   参考画像を実測した結果（推測ではなく計測値）:
+     左上ロゴ周り  #F5F1ED   青-赤 -8   ← 暖色のオフホワイト
+     左のコピー地  #F1EBE6   青-赤 -11  ← いちばん暖かい
+     中央下の床    #E7E6E6   彩度 0.4%  ← ほぼ無彩色
+     右上ガラス    #E6E8EB   彩度 2.1%
+     右中ガラス    #C5CFD7   彩度 8.4%  ← 画面でいちばん青い所でもこれだけ
+     文字の最濃部  #795932            ← 沈んだシャンパンゴールド
+     文字の範囲    x 5.7%〜52.0%（幅46.3%）／3行で画面高の40%
+   → 空間はほぼ無彩色。青は"最も濃い一点"でも彩度8%しかない。
+     ガラスは色ではなく、エッジ・反射・屈折・影で見せる。
+   ============================================================ */
 .hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  position: relative; min-height: 100svh;
+  display: flex; align-items: center;
+  padding: 148px 0 128px;
   overflow: hidden;
-  padding: 0 24px;
-}
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
+  /* HERO だけ、左が暖かく右が冷たい地色を敷く（実測値どおり）。
+     下端は .page-tone の PHILOSOPHY 上端と同じ色（#F2F1EE）まで溶かすので、
+     セクションの境目に水平線は出ず、そのまま次の空間へ続く。 */
   background:
-    radial-gradient(ellipse at 20% 20%, rgba(201, 162, 75, 0.12), transparent 55%),
-    radial-gradient(ellipse at 80% 75%, rgba(201, 162, 75, 0.08), transparent 50%),
-    linear-gradient(180deg, #0a0a0a 0%, #0d0c0a 100%);
-  z-index: -5;
-  transition: opacity 1.2s var(--ease);
+    linear-gradient(180deg,
+      rgba(242, 241, 238, 0) 0%,
+      rgba(242, 241, 238, 0) 54%,
+      rgba(242, 241, 238, 0.5) 80%,
+      rgba(242, 241, 238, 1) 100%),
+    linear-gradient(100deg,
+      #F3EDE8 0%,
+      #F1EBE6 26%,
+      #EFEDEB 52%,
+      #EAECEE 74%,
+      #E6E8EB 100%);
 }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 2s var(--ease); }
+.hero-video.is-ready { opacity: 0.34; }
 
-.hero-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  z-index: -4;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1.2s var(--ease);
-}
+/* ---------- 空気 ― すべて低彩度。青は「気配」程度に留める ---------- */
+.hero-atmos { position: absolute; inset: 0; pointer-events: none; }
 
-.hero-image.is-ready { opacity: 1; }
-
-.hero-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -3;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1.4s var(--ease);
-}
-
-.hero-video.is-ready { opacity: 1; }
-
-.hero-shade {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  opacity: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(10, 8, 6, 0.7) 0%, rgba(10, 8, 6, 0.4) 45%, rgba(10, 8, 6, 0.8) 100%);
-  transition: opacity 1.4s var(--ease);
-}
-
-.hero.has-video .hero-bg,
-.hero.has-image .hero-bg { opacity: 0; }
-
-.hero.has-video .hero-shade,
-.hero.has-image .hero-shade { opacity: 1; }
-
-.hero.has-video .hero-movie,
-.hero.has-image .hero-movie { opacity: 0; }
-
-.hero-movie {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  transition: opacity 1s var(--ease);
-}
-
-.hero-movie-texture {
-  position: absolute;
-  inset: 0;
-  opacity: 0.5;
+/* 左の暖かい光 */
+.hero-warm {
+  position: absolute; left: -14%; top: -16%;
+  width: 74%; height: 124%;
   background:
-    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 4px),
-    repeating-linear-gradient(25deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 5px);
+    radial-gradient(44% 40% at 40% 34%, rgba(238, 224, 206, 0.52), rgba(238,224,206,0) 72%),
+    radial-gradient(56% 50% at 26% 62%, rgba(252, 248, 242, 0.92), rgba(252,248,242,0) 74%);
+  filter: blur(56px);
+  animation: warmBreath 29s ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes warmBreath {
+  0%, 100% { opacity: 0.76; transform: translate3d(0, 0, 0); }
+  50%      { opacity: 1;    transform: translate3d(2%, 2%, 0); }
 }
 
-.hero-movie-wash {
-  position: absolute;
-  inset: 0;
-  opacity: 0.5;
+/* 言葉の背後の白い抜け */
+.hero-halo {
+  position: absolute; left: 0; top: 44%;
+  width: min(920px, 88vw); height: min(760px, 86vh);
+  transform: translate(-22%, -50%) translate3d(calc(var(--mx) * 9px), calc(var(--my) * 7px + var(--sy) * 42px), 0);
+  background: radial-gradient(closest-side, rgba(253, 250, 246, 0.94), rgba(253,250,246,0) 66%);
+  opacity: 0;
+  animation: haloIn 2.2s var(--ease) 0.10s forwards, haloBreath 19s ease-in-out 2.4s infinite;
+  will-change: transform, opacity;
+}
+@keyframes haloIn { to { opacity: 1; } }
+@keyframes haloBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.86; } }
+
+/* 右のシルバー（青ではなくグレー寄り。実測 #C5CFD7 を超えない） */
+.hero-silver {
+  position: absolute; right: -12%; top: -12%;
+  width: 68%; height: 118%;
+  background: radial-gradient(44% 38% at 54% 42%, rgba(198, 207, 215, 0.46), rgba(198,207,215,0) 74%);
+  filter: blur(68px);
+  animation: silverDrift 23s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes silverDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1);      opacity: 0.6; }
+  44%  { transform: translate3d(-3%, 4%, 0) scale(1.08); opacity: 0.88; }
+  100% { transform: translate3d(0, 0, 0) scale(1);      opacity: 0.6; }
+}
+
+/* 青は屈折の気配としてだけ。面として塗らない */
+.hero-tint {
+  position: absolute; right: 6%; top: 30%;
+  width: 34%; height: 46%;
+  background: radial-gradient(closest-side, rgba(176, 198, 216, 0.28), rgba(176,198,216,0) 74%);
+  filter: blur(58px);
+  animation: tintDrift 17s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes tintDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);      opacity: 0.62; }
+  50%      { transform: translate3d(-3%, -2%, 0) scale(1.1); opacity: 0.92; }
+}
+
+/* 左上から差し込む光の帯（参考画像でいちばん効いている要素） */
+.hero-rays {
+  position: absolute; inset: -30% -20%;
   background:
-    linear-gradient(160deg, rgba(201, 162, 75, 0.07) 0%, transparent 45%),
-    linear-gradient(-20deg, rgba(201, 162, 75, 0.05) 0%, transparent 50%);
-}
-
-.hero-movie-glow {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(640px, 90vw);
-  height: min(640px, 90vw);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(230, 200, 119, 0.5) 0%, rgba(201, 162, 75, 0.24) 38%, transparent 72%);
+    linear-gradient(112deg, rgba(255,255,255,0) 28%, rgba(255, 253, 250, 0.9) 35%, rgba(255,255,255,0) 41%),
+    linear-gradient(112deg, rgba(255,255,255,0) 43%, rgba(255, 252, 247, 0.56) 48%, rgba(255,255,255,0) 54%),
+    linear-gradient(112deg, rgba(255,255,255,0) 57%, rgba(253, 250, 246, 0.34) 61%, rgba(255,255,255,0) 66%);
+  filter: blur(24px);
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.7);
-}
-
-.hero-movie-particles { position: absolute; inset: 0; }
-
-.hero-movie-particles span {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--color-gold-light);
-  opacity: 0;
-  animation-delay: var(--delay, 0s);
-}
-
-.hero-movie-petals { position: absolute; inset: 0; }
-
-.hero-movie-petal {
-  position: absolute;
-  top: var(--start-y, 30%);
-  left: var(--start-x, 0);
-  width: var(--size, 7px);
-  height: calc(var(--size, 7px) * 0.62);
-  border-radius: 50% 0 50% 50%;
-  background: var(--petal-color, #e9c9b6);
-  opacity: 0;
-  filter: blur(var(--blur, 0px));
-  transform: translate(0, 0) rotate(0deg);
-  animation-delay: var(--delay, 0s);
-}
-
-.hero-movie-petal--far  { z-index: 1; }
-.hero-movie-petal--mid  { z-index: 2; }
-.hero-movie-petal--near { z-index: 3; }
-
-@keyframes movieGlow {
-  0%, 20%    { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
-  25%        { opacity: 0.15; transform: translate(-50%, -50%) scale(0.8); }
-  50%        { opacity: 0.8; transform: translate(-50%, -50%) scale(1.04); }
-  58.3%      { opacity: 0.95; transform: translate(-50%, -50%) scale(1.1); }
-  75%        { opacity: 0.45; transform: translate(-50%, -50%) scale(1); }
-  95.8%      { opacity: 0.15; transform: translate(-50%, -50%) scale(0.9); }
-  100%       { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
-}
-
-@keyframes movieParticle {
-  0%, 24%    { opacity: 0; transform: translate(0, 0) scale(0.8); }
-  32%        { opacity: 0.7; }
-  55%        { opacity: 0.85; transform: translate(var(--px), var(--py)) scale(1); }
-  78%        { opacity: 0.35; }
-  88%, 100%  { opacity: 0; transform: translate(var(--px), var(--py)) scale(0.9); }
-}
-
-@keyframes moviePetal {
-  0%         { opacity: 0; transform: translate(0, 0) rotate(0deg); }
-  8%         { opacity: var(--peak-opacity, 0.4); }
-  50%        { opacity: var(--peak-opacity, 0.4); transform: translate(var(--end-x, 40vw), var(--drop, 60px)) rotate(var(--spin, 140deg)); }
-  72%        { opacity: 0.12; }
-  85%, 100%  { opacity: 0; transform: translate(calc(var(--end-x, 40vw) * 1.15), calc(var(--drop, 60px) * 1.4)) rotate(calc(var(--spin, 140deg) * 1.3)); }
-}
-
-@keyframes movieLogoReveal {
-  0%, 58.3%  { opacity: 0; transform: translateY(10px); }
-  66.7%      { opacity: 1; transform: translateY(0); }
-  95.8%      { opacity: 1; transform: translateY(0); }
-  100%       { opacity: 0; transform: translateY(-6px); }
-}
-
-@keyframes movieTaglineReveal {
-  0%, 66.7%  { opacity: 0; transform: translateY(10px); }
-  75%        { opacity: 1; transform: translateY(0); }
-  95.8%      { opacity: 1; transform: translateY(0); }
-  100%       { opacity: 0; transform: translateY(-6px); }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .hero-movie-glow { animation: movieGlow 12s ease-in-out infinite; }
-  .hero-movie-particles span { animation: movieParticle 12s ease-in-out infinite; }
-  .hero-movie-petal {
-    animation-name: moviePetal;
-    animation-duration: var(--duration, 9s);
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-  }
-  .hero-logo-block { animation: movieLogoReveal 12s ease-in-out infinite; }
-  .hero-title, .hero-lead { animation: movieTaglineReveal 12s ease-in-out infinite; }
-}
-
-.hero-movie.is-paused,
-.hero-movie.is-paused * { animation-play-state: paused !important; }
-
-@media (max-width: 768px) {
-  .hero-movie-particles span:nth-child(even) { display: none; }
-}
-
-.hero-logo-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 44px;
-}
-
-.hero-logo-img {
-  width: min(300px, 62vw);
-  height: auto;
-  display: block;
-}
-
-.sakura-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 40;
-  pointer-events: none;
-}
-
-.hero-inner { max-width: 700px; }
-
-.hero-title {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: clamp(1.7rem, 4.2vw, 2.5rem);
-  letter-spacing: 0.045em;
-  line-height: 1.62;
-  margin-bottom: 30px;
-}
-
-.hero-lead {
-  color: var(--color-text-muted);
-  font-size: 1.02rem;
-  line-height: 2.05;
-  letter-spacing: 0.09em;
-  margin-bottom: 60px;
-}
-
-.btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 14px 40px;
-  font-size: 0.88rem;
-  letter-spacing: 0.08em;
-  border-radius: 2px;
-  overflow: hidden;
-
-  transition: translate 0.4s var(--ease), box-shadow 0.4s var(--ease),
-    background 0.4s var(--ease), color 0.4s var(--ease), letter-spacing 0.4s var(--ease);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.btn-gold {
-  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold));
-  color: var(--color-black);
-  font-weight: 500;
-  border: 1px solid var(--color-gold);
-}
-
-.btn-gold:hover {
-  background: transparent;
-  color: var(--color-gold-light);
-  box-shadow:
-    0 0 0 1px var(--color-gold-light) inset,
-    0 14px 30px -16px rgba(201, 162, 75, 0.55);
-  letter-spacing: 0.11em;
-  translate: 0 -2px;
-}
-
-.btn-gold:active { translate: 0 -1px; }
-
-.btn-gold::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 35%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transform: skewX(-20deg);
-  transition: left 0.75s var(--ease);
-  pointer-events: none;
-}
-
-.btn-gold:hover::after { left: 130%; }
-
-.hero-cta {
-  min-height: 46px;
-  padding: 11px 46px;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  background: linear-gradient(135deg, #c2a054, #a9863b);
-  border-color: rgba(201, 162, 75, 0.5);
-  box-shadow: 0 12px 34px -20px rgba(201, 162, 75, 0.5);
-}
-
-.hero-cta:hover {
-  letter-spacing: 0.19em;
-}
-
-.btn-gold.reveal {
-  transition: translate 0.4s var(--ease), background 0.4s var(--ease),
-    color 0.4s var(--ease), box-shadow 0.4s var(--ease), letter-spacing 0.4s var(--ease),
-    opacity 1.1s var(--ease), transform 1.1s var(--ease);
-}
-
-.btn-block { width: 100%; text-align: center; border: none; cursor: pointer; }
-
-.scroll-cue {
-  position: absolute;
-  bottom: 36px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  color: var(--color-text-muted);
-  transition: color 0.3s ease;
-}
-
-.scroll-cue:hover { color: var(--color-gold-light); }
-
-.scroll-cue span {
-  width: 1px;
-  height: 36px;
-  background: linear-gradient(180deg, var(--color-gold), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
-
-@keyframes scrollPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
-}
-
-.section { padding: 132px 24px; }
-
-.section-alt { background: var(--color-black-soft); }
-
-.section-inner { max-width: var(--max-width); margin: 0 auto; }
-
-.section-tag {
-  color: rgba(245, 243, 238, 0.6);
-  font-weight: 300;
-  font-size: 0.75rem;
-  letter-spacing: 0.38em;
-  text-indent: 0.38em;
-  text-transform: uppercase;
-  margin-bottom: 22px;
-}
-
-.section-title {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: clamp(1.9rem, 3.8vw, 2.6rem);
-  letter-spacing: 0.03em;
-  line-height: 1.58;
-  max-width: 34rem;
-  margin-bottom: 30px;
-  position: relative;
-  padding-bottom: 30px;
-}
-
-.section-title::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light));
-  transition: width 0.9s var(--ease) 0.15s;
-}
-
-.section-title.is-visible::after { width: 56px; }
-
-.section-lead {
-  color: var(--color-text);
-  font-size: 1.05rem;
-  line-height: 2.0;
-  letter-spacing: 0.02em;
-  max-width: 40rem;
-  margin-bottom: 72px;
-}
-
-.philosophy-inner { text-align: center; }
-
-.philosophy-inner .section-tag,
-.philosophy-inner .section-title { text-align: center; }
-
-.philosophy-inner .section-title::after {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.philosophy-title {
-  font-size: clamp(2.1rem, 4.4vw, 3rem);
-  max-width: 760px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 32px;
-}
-
-.philosophy-line {
-  display: block;
-}
-
-.philosophy-line.reveal {
-  transition: opacity 1.4s var(--ease), transform 1.4s var(--ease);
-}
-
-.philosophy-title:has(.philosophy-line.is-visible)::after {
-  width: 56px;
-}
-
-.philosophy-body {
-  max-width: 42rem;
-  margin: 64px auto 0;
-}
-
-.philosophy-body p {
-  color: var(--color-text);
-  font-size: 1.15rem;
-  line-height: 2.15;
-  letter-spacing: 0.02em;
-  margin-bottom: 34px;
-}
-
-.philosophy-body p:last-child { margin-bottom: 0; }
-
-#company .section-tag,
-#company .section-title {
-  text-align: center;
-}
-
-#company .section-title {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#company .section-title::after {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.info-list {
-  max-width: 720px;
-  margin: 0 auto;
-  border-top: 1px solid var(--color-border);
-}
-
-.info-row {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  column-gap: 44px;
-  row-gap: 8px;
-  padding: 30px 8px;
-  border-bottom: 1px solid var(--color-border);
-  transition: background 0.35s var(--ease), padding-left 0.35s var(--ease);
-}
-
-.info-row:hover {
-  background: rgba(201, 162, 75, 0.045);
-  padding-left: 14px;
-}
-
-.info-row dt {
-  padding-top: 0.35em;
-  color: var(--color-gold-light);
-  font-size: 0.76rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.info-row dd {
-  color: var(--color-text);
-  font-size: 1.05rem;
-  line-height: 1.95;
-  letter-spacing: 0.02em;
-}
-
-.info-list-inline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-}
-
-.info-list-inline li {
-  position: relative;
-  padding-left: 14px;
-}
-
-.info-list-inline li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.6em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--color-gold);
-}
-
-.business-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--color-border);
-  border: 1px solid var(--color-border);
-}
-
-.business-card {
-  position: relative;
-  background: var(--color-black);
-  padding: 48px 32px;
-  overflow: hidden;
-  translate: 0 0;
-}
-
-.business-card.reveal {
-  transition: translate 0.45s var(--ease), background 0.45s var(--ease),
-    box-shadow 0.45s var(--ease), opacity 1.1s var(--ease-soft), transform 1.1s var(--ease-soft);
-}
-
-.business-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.45s var(--ease);
-}
-
-.business-card:hover {
-  background: #141210;
-  translate: 0 -5px;
-  box-shadow:
-    0 26px 52px -30px rgba(0, 0, 0, 0.72),
-    0 10px 30px -20px rgba(201, 162, 75, 0.28);
-}
-
-.business-card:hover::before { transform: scaleX(1); }
-
-.business-card:hover .business-icon {
-  color: var(--color-gold-light);
-  transform: translateY(-2px);
-}
-
-.business-icon {
-  width: 44px;
-  height: 44px;
-  color: var(--color-gold);
-  margin-bottom: 28px;
-  transition: color 0.35s var(--ease), transform 0.35s var(--ease);
-}
-
-.business-icon svg { width: 100%; height: 100%; }
-
-.business-card h3 {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 1.08rem;
-  letter-spacing: 0.01em;
-  margin-bottom: 16px;
-  color: var(--color-white);
-}
-
-.business-card p {
-  font-size: 0.94rem;
-  color: var(--color-text);
-  line-height: 1.9;
-}
-
-.brand-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 440px));
-  justify-content: center;
-  gap: 32px;
-}
-
-@media (max-width: 768px) {
-  .brand-grid { grid-template-columns: 1fr; }
-}
-
-.brand-card {
-  position: relative;
-  padding: 48px 40px;
-  text-align: center;
-  background: var(--color-panel);
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-  transition: border-color 0.4s var(--ease);
-}
-
-.brand-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-light));
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.6s var(--ease);
-}
-
-.brand-card:hover { border-color: var(--color-gold); }
-
-.brand-card:hover::before { transform: scaleX(1); }
-
-/* カード全体がブランドサイトへのリンクになっている場合の手がかり（見た目は不変） */
-.brand-card[data-brand-href] { cursor: pointer; }
-
-.brand-logo {
-  width: 100%;
-  /* SAKURAの正式ロゴは横長（1400×556）。枠の高さ120pxに合わせて幅300pxまで許容し、
-     縦横比を保ったままロゴが主役の大きさで収まるようにする（object-fit: contain）。 */
-  max-width: 300px;
-  height: 120px;
-  margin: 0 auto 28px;
-}
-
-.brand-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-.brand-name {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 1.55rem;
-  letter-spacing: 0.01em;
-  color: var(--color-white);
-  margin-bottom: 16px;
-}
-
-.brand-tagline {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  color: var(--color-gold-light);
-  font-size: 1.08rem;
-  letter-spacing: 0.06em;
-  margin-bottom: 20px;
-}
-
-.brand-desc {
-  color: var(--color-text);
-  font-size: 0.98rem;
-  line-height: 1.9;
-  margin-bottom: 36px;
-}
-
-.brand-btn { width: 100%; }
-
-@media (max-width: 480px) {
-  .brand-logo { height: 100px; }
-  .brand-card { padding: 40px 28px; }
-}
-
-#message { position: relative; overflow: hidden; }
-
-#message::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.6;
+  animation: raysIn 3s var(--ease) 0.3s forwards, raysDrift 25s ease-in-out 3.4s infinite;
+  will-change: transform, opacity;
+}
+@keyframes raysIn { to { opacity: 1; } }
+@keyframes raysDrift {
+  0%, 100% { transform: translate3d(0, 0, 0);     opacity: 1; }
+  50%      { transform: translate3d(1.4%, 1%, 0); opacity: 0.8; }
+}
+
+.hero-sweep {
+  position: absolute; top: -22%; left: -38%;
+  width: 22vw; height: 144%;
+  background: linear-gradient(104deg, rgba(255,255,255,0) 0%, rgba(255, 253, 249, 0.62) 48%, rgba(255,255,255,0) 82%);
+  filter: blur(32px);
+  animation: sweep 21s linear 1.6s infinite;
+}
+@keyframes sweep {
+  0%   { transform: translateX(0); opacity: 0; }
+  12%  { opacity: 1; }
+  84%  { opacity: 1; }
+  100% { transform: translateX(440%); opacity: 0; }
+}
+
+/* ============================================================
+   右側 ― Rafale Signature R ＋ 右下から流れる光
+   別々の装飾ではなく、ひとつの演出。R を書き始めた瞬間に光も動き出し、
+   筆が進むほど広がり、最後の払いでピークを迎え、そのまま余韻へ移る。
+   ============================================================ */
+
+/* ---- 右下から斜め上へ流れる、大きな絹の光 ----
+   外側の器が「R の進みぐあい」を、中の3枚が「完成後の呼吸」を担当する。
+   ぼかしは使わず、グラデーションの裾で柔らかくしている。 */
+.hero-flow {
+  position: absolute; right: 0; bottom: 0;
+  width: 82%; height: 88%;
+  pointer-events: none; opacity: 0;
+  animation: flowRise 3.6s cubic-bezier(0.26, 0.42, 0.24, 1) 1.8s forwards;
+  will-change: transform, opacity;
+}
+.hero-flow > span { position: absolute; display: block; }
+
+/* 1.80s 書き始め＝無 → 2.52s ループ＝弱 → 3.53s 脚＝増す
+   → 4.68s 払い＝ピーク → 5.40s 余韻 */
+@keyframes flowRise {
+  0%   { opacity: 0;    transform: translate3d(8%, 17%, 0) scale(0.82); }
+  20%  { opacity: 0.42; transform: translate3d(6%, 12%, 0) scale(0.89); }
+  48%  { opacity: 0.74; transform: translate3d(3%, 6%, 0)  scale(0.96); }
+  80%  { opacity: 1;    transform: translate3d(0, 0, 0)    scale(1.06); }
+  100% { opacity: 0.86; transform: translate3d(-1%, -2%, 0) scale(1.03); }
+}
+
+/* 大きな面 ― 右下に溜まり、左上へ抜けていく */
+.hero-flow-a {
+  right: -20%; bottom: -38%; width: 98%; height: 104%;
   background:
-    radial-gradient(ellipse 420px 300px at 12% 18%, rgba(233, 201, 182, 0.10), transparent 70%),
-    radial-gradient(ellipse 360px 260px at 88% 82%, rgba(201, 162, 75, 0.09), transparent 70%),
-    radial-gradient(ellipse 260px 200px at 70% 15%, rgba(233, 201, 182, 0.06), transparent 70%),
-    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 1px, transparent 1px, transparent 4px);
+    radial-gradient(58% 50% at 74% 80%, rgba(255, 255, 255, 0.96), rgba(255,255,255,0) 74%),
+    linear-gradient(28deg,
+      rgba(233, 224, 203, 0.56) 0%,
+      rgba(255, 255, 255, 0.74) 32%,
+      rgba(206, 221, 236, 0.4) 60%,
+      rgba(255, 255, 255, 0) 88%);
+  animation: flowBreathA 26s ease-in-out 5.4s infinite;
+}
+/* 絹の筋 ― 面の中を通る、一段明るい流れ */
+.hero-flow-b {
+  right: -28%; bottom: -26%; width: 90%; height: 82%;
+  background: linear-gradient(32deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(241, 233, 214, 0.5) 24%,
+    rgba(255, 255, 255, 0.82) 43%,
+    rgba(200, 217, 234, 0.34) 62%,
+    rgba(255, 255, 255, 0) 84%);
+  animation: flowBreathB 31s ease-in-out 5.4s infinite;
+}
+/* さらに手前を横切る、細めのもう1本 */
+.hero-flow-c {
+  right: -12%; bottom: -14%; width: 70%; height: 66%;
+  background: linear-gradient(24deg,
+    rgba(255, 255, 255, 0) 6%,
+    rgba(255, 255, 255, 0.5) 40%,
+    rgba(226, 216, 194, 0.3) 58%,
+    rgba(255, 255, 255, 0) 82%);
+  animation: flowBreathC 21s ease-in-out 5.4s infinite;
+}
+@keyframes flowBreathA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 1; }
+  50%      { transform: translate3d(-3%, -2%, 0) scale(1.05); opacity: 0.86; }
+}
+@keyframes flowBreathB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);       opacity: 0.9; }
+  50%      { transform: translate3d(4%, -3%, 0) scale(1.04); opacity: 1; }
+}
+@keyframes flowBreathC {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 0.72; }
+  50%      { transform: translate3d(-2%, -4%, 0) scale(1.03); opacity: 0.94; }
 }
 
-#message .section-inner { position: relative; z-index: 1; }
-
-#message .section-tag,
-#message .section-title {
-  text-align: center;
+/* ---- Signature R ---------------------------------------------------
+   置かれる順は ループ → 縦のストローク → 脚 → 補助。
+   1本につき body / mid / core を重ね、3層とも通る所は太く、
+   core だけの所は細い ―― これで筆圧差と束の厚みが同時に出る。 */
+.hero-sign {
+  position: absolute; right: 8.5%; top: 50%;
+  height: 75%; aspect-ratio: 540 / 730;
+  transform: translate3d(calc(var(--mx) * -4px), calc(-50% + var(--my) * -3px), 0);
+  pointer-events: none;
+  will-change: transform;
+  /* 中央付近で書き始め、描き進むにつれて右へ寄っていく。
+     3秒かけて 17vw ぶんだけなので、線を引く動きの方が主役に見える。 */
+  animation: signSettle 3s cubic-bezier(0.18, 0.66, 0.3, 1) 1.8s forwards;
+}
+@keyframes signSettle {
+  from { transform: translate3d(calc(var(--mx) * -4px - 17vw), calc(-50% + var(--my) * -3px), 0); }
+  to   { transform: translate3d(calc(var(--mx) * -4px), calc(-50% + var(--my) * -3px), 0); }
+}
+.r-sign {
+  display: block; width: 100%; height: 100%; overflow: visible;
+  animation: signDrift 29s ease-in-out 5.4s infinite;
+}
+@keyframes signDrift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-2px, 1px, 0); }
 }
 
-#message .section-title {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#message .section-title::after {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.message-layout {
-  max-width: 42rem;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.message-quote {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: clamp(1.35rem, 2.6vw, 1.62rem);
-  line-height: 1.85;
-  letter-spacing: 0.02em;
-  color: var(--color-gold-light);
-  margin-bottom: 52px;
-}
-
-.message-body p:not(.message-quote):not(.message-sign) {
-  color: var(--color-text);
-  font-size: 1.09rem;
-  line-height: 2.1;
-  letter-spacing: 0.02em;
-  margin-bottom: 30px;
-  text-align: left;
-}
-
-.message-sign {
-  position: relative;
-  display: inline-block;
-  margin-top: 48px;
-  padding-top: 30px;
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 1.02rem;
-  letter-spacing: 0.16em;
-  color: var(--color-white);
-}
-
-.message-sign::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 44px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
-}
-
-#contact .section-tag,
-#contact .section-title,
-#contact .section-lead {
-  text-align: center;
-}
-
-#contact .section-title,
-#contact .section-lead {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#contact .section-title::after {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.contact-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.contact-info { text-align: left; }
-
-.contact-info-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
-  padding: 24px 0;
-  border-bottom: 1px solid var(--color-border);
-  font-size: 1rem;
-  line-height: 1.7;
-}
-
-.contact-info-row > div {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.contact-icon {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  margin-top: 2px;
+.r-ink {
   fill: none;
-  stroke: var(--color-gold);
-  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+  stroke-dasharray: 0 2000;
+  animation-name: inkGrow;
+  animation-fill-mode: forwards;
 }
+@keyframes inkGrow { to { stroke-dasharray: var(--len) 2000; } }
 
-.contact-label {
-  color: var(--color-gold);
-  font-size: 0.78rem;
-  letter-spacing: 0.15em;
-}
+/* 層ごとの色と濃さ。body が最も太くシャンパン寄り、core が細く明るい */
+.loop-body, .stem-body, .leg-body { stroke: url(#ink-body); opacity: 0.4; }
+.loop-mid,  .stem-mid,  .leg-mid  { stroke: url(#ink-mid);  opacity: 0.48; }
+.loop-core, .stem-core, .leg-core { stroke: url(#ink-core); opacity: 0.68; }
+.hl-main, .hl-stem, .hair         { stroke: url(#ink-hl);   opacity: 0.52; }
 
-.contact-form { display: flex; flex-direction: column; gap: 26px; }
+/* ── 1本目の前半: 上部の巨大なループ 1.80–2.60s（入りはゆっくり） ── */
+.loop-body { stroke-width: 74; stroke-dashoffset: -100; --len: 370;
+             animation-duration: 0.53s; animation-delay: 1.96s;
+             animation-timing-function: cubic-bezier(0.36, 0.02, 0.34, 1); }
+.loop-mid  { stroke-width: 44; stroke-dashoffset: -30;  --len: 510;
+             animation-duration: 0.73s; animation-delay: 1.84s;
+             animation-timing-function: cubic-bezier(0.34, 0.02, 0.36, 1); }
+.loop-core { stroke-width: 17; stroke-dashoffset: 0;    --len: 560;
+             animation-duration: 0.80s; animation-delay: 1.80s;
+             animation-timing-function: cubic-bezier(0.32, 0.02, 0.38, 1); }
 
-.form-row { display: flex; flex-direction: column; gap: 11px; }
+/* ── 2本目: 中央の力強い縦ストローク 2.60–3.50s（わずかに減速） ── */
+.stem-body { stroke-width: 68; stroke-dashoffset: -110; --len: 590;
+             animation-duration: 0.53s; animation-delay: 2.70s;
+             animation-timing-function: cubic-bezier(0.4, 0, 0.42, 1); }
+.stem-mid  { stroke-width: 40; stroke-dashoffset: -40;  --len: 860;
+             animation-duration: 0.77s; animation-delay: 2.64s;
+             animation-timing-function: cubic-bezier(0.4, 0, 0.42, 1); }
+.stem-core { stroke-width: 16; stroke-dashoffset: 0;    --len: 1000;
+             animation-duration: 0.90s; animation-delay: 2.60s;
+             animation-timing-function: cubic-bezier(0.38, 0, 0.44, 1); }
 
-.form-row label {
-  font-size: 0.76rem;
-  letter-spacing: 0.16em;
-  color: var(--color-text-muted);
-}
+/* ── 1本目の後半: 右下へ伸びる大きな脚 3.50–4.40s（加速して抜ける） ── */
+.leg-body  { stroke-width: 61; stroke-dashoffset: -600; --len: 300;
+             animation-duration: 0.44s; animation-delay: 3.61s;
+             animation-timing-function: cubic-bezier(0.5, 0, 0.86, 0.6); }
+.leg-mid   { stroke-width: 36; stroke-dashoffset: -560; --len: 400;
+             animation-duration: 0.72s; animation-delay: 3.54s;
+             animation-timing-function: cubic-bezier(0.5, 0, 0.86, 0.6); }
+.leg-core  { stroke-width: 14; stroke-dashoffset: -540; --len: 460;
+             animation-duration: 0.90s; animation-delay: 3.50s;
+             animation-timing-function: cubic-bezier(0.48, 0, 0.88, 0.58); }
 
-.required {
-  color: var(--color-gold-light);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  border: 1px solid var(--color-border);
-  padding: 2px 7px;
-  margin-left: 10px;
-  border-radius: 2px;
-  vertical-align: middle;
-}
+/* ── 太い筆跡の中を走る細い光。線の内側で光っているように見せる ── */
+.hl-main { stroke-width: 6; stroke-dashoffset: 0; --len: 1000;
+           animation-duration: 2.60s; animation-delay: 1.80s;
+           animation-timing-function: cubic-bezier(0.34, 0.06, 0.5, 1); }
+.hl-stem { stroke-width: 5.5;   stroke-dashoffset: 0; --len: 1000;
+           animation-duration: 0.90s; animation-delay: 2.60s;
+           animation-timing-function: cubic-bezier(0.38, 0, 0.44, 1); }
 
-.form-row input,
-.form-row textarea {
-  background: rgba(20, 19, 17, 0.55);
-  border: 1px solid var(--color-border);
-  color: var(--color-white);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  min-height: 52px;
-  padding: 15px 16px;
-  border-radius: 3px;
-  resize: vertical;
-  transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), background 0.4s var(--ease);
-}
+/* ── 脚に沿う細い補助の筆筋 4.40–4.80s ── */
+.hair { stroke-width: 7; stroke-dashoffset: 0; --len: 1000;
+        animation-duration: 0.40s; animation-delay: 4.40s;
+        animation-timing-function: cubic-bezier(0.42, 0, 0.7, 0.5); }
 
-.form-row textarea { min-height: 140px; line-height: 1.85; }
-
-.form-row input:focus,
-.form-row textarea:focus {
-  outline: none;
-  border-color: var(--color-gold);
-  background: rgba(26, 24, 20, 0.72);
-  box-shadow:
-    0 0 0 3px rgba(201, 162, 75, 0.13),
-    0 10px 26px -18px rgba(201, 162, 75, 0.45);
-}
-
-.form-row input::placeholder,
-.form-row textarea::placeholder { color: rgba(168, 162, 154, 0.55); }
-
-.form-note {
-  font-size: 0.85rem;
-  min-height: 1.2em;
-  color: var(--color-gold-light);
-}
-
-.site-footer {
-  background: var(--color-black-soft);
-  border-top: 1px solid var(--color-border);
-  padding: 64px 24px 0;
-}
-
-.footer-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 32px;
-  padding-bottom: 48px;
-}
-
-.footer-logo-img {
-  height: 88px;
-  width: auto;
-  display: block;
-}
-
-.footer-brand p:last-child {
-  margin-top: 12px;
-  color: var(--color-text-muted);
-  font-size: 0.85rem;
-}
-
-.footer-nav { display: flex; gap: 28px; flex-wrap: wrap; }
-
-.footer-nav a {
-  position: relative;
-  padding-bottom: 4px;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  transition: color 0.35s var(--ease);
-}
-
-.footer-nav a::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-gold-light), transparent);
-  transform: translateX(-50%);
-  transition: width 0.4s var(--ease);
-}
-
-.footer-nav a:hover { color: var(--color-gold-light); }
-
-.footer-nav a:hover::after { width: 100%; }
-
-.footer-bottom {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 24px 0;
-  border-top: 1px solid var(--color-border);
-  text-align: center;
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-}
-
-.reveal {
+/* 線のまわりの空気。2本まとめて1回だけぼかす。発光にはしない */
+.r-glow {
+  fill: none;
+  stroke: #DED6C6;
+  stroke-width: 86; stroke-linecap: round; stroke-linejoin: round;
+  filter: blur(22px);
   opacity: 0;
-  transform: translateY(24px);
+  animation: inkGlow 2.6s var(--ease) 2.6s forwards;
+}
+@keyframes inkGlow { to { opacity: 0.22; } }
 
-  transition: opacity 1.1s var(--ease-soft), transform 1.1s var(--ease-soft);
+/* 完成後の反射 ― 5.3秒に1度目、以後20秒ごと。
+   通った瞬間だけシルバーとシャンパンが強く見える程度で、光らせはしない。 */
+.r-sheen {
+  fill: none;
+  stroke: #FFFCF2;
+  stroke-width: 21; stroke-linecap: round;
+  stroke-dasharray: 90 910;
+  opacity: 0;
+  animation: sheenRun 20s linear 5.3s infinite;
+}
+@keyframes sheenRun {
+  0%   { stroke-dashoffset: 0;     opacity: 0; }
+  4%   { opacity: 0.7; }
+  22%  { opacity: 0.7; }
+  30%  { stroke-dashoffset: -1000; opacity: 0; }
+  100% { stroke-dashoffset: -1000; opacity: 0; }
 }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+/* ============================================================
+   左側 ― ブランドと言葉（実測: 文字は x 5.7%〜52%、3行で画面高の40%）
+   ============================================================ */
+.hero-inner {
+  position: relative; z-index: 2;
+  width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
+}
+.hero-main { max-width: min(48vw, 680px); }
+
+.hero-logo-block { position: relative; display: inline-block; margin-bottom: clamp(30px, 5vh, 54px); }
+
+/* ---- ロゴ ― HERO の主役として最初に現れる ----
+   0.42s まで画面には空間と光しかない。そこへロゴだけが、
+   霧が晴れるように大きく結像し（〜1.41s）、そのまま見せたまま
+   定位置へ静かに収まる（〜2.40s）。コピーが始まるのはその途中から。
+   回転・バウンド・発光はしない。拡大はロゴの左端を軸にするので、
+   画面の左へはみ出さない。 */
+.hero-logo-img {
+  height: clamp(62px, 8.4vh, 92px); width: auto;
+  opacity: 0;
+  transform-origin: left center;
+  --logo-s: 3.2;      /* 結像時の大きさ */
+  --logo-dx: 12vw;    /* 中央寄りへ */
+  --logo-dy: 15vh;    /* 画面の高さの中ほどへ */
+  animation: logoIntro 1.98s 0.42s forwards;
+  will-change: transform, opacity, filter;
+}
+@keyframes logoIntro {
+  0% {
+    opacity: 0; filter: blur(16px);
+    transform: translate(var(--logo-dx), var(--logo-dy)) scale(calc(var(--logo-s) * 0.96));
+    animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  22% { opacity: 1; animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1); }
+  50% {                                   /* ≒1.41s ― ここで結像しきる */
+    opacity: 1; filter: blur(0);
+    transform: translate(var(--logo-dx), var(--logo-dy)) scale(var(--logo-s));
+    animation-timing-function: cubic-bezier(0.62, 0, 0.16, 1);
+  }
+  100% { opacity: 1; filter: blur(0); transform: none; }   /* ≒2.40s ― 定位置 */
+}
+/* ロゴまわりのごく淡い暖色。登場中は出さず、収まってから静かに添える */
+.hero-logo-block::after {
+  content: ""; position: absolute; left: 50%; top: 50%; z-index: -1;
+  width: 168%; height: 178%; transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(190, 152, 72, 0.13), rgba(190,152,72,0) 70%);
+  filter: blur(30px);
+  opacity: 0; animation: fadeIn 2.2s var(--ease) 2.5s forwards;
 }
 
-@media (max-width: 900px) {
-  .header-inner { padding: 0 20px; }
+/* ---- 英語コピー ----
+   書体は Qwigley。参考画像は「極細のモノラインが横に長く流れ、大文字の装飾は
+   控えめ」で、これがいちばん近い。Mrs Saint Delafield（スワッシュ過多）、
+   Allura（太く直立寄り）、Italianno（大文字がクラシックなセリフ感）は不採用。
+   代替候補: 'Arizonia'（やや丸い）／'Italianno'（傾斜が強い）― 差し替えは下1行。 */
+.hero-title {
+  font-family: 'Qwigley', 'Segoe Script', cursive;
+  font-weight: 400;
+  /* 参考画像の実測から逆算: 1行のインク高 145px / 1448px幅 → font-size 相当 111px
+     ＝ 7.67vw。最長行の幅は約 6em なので、7.3vw なら 1440px で 634px となり
+     コピー欄（680px）に収まる。従来値 9.2vw は約1.2倍大きかった。 */
+  font-size: clamp(3.4rem, 7.3vw, 6.8rem);
+  line-height: 1.12;
+  letter-spacing: 0.015em;
+  /* 日本語コピーを外したぶん、ここと CTA の上で受け直している。
+     空白をそのまま残さず、かといって詰めすぎない量にした。 */
+  margin-bottom: clamp(40px, 6vh, 66px);
+}
+.hero-line {
+  display: block; white-space: nowrap;
+  clip-path: inset(-0.34em -0.34em -0.04em -0.34em);
+  transform: translate3d(calc(var(--mx) * var(--lx, 0px)), calc(var(--sy) * var(--ly, 0px)), 0);
+  will-change: transform;
+}
+.hero-line:nth-child(1) { --lx: 4px; --ly: -12px; }
+.hero-line:nth-child(2) { --lx: 5px; --ly: -18px; padding-left: 0.02em; }
+.hero-line:nth-child(3) { --lx: 6px; --ly: -24px; padding-left: 0.01em; }
 
-  .main-nav ul { gap: 22px; }
-  .nav-link { font-size: 0.82rem; }
-  .nav-cta { padding: 0 16px; }
-  .business-grid { grid-template-columns: repeat(2, 1fr); }
-  .section { padding: 96px 32px; }
+/* 実測の最濃部 #795932 を基準にした、沈んだシャンパンゴールド */
+.hero-line-in {
+  display: block;
+  color: #8A6A3C;
+  background: linear-gradient(96deg, #7C5D33 0%, #96764A 46%, #866640 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Qwigley は1ウェイトしかないので font-weight では太くできない。
+     字の輪郭そのものを 0.8px ぶん太らせている ―― 色はグラデーションの
+     中間色と同じなので、縁取りには見えず、線が太くなるだけ。 */
+  -webkit-text-stroke: 1.15px #8A6A3C;
+  paint-order: stroke fill;
+  opacity: 0; filter: blur(10px); transform: translateY(26px);
+  animation: lineRise 0.85s var(--ease-out) forwards;
+  will-change: opacity, transform, filter;
+}
+.hero-line:nth-child(1) .hero-line-in { animation-delay: 1.98s; }
+.hero-line:nth-child(2) .hero-line-in { animation-delay: 2.34s; }
+.hero-line:nth-child(3) .hero-line-in { animation-delay: 2.70s; }
+@keyframes lineRise { to { opacity: 1; filter: blur(0); transform: none; } }
+
+/* ---- CTA ― ボタンではなく導線。前より幅28%・高さ20%小さく ---- */
+.hero-cta {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 22px;
+  margin-top: clamp(34px, 5.2vh, 56px);
+  min-width: 180px; min-height: 43px; padding: 11px 18px;
+  border: 1px solid rgba(170, 138, 86, 0.38);
+  border-radius: 0;
+  background: rgba(255, 253, 249, 0.3);
+  color: #7A6136;
+  font-family: var(--font-jp); font-weight: 300;
+  font-size: 0.74rem; letter-spacing: 0.14em;
+  opacity: 0; animation: ctaIn 0.9s var(--ease-out) 3.30s forwards;
+  transition: background 0.7s var(--ease), border-color 0.7s var(--ease), color 0.6s var(--ease);
+  box-shadow: none;
+}
+.hero-cta::after {
+  content: "→"; font-family: var(--font-en); font-size: 0.8rem; opacity: 0.7;
+  transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease);
+}
+.hero-cta:hover, .hero-cta:focus-visible {
+  background: rgba(246, 240, 230, 0.58);
+  border-color: rgba(170, 138, 86, 0.58);
+  color: #6B5430;
+  box-shadow: none;
+}
+.hero-cta:hover::after { transform: translateX(3px); opacity: 1; }
+@keyframes ctaIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ---- Scroll ― 左下 ---- */
+.scroll-cue {
+  position: absolute; bottom: 38px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 13px;
+  font-family: var(--font-en); font-size: 0.68rem; font-weight: 300;
+  letter-spacing: 0.24em; color: #6B7178;
+  opacity: 0; z-index: 3;
+}
+.scroll-cue--left {
+  left: var(--gutter); transform: translateY(10px);
+  animation: cueInLeft 1s var(--ease-out) 3.58s forwards;
+}
+@keyframes cueInLeft { to { opacity: 1; transform: translateY(0); } }
+.scroll-cue-rail { width: 1px; height: 72px; margin-left: 2px; background: rgba(52, 68, 88, 0.16); position: relative; overflow: hidden; }
+.scroll-cue-rail::after {
+  content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 32%;
+  background: linear-gradient(180deg, rgba(176, 142, 88, 0), #B08E58);
+  animation: cueFlow 3.8s cubic-bezier(0.4, 0, 0.5, 1) infinite;
+}
+@keyframes cueFlow {
+  0%   { transform: translateY(-110%); opacity: 0; }
+  22%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translateY(230%); opacity: 0; }
+}
+/* ============================================================
+   BUTTON
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 56px; padding: 16px 42px; border-radius: 2px;
+  border: 1px solid rgba(30, 50, 70, 0.16);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--ink);
+  font-family: var(--font-en); font-size: 0.86rem; font-weight: 400; letter-spacing: 0.13em;
+  cursor: pointer;
+  transition: background 0.7s var(--ease), border-color 0.7s var(--ease),
+              box-shadow 0.7s var(--ease), color 0.6s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover {
+  background: var(--white); border-color: rgba(120, 160, 195, 0.5);
+  box-shadow: 0 20px 40px -28px rgba(30, 50, 70, 0.4);
+}
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn-block { width: 100%; }
+
+/* ============================================================
+   SECTION ― セクションごとに空気を変える（すべて明るい側）
+   ============================================================ */
+/* overflow-x: clip ― セクションの光（::before は inset:-6%）や使命の光、
+   事業行の負のマージンが横スクロール領域を作らないよう、横だけ切る。
+   縦は visible のままなので、sticky も落ち影も従来どおり。 */
+.section { position: relative; padding: clamp(120px, 17vh, 220px) 0; overflow-x: clip; }
+.section-inner { position: relative; z-index: 1; width: var(--shell); margin: 0 auto; padding: 0 var(--gutter); }
+/* セクションが元から持っている光にも、それぞれ違う向き・違う速さの動きを与える。
+   動かすのは transform だけ（blur は掛けていないので合成のみで済む）。
+   端に隙間が出ないよう、あらかじめ外へ 6% 広げてある。 */
+.section::before { content: ""; position: absolute; inset: -6%; z-index: 0; pointer-events: none; }
+
+#philosophy::before { animation: lightPhil 21s ease-in-out infinite; }  /* 左上 → 中央 */
+#business::before   { animation: lightBiz  26s ease-in-out infinite; }  /* 右上 → 左下 */
+#message::before    { animation: lightMsg  19s ease-in-out infinite; }  /* 中央奥 → 右 */
+#company::before    { animation: lightComp 24s ease-in-out infinite; }  /* 左 → 右 */
+#contact::before    { animation: lightCont 29s ease-in-out infinite; }  /* 上 → 下 */
+
+@keyframes lightPhil { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(5%, 4%, 0); } }
+@keyframes lightBiz  { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(-5%, 5%, 0); } }
+@keyframes lightMsg  { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(6%, -2%, 0); } }
+@keyframes lightComp { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(7%, 1%, 0); } }
+@keyframes lightCont { 0%, 100% { transform: translate3d(0, 0, 0); }      50% { transform: translate3d(1%, 6%, 0); } }
+
+#philosophy::before {        /* 白 〜 ごく薄いブルー */
+  background:
+    radial-gradient(60% 46% at 20% 22%, rgba(220, 234, 242, 0.85), rgba(220,234,242,0) 72%),
+    radial-gradient(46% 38% at 84% 78%, rgba(238, 244, 248, 0.9), rgba(238,244,248,0) 74%);
+}
+/* 平らな帯は .page-tone が受け持つので、ここは光の溜まりだけにする */
+#business::before {
+  background:
+    radial-gradient(52% 40% at 76% 24%, rgba(228, 236, 244, 0.62), rgba(228,236,244,0) 74%),
+    radial-gradient(44% 34% at 18% 70%, rgba(248, 245, 239, 0.58), rgba(248,245,239,0) 76%);
+}
+/* BRANDS の黒から抜けてきた照明が、そのまま MESSAGE の白へ移り変わる。
+   新しい色は足さず、既にある Silver / Pale Blue / Warm White だけで
+   Charcoal → Silver → Pale Blue → White の階調を作り、境界を出さない。 */
+#message::before {
+  background:
+    linear-gradient(180deg,
+      rgba(52, 68, 88, 0.10) 0%,      /* 上端はまだ黒の余韻 */
+      rgba(140, 152, 166, 0.07) 7%,   /* Charcoal → Silver */
+      rgba(198, 213, 226, 0.09) 15%,  /* Silver → Pale Blue */
+      rgba(232, 241, 247, 0.06) 24%,
+      rgba(247, 248, 250, 0) 36%),
+    radial-gradient(52% 40% at 76% 30%, rgba(224, 238, 246, 0.52), rgba(224,238,246,0) 74%),
+    radial-gradient(46% 34% at 14% 64%, rgba(250, 246, 240, 0.66), rgba(250,246,240,0) 76%);
+}
+/* MESSAGE から続く同じ建築空間を歩いている感じにする。
+   大きな色変化は作らず、Warm White / Pale Blue / Silver をごく淡く置くだけ。 */
+#company::before {
+  background:
+    radial-gradient(50% 38% at 18% 16%, rgba(250, 246, 240, 0.72), rgba(250,246,240,0) 74%),
+    radial-gradient(44% 34% at 84% 54%, rgba(226, 238, 246, 0.44), rgba(226,238,246,0) 76%);
+}
+/* 最後は光がわずかに沈む。黒には向かわず、シルバー寄りの静けさで終える。 */
+#contact::before {
+  background:
+    radial-gradient(46% 34% at 74% 14%, rgba(228, 238, 245, 0.46), rgba(228,238,245,0) 76%),
+    radial-gradient(40% 30% at 16% 46%, rgba(250, 247, 242, 0.6), rgba(250,247,242,0) 78%);
+}
+
+/* ---------- セクションごとの表情 ― スクロールに連動する層 ----------
+   ::before は各セクションが元から持っている地で、時間で循環するだけの光。
+   その手前に ::after を1枚だけ足し、こちらは時間ではなく
+   「そのセクションが画面を通過した割合」に直結して動かす。
+   スクロールを止めれば止まり、戻せば戻る ―― だから画面が変わって見える。
+     --p … 下から入り上へ抜けるまで 0 → 1（向きのある動きに使う）
+     --e … 画面に写っている度合い 0 → 1 → 0（濃さに使う）
+   セクションごとに向きも性格も変えてある:
+     PHILOSOPHY … 淡いブルーが左上から差し込み、広がる
+     BUSINESS   … シルバーの面が 01 から 09 へ降りていく
+     MESSAGE    … 黒から抜けた直後、中央から暖かい光が開く
+     COMPANY    … 冷たいシルバーが横へ大きくパンする
+     CONTACT    … 光が下から立ち上がって閉じる
+   動かすのは transform と opacity だけ。ぼかしは掛けていない。 */
+#philosophy .sec-light,
+#business .sec-light,
+#message .sec-light,
+#company .sec-light,
+#contact .sec-light {
+  content: ""; position: absolute; inset: -4% -12%; z-index: 0;
+  pointer-events: none; will-change: transform, opacity;
+}
+
+#philosophy .sec-light {
+  background: radial-gradient(58% 44% at 26% 30%, rgba(206, 226, 240, 0.55), rgba(206,226,240,0) 72%);
+  transform: translate3d(calc(-14% + var(--p, 0) * 20%), calc(-8% + var(--p, 0) * 14%), 0)
+             scale(calc(0.92 + var(--e, 0) * 0.16));
+  opacity: calc(0.18 + var(--e, 0) * 0.82);
+}
+
+#business .sec-light {
+  top: 0; bottom: auto; height: 46%;
+  background: linear-gradient(180deg,
+    rgba(210, 219, 228, 0) 0%,
+    rgba(198, 209, 221, 0.5) 42%,
+    rgba(210, 219, 228, 0) 100%);
+  transform: translate3d(0, calc(var(--p, 0) * 190% - 26%), 0);
+  opacity: calc(0.2 + var(--e, 0) * 0.8);
+}
+
+#message .sec-light {
+  background: radial-gradient(46% 40% at 50% 44%, rgba(252, 246, 236, 0.62), rgba(252,246,236,0) 74%);
+  transform: scale(calc(0.7 + var(--e, 0) * 0.5))
+             translate3d(0, calc(6% - var(--p, 0) * 12%), 0);
+  opacity: calc(var(--e, 0) * 0.95);
+}
+
+#company .sec-light {
+  left: -62%; right: auto; width: 70%;
+  background: linear-gradient(96deg,
+    rgba(224, 233, 241, 0) 0%,
+    rgba(206, 219, 231, 0.5) 46%,
+    rgba(224, 233, 241, 0) 100%);
+  transform: translate3d(calc(var(--p, 0) * 196%), 0, 0);
+  opacity: calc(0.15 + var(--e, 0) * 0.85);
+}
+
+#contact .sec-light {
+  background: linear-gradient(0deg,
+    rgba(232, 240, 246, 0.55) 0%,
+    rgba(232, 240, 246, 0.18) 40%,
+    rgba(232, 240, 246, 0) 78%);
+  transform: translate3d(0, calc(40% - var(--p, 0) * 52%), 0);
+  opacity: calc(0.2 + var(--e, 0) * 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #philosophy .sec-light, #business .sec-light, #message .sec-light,
+  #company .sec-light, #contact .sec-light { transform: none; opacity: 0.4; }
+}
+
+.section-head { margin-bottom: clamp(30px, 4.5vh, 52px); }
+.section-tag {
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.8rem; letter-spacing: 0.36em; color: var(--label);
+}
+.section-title {
+  font-family: var(--font-jp-title); font-weight: 500;
+  font-feature-settings: "palt" 1;
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  line-height: 1.5; letter-spacing: 0.08em; color: var(--ink);
+  margin-bottom: clamp(24px, 3vh, 36px);
+}
+.section-lead {
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem);
+  line-height: 2.2; color: var(--sub); max-width: 780px;
+  margin-bottom: clamp(60px, 9vh, 116px);
+}
+
+/* reveal */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out); }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+.mask { display: block; overflow: hidden; }
+.mask-in { display: block; transform: translateY(104%); }
+.reveal.mask { opacity: 1; transform: none; }
+.reveal.mask .mask-in { transition: transform 1.25s var(--ease-out); }
+.reveal.mask.is-visible .mask-in { transform: none; }
+
+/* ---------- Light Sweep ― 文字の表面を一筋の反射光が通過する ----------
+   文字は複製しない。背景を2枚重ねて文字の形に切り抜いているだけ。
+     下の層 … linear-gradient(currentColor, currentColor) ＝ その要素の文字色そのもの
+     上の層 … 幅の狭い斜めの反射帯。これだけを background-position で左→右へ動かす
+   下地に currentColor を使うので、どの見出しでも元の色は一切変わらない。
+   帯は文字幅の約13%、傾き18度、両端は透明へ抜くので境界は出ない。
+   発動はセクションが現れた 0.62 秒後に1回だけ（付け外しは js/script.js）。 */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .is-swept {
+    background-image:
+      linear-gradient(108deg,
+        transparent 47.8%,
+        var(--sw-warm) 49.3%,
+        var(--sw-hi) 50%,
+        var(--sw-warm) 50.7%,
+        transparent 52.2%),
+      linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-size: 300% 100%, 100% 100%;
+    background-position: 95% 0, 0 0;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textSweep 1.25s cubic-bezier(0.32, 0, 0.16, 1) forwards;
+  }
+  /* 95% → 5% で、帯の中心が文字の左外から右外まで一度だけ抜ける */
+  @keyframes textSweep {
+    from { background-position: 95% 0, 0 0; }
+    to   { background-position: 5% 0, 0 0; }
+  }
+
+  /* HERO だけは元から lineRise を持っているため、その最終状態を書き戻してから
+     反射だけを走らせる（クラスは外さない＝外すと lineRise が再生される）。
+     下地は現在のゴールドのまま、帯だけを明るいシャンパンゴールドにしている。 */
+  .hero-line-in.is-swept {
+    opacity: 1; filter: none; transform: none;
+    background-image:
+      linear-gradient(108deg,
+        transparent 47.8%,
+        var(--sw-warm) 49.3%,
+        var(--sw-hi) 50%,
+        var(--sw-warm) 50.7%,
+        transparent 52.2%),
+      linear-gradient(96deg, #7C5D33 0%, #96764A 46%, #866640 100%);
+    animation: textSweep 1.45s cubic-bezier(0.3, 0, 0.14, 1) forwards;
+  }
+}
+
+/* 反射の色。銀を芯に、その両脇へごく薄いウォームホワイトを添える。 */
+.section-tag                             { --sw-hi: #C2CCD6; --sw-warm: #DED9D1; }
+.section-title,
+.philo-title .mask-in                    { --sw-hi: #56626F; --sw-warm: #5E5A53; }
+.philo-title .mask:nth-child(3) .mask-in { --sw-hi: #7C8794; --sw-warm: #837E77; }
+.hero-line-in                            { --sw-hi: #EBDCB4; --sw-warm: #E2D2A6; }
+
+/* スマホは文字が小さく帯の実寸も短いので、反射だけ一段はっきりさせる。
+   動かすのは背景位置1つのままなので、スクロール性能には影響しない。 */
+@media (max-width: 768px) {
+  .section-tag                             { --sw-hi: #D2DAE2; --sw-warm: #E8E4DC; }
+  .section-title,
+  .philo-title .mask-in                    { --sw-hi: #64707D; --sw-warm: #6C6760; }
+  .philo-title .mask:nth-child(3) .mask-in { --sw-hi: #8A95A1; --sw-warm: #918B84; }
+  .hero-line-in                            { --sw-hi: #F0E4C4; --sw-warm: #E9DCB6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-swept { animation: none; }
+}
+
+/* 強制カラーモードでは背景が無視されるため、切り抜き自体を使わない */
+@media (forced-colors: active) {
+  .is-swept {
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+    animation: none;
+  }
+}
+
+/* ============================================================
+   PHILOSOPHY
+   ============================================================ */
+.philo-title {
+  /* いちばん大きく出るので、上げるのは 300 → 400 まで。
+     太さではなく骨格の直線性で存在感を出す。 */
+  font-family: var(--font-jp-title); font-weight: 400;
+  font-feature-settings: "palt" 1;
+  font-size: clamp(2rem, 6.4vw, 5rem);
+  line-height: 1.36; letter-spacing: 0.02em; color: var(--ink);
+  margin-bottom: clamp(72px, 10vh, 148px);
+}
+.philo-title .mask-in { padding-bottom: 0.1em; }
+.philo-title .mask:nth-child(2) .mask-in { padding-left: clamp(0px, 5vw, 108px); }
+.philo-title .mask:nth-child(3) .mask-in { padding-left: clamp(0px, 10vw, 216px); color: #46525F; }
+
+.philo-body {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(34px, 5vw, 96px);
+  max-width: 1040px; margin-left: auto;
+}
+.philo-col p {
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem);
+  line-height: 2.45; color: var(--sub);
+  margin-bottom: clamp(32px, 4.4vh, 50px);
+}
+.philo-col p:last-child { margin-bottom: 0; }
+
+.philo-accent {
+  position: relative; z-index: 0;
+  color: var(--ink) !important;
+  font-size: clamp(1.16rem, 2.3vw, 1.46rem) !important;
+  letter-spacing: 0.1em; line-height: 2 !important;
+  padding: 24px 28px; margin-left: -28px;
+}
+/* カードではなく「その一文のところだけ光が集まっている」状態にする。
+   矩形の輪郭が出ないよう、要素より外へ広げた楕円の光をぼかして置く。
+   枠線・角丸・落ち影は使わない。 */
+.philo-accent::before {
+  content: ""; position: absolute; inset: -34% -20%; z-index: -1;
+  background:
+    radial-gradient(52% 62% at 26% 50%, rgba(255, 255, 255, 0.84), rgba(255,255,255,0) 76%),
+    radial-gradient(42% 54% at 58% 46%, rgba(226, 238, 247, 0.44), rgba(226,238,247,0) 78%);
+  filter: blur(24px);
+}
+
+/* ============================================================
+   BUSINESS ― 余白で分ける。カードにしない。
+   ============================================================ */
+.biz-list { display: grid; gap: clamp(4px, 0.8vh, 10px); }
+.biz-row {
+  position: relative; z-index: 0;
+  display: grid; grid-template-columns: clamp(48px, 5vw, 72px) minmax(0, 1fr);
+  align-items: start; gap: clamp(18px, 3vw, 44px);
+  padding: clamp(26px, 3.4vh, 40px) clamp(20px, 2.4vw, 34px);
+  margin-left: clamp(-20px, -2.4vw, -34px);
+  border-radius: 3px;
+}
+.biz-row::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 3px;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.9), rgba(220, 236, 246, 0.5) 62%, rgba(220,236,246,0));
+  box-shadow: 0 26px 50px -44px rgba(30, 50, 70, 0.5);
+  opacity: 0; transition: opacity 0.9s var(--ease);
+}
+.biz-row:hover::before { opacity: 1; }
+
+/* ---- 行の中で 番号 → 事業名 → 説明 の順に、ごく短い時間差で現れる ----
+   親（.biz-row）は場所を動かさず、中の3要素が opacity + 12px + 弱い blur で
+   立ち上がる。transition-delay は transform に掛けていないので、
+   ホバー時の横移動は遅れない。表示は IntersectionObserver が一度だけ発火する。 */
+.biz-row.reveal { opacity: 1; transform: none; }
+.biz-row .biz-num,
+.biz-row .biz-name,
+.biz-row .biz-desc {
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition-property: opacity, transform, filter;
+  transition-duration: 0.85s, 0.85s, 0.85s;
+  transition-timing-function: var(--ease-out);
+}
+.biz-row.is-visible .biz-num  { opacity: 1; transform: none; filter: blur(0); transition-delay: 0.02s; }
+.biz-row.is-visible .biz-name { opacity: 1; transform: none; filter: blur(0); transition-delay: 0.11s; }
+.biz-row.is-visible .biz-desc { opacity: 1; transform: none; filter: blur(0); transition-delay: 0.20s; }
+
+/* 縦に9つ並ぶので、等間隔に見えすぎないよう上下の余白をわずかに揺らす
+   （レイアウトは変えず、リズムだけ作る） */
+.biz-row:nth-child(4n+1) { padding-top: calc(clamp(26px, 3.4vh, 40px) + 11px); }
+.biz-row:nth-child(4n+3) { padding-bottom: calc(clamp(26px, 3.4vh, 40px) + 9px); }
+.biz-row:nth-child(4n)   { padding-top: calc(clamp(26px, 3.4vh, 40px) - 5px); }
+
+.biz-num {
+  font-family: var(--font-en); font-weight: 400;
+  font-size: clamp(0.94rem, 1.5vw, 1.12rem);
+  line-height: 2.1; letter-spacing: 0.1em; color: var(--label);
+  opacity: 0.72; transition: opacity 0.8s var(--ease), color 0.8s var(--ease);
+}
+.biz-row:hover .biz-num { opacity: 1; color: #7FA6C4; }
+
+.biz-body { padding-top: clamp(0px, 0.3vw, 4px); }
+.biz-name {
+  font-family: var(--font-jp-title); font-weight: 500;
+  font-feature-settings: "palt" 1;
+  font-size: clamp(1.14rem, 2.3vw, 1.52rem);
+  line-height: 1.6; letter-spacing: 0.06em; color: var(--ink);
+  transition: transform 0.9s var(--ease-out);
+}
+.biz-row:hover .biz-name { transform: translateX(6px); transition-delay: 0s; }
+/* 英語サブタイトル ― 01〜09 すべてに付く。日本語事業名の補助情報として、
+   一段小さく・細く・薄いシルバーグレーで置く。
+   順位は 日本語（#111820 / 500）→ 英語（#7B8794 / 300）→ 説明（#414B55 / 300）。
+   色はこれ以上薄くしない ― #8A96A2 まで薄くすると地とのコントラストが
+   2.9:1 まで落ち、小さい字では読み取りにくくなる。
+   .biz-name の中にあるので、説明文との間隔は 9行すべて自動的に揃う。 */
+.biz-en {
+  display: block; margin-top: clamp(8px, 1vh, 11px);
+  font-family: var(--font-en); font-weight: 300;
+  font-size: clamp(0.74rem, 1.05vw, 0.82rem);
+  line-height: 1.5; letter-spacing: 0.14em; color: #7B8794;
+}
+.biz-desc {
+  margin-top: clamp(10px, 1.3vh, 15px); max-width: 740px;
+  font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.15; color: var(--sub);
+  transition: transform 0.9s var(--ease-out);
+}
+.biz-row:hover .biz-desc { transform: translateX(6px); transition-delay: 0s; }
+
+/* ============================================================
+   BRANDS ― 白 → グレー → グラファイト → 黒 → 白へ戻る
+   ============================================================ */
+.section--brand {
+  min-height: 132svh;
+  display: flex; align-items: center;
+  padding: clamp(150px, 22vh, 280px) 0;
+  overflow: hidden;
+}
+.section--brand::before { display: none; }
+.brand-shift {
+  position: absolute; inset: -1px 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(58% 40% at 50% 50%, rgba(200, 169, 106, 0.10), rgba(200,169,106,0) 70%),
+    linear-gradient(180deg,
+      rgba(247, 248, 250, 0) 0%,
+      #C8CDD3 12%,
+      #6E757D 22%,
+      #2A2E34 32%,
+      #0B0C0E 42%,
+      #08090B 58%,
+      #2A2E34 70%,
+      #6E757D 80%,
+      #C8CDD3 90%,
+      rgba(247, 248, 250, 0) 100%);
+}
+/* 黒に入ったら、白側の光は brand-shift の不透明部分に隠れて自然に消える。
+   代わりにチャコールの光だけを 33 秒で巡回させる（アンバーは使わない）。
+   .brand-shift のグラデーションと SAKURA の面には一切触れていない。 */
+.section--brand::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(44% 32% at 60% 46%, rgba(124, 136, 152, 0.18), rgba(124,136,152,0) 74%);
+  filter: blur(58px);
+  animation: brandLight 33s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes brandLight {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);        opacity: 0.7; }
+  50%      { transform: translate3d(-4%, 3%, 0) scale(1.08);  opacity: 1; }
+}
+
+.section--brand .section-tag   { color: var(--gold-soft); }
+.section--brand .section-title { color: #F4EFE6; }
+.section--brand .section-lead  { color: #9C9286; }
+
+.brand { position: relative; cursor: pointer; text-align: center; }
+.brand-origin {
+  font-family: var(--font-en); font-weight: 300;
+  font-size: 0.76rem; letter-spacing: 0.4em; color: rgba(200, 169, 106, 0.66);
+  margin-bottom: clamp(38px, 5.5vh, 66px);
+}
+.brand-logo {
+  width: min(600px, 84vw); height: clamp(126px, 21vw, 228px);
+  margin: 0 auto clamp(34px, 5vh, 58px);
+  transition: transform 1.5s var(--ease-out), opacity 1.5s var(--ease-out), filter 1.5s var(--ease-out);
+}
+.brand-logo.reveal { opacity: 0; transform: scale(0.96); filter: blur(10px); }
+.brand-logo.reveal.is-visible { opacity: 1; transform: none; filter: blur(0); }
+.brand-logo img { width: 100%; height: 100%; object-fit: contain; }
+.brand:hover .brand-logo { transform: translateY(-5px); }
+
+.brand-tagline {
+  font-family: var(--font-jp); font-weight: 400;
+  font-size: clamp(1.32rem, 3.2vw, 2.15rem);
+  letter-spacing: 0.22em; color: var(--gold-soft);
+  margin-bottom: clamp(24px, 3.2vh, 34px);
+}
+.brand-desc {
+  font-size: clamp(0.96rem, 1.7vw, 1.05rem); line-height: 2.2; color: #A79D8D;
+  margin-bottom: clamp(42px, 6vh, 68px);
+}
+.brand-btn {
+  display: inline-flex; align-items: center; gap: 11px;
+  padding: 16px 38px; border-radius: 2px;
+  border: 1px solid rgba(200, 169, 106, 0.38);
+  color: var(--gold-soft);
+  font-family: var(--font-en); font-size: 0.84rem; font-weight: 300; letter-spacing: 0.15em;
+  transition: background 0.7s var(--ease), border-color 0.7s var(--ease), color 0.6s var(--ease), gap 0.6s var(--ease);
+}
+.brand-btn svg { transition: transform 0.6s var(--ease); }
+.brand:hover .brand-btn { background: rgba(200, 169, 106, 0.11); border-color: var(--gold); color: #F0DCAE; gap: 15px; }
+.brand-name {
+  margin-top: clamp(38px, 5.5vh, 62px);
+  font-family: var(--font-en); font-weight: 300;
+  font-size: 0.82rem; letter-spacing: 0.32em; color: #6D6659;
+}
+
+/* ============================================================
+   MESSAGE ― 白へ戻る
+   ============================================================ */
+.message-layout {
+  display: grid; grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
+  gap: clamp(40px, 5vw, 104px); align-items: start;
+}
+/* 導入の3つは、ラベル → 主役 → 補助 と明確に差をつける。
+   「代表メッセージ」が主役、英語は添え物まで下げる（同じ情報の繰り返しに見せない） */
+.message-head .section-title { margin-bottom: 14px; }
+.message-en {
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.8rem; line-height: 1.7;
+  letter-spacing: 0.22em; color: var(--label); opacity: 0.86;
+}
+
+/* 冒頭の言葉 ― 囲わず、余白だけで Statement にする */
+.message-quote {
+  font-family: var(--font-jp-title); font-weight: 500;
+  font-feature-settings: "palt" 1;
+  font-size: clamp(1.34rem, 2.9vw, 1.92rem);
+  line-height: 2.0; letter-spacing: 0.07em; color: var(--ink);
+  max-width: 20em;
+  margin-bottom: clamp(52px, 7vh, 84px);
+}
+
+/* 本文 ― 1行を長くしすぎない。文章は変えず、呼吸だけ作る */
+.message-body p {
+  font-size: clamp(0.96rem, 1.7vw, 1.04rem);
+  line-height: 2.5; color: var(--sub);
+  max-width: 34em;
+  margin-bottom: clamp(30px, 3.8vh, 42px);
+}
+.message-sign {
+  margin-top: clamp(44px, 6vh, 66px);
+  max-width: 34em; text-align: right;
+  color: var(--ink-2); letter-spacing: 0.12em;
+}
+
+/* 出現 ― 12〜18px 持ち上げ、ごく弱い blur から。順番は data-reveal-delay で制御 */
+#message .reveal {
+  transform: translateY(16px); filter: blur(4px);
+  transition: opacity 1.05s var(--ease-out), transform 1.05s var(--ease-out), filter 1.05s var(--ease-out);
+}
+#message .reveal.is-visible { transform: none; filter: blur(0); }
+
+/* COMPANY / CONTACT も MESSAGE と同じ出方に揃える（順番は data-reveal-delay） */
+#company .reveal, #contact .reveal {
+  transform: translateY(13px); filter: blur(3px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out), filter 1s var(--ease-out);
+}
+#company .reveal.is-visible, #contact .reveal.is-visible { transform: none; filter: blur(0); }
+
+/* ============================================================
+   COMPANY
+   ============================================================ */
+/* 「表を読む」ではなく「静かに閲覧する」。罫線は輪郭を出さない程度まで薄くし、
+   項目の区切りは余白で行う。囲いを作らないよう、最初と最後の線は引かない。 */
+.info-list { max-width: 62em; }
+.info-row {
+  display: grid; grid-template-columns: clamp(150px, 18vw, 240px) minmax(0, 1fr);
+  gap: clamp(14px, 2.6vw, 44px);
+  padding: clamp(26px, 3.6vh, 40px) 2px;
+  border-bottom: 1px solid rgba(30, 50, 70, 0.055);
+}
+.info-row:last-child { border-bottom: none; }
+/* ラベルは小さく・字間を広く・薄いグレー、内容は濃いチャコール */
+.info-row dt {
+  font-size: 0.78rem; font-weight: 400;
+  letter-spacing: 0.22em; line-height: 2.1; color: var(--label);
+}
+.info-row dd {
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem); line-height: 2.1;
+  color: var(--ink); font-weight: 400; letter-spacing: 0.05em;
+}
+.info-list-inline { display: flex; flex-wrap: wrap; gap: 10px 30px; }
+.info-list-inline li { color: var(--ink-2); }
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-layout {
+  display: grid; grid-template-columns: minmax(0, 0.74fr) minmax(0, 1.26fr);
+  gap: clamp(44px, 5vw, 100px); align-items: start;
+}
+.contact-info-row { padding: 28px 0; display: flex; flex-direction: column; gap: 11px; }
+.contact-info-row + .contact-info-row { border-top: 1px solid rgba(30, 50, 70, 0.055); }
+.contact-label { font-family: var(--font-en); font-weight: 400; font-size: 0.78rem; letter-spacing: 0.22em; color: var(--label); }
+.contact-info-row span:not(.contact-label) { font-size: 1rem; color: var(--ink); font-weight: 400; line-height: 1.95; }
+.contact-info-row a { border-bottom: 1px solid rgba(30, 50, 70, 0.2); transition: border-color 0.5s var(--ease), color 0.5s var(--ease); }
+.contact-info-row a:hover { color: #4E7FA4; border-color: #4E7FA4; }
+
+/* 箱型のフォームにしない。枠を持たず、細い下線と余白だけで受け付ける。
+   入力項目・name属性・送信処理には一切触れていない（見た目だけ）。 */
+.form-row { position: relative; margin-bottom: clamp(30px, 4vh, 44px); }
+.form-row label {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 13px;
+  font-size: 0.78rem; font-weight: 400; letter-spacing: 0.22em; color: var(--label);
+}
+.required {
+  font-size: 0.66rem; letter-spacing: 0.1em; padding: 2px 0 2px 12px;
+  border-radius: 0; color: var(--label); background: none;
+  border-left: 1px solid rgba(30, 50, 70, 0.14);
+}
+.contact-form input, .contact-form textarea {
+  width: 100%; padding: 14px 2px;
+  background: transparent; color: var(--ink);
+  border: none; border-bottom: 1px solid rgba(30, 50, 70, 0.13); border-radius: 0;
+  font-size: 1rem; letter-spacing: 0.05em;
+  transition: border-color 0.6s var(--ease);
+  -webkit-appearance: none; appearance: none;
+}
+.contact-form textarea { resize: vertical; min-height: 148px; line-height: 2.05; }
+/* フォーカスは「わずかに濃くなる」だけ。発光も色替えもしない */
+.contact-form input:focus, .contact-form textarea:focus { outline: none; border-bottom-color: rgba(30, 50, 70, 0.30); }
+.form-row::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
+  background: linear-gradient(90deg, rgba(120, 140, 160, 0.55), rgba(190, 202, 214, 0.28));
+  transform: scaleX(0); transform-origin: 0 50%;
+  transition: transform 0.9s var(--ease-out); pointer-events: none;
+}
+.form-row:focus-within::after { transform: scaleX(1); }
+
+/* 送信 ― 塗りボタンにしない。淡い枠とほぼ透明の地だけ */
+.contact-form .btn {
+  margin-top: 18px;
+  min-height: 48px; padding: 13px 34px;
+  border: 1px solid rgba(30, 50, 70, 0.16);
+  background: rgba(255, 255, 255, 0.34);
+  color: var(--ink-2);
+  font-size: 0.8rem; letter-spacing: 0.16em;
+  box-shadow: none;
+}
+.contact-form .btn-block { width: auto; min-width: 210px; }
+.contact-form .btn:hover {
+  background: rgba(236, 239, 242, 0.72);
+  border-color: rgba(30, 50, 70, 0.26);
+  color: var(--ink);
+  box-shadow: none;
+}
+.form-note { margin-top: 24px; font-size: 0.9rem; line-height: 2; color: var(--ink-2); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer { position: relative; padding: clamp(66px, 9vh, 104px) 0 32px; }
+.site-footer::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line) 30%, var(--line) 70%, transparent);
+}
+.footer-inner {
+  width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 46px; flex-wrap: wrap;
+}
+.footer-logo-img { height: 64px; width: auto; margin-bottom: 24px; }
+.footer-brand p { font-family: var(--font-en); font-weight: 400; font-size: 0.84rem; line-height: 2; letter-spacing: 0.08em; color: var(--label); }
+.footer-nav { display: flex; flex-wrap: wrap; gap: 14px 32px; }
+.footer-nav a { font-size: 0.88rem; color: var(--ink-2); font-weight: 400; letter-spacing: 0.08em; transition: color 0.5s var(--ease); }
+.footer-nav a:hover { color: #4E7FA4; }
+.footer-bottom { width: var(--shell); margin: clamp(50px, 6vh, 80px) auto 0; padding: 26px var(--gutter) 0; }
+.footer-bottom p { font-family: var(--font-en); font-size: 0.76rem; letter-spacing: 0.08em; color: var(--label); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .philo-body     { grid-template-columns: 1fr; gap: 0; }
+  .philo-col p:last-child { margin-bottom: clamp(32px, 4.4vh, 50px); }
+  .philo-col:last-child p:last-child { margin-bottom: 0; }
+  /* 1カラムになると導入と本文が近づくので、その間だけ間隔を取り直す */
+  .message-layout { grid-template-columns: 1fr; gap: clamp(34px, 4.6vh, 52px); }
+  .contact-layout { grid-template-columns: 1fr; }
+  /* タブレット: 建築空間は右奥へ退き、言葉が主役に戻る */
+  .hero-main { max-width: min(78vw, 720px); }
+  .hero-sign { right: 3%; height: 66%; }
+  .hero-flow { width: 88%; }
 }
 
 @media (max-width: 768px) {
   .only-pc { display: none; }
+  .only-sp { display: inline; }
 
-  .header-inner { padding: 0 18px; }
-
-  .logo { font-size: 0.92rem; }
-
-  .logo-img { height: 42px; }
-
-  .hero-logo-img { width: min(230px, 64vw); }
-
+  .hamburger { display: block; }
   .main-nav {
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    right: 0;
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 104px var(--gutter) 46px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 20px 40px -30px rgba(30, 50, 70, 0.4);
+    transform: translateY(-101%);
+    transition: transform 0.7s var(--ease-out);
+  }
+  .main-nav.is-open { transform: translateY(0); }
+  .main-nav ul { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .main-nav li { width: 100%; }
+  .nav-link { display: block; width: 100%; padding: 18px 0; font-size: 1rem; border-bottom: 1px solid var(--line); }
+  .nav-cta { margin-top: 24px; text-align: center; border-bottom: none; }
 
-    height: calc(100svh - var(--header-height));
-    background: rgba(10, 10, 10, 0.98);
-    backdrop-filter: blur(10px);
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 0.4s ease, opacity 0.4s ease;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+  /* スマホ: ラベルと内容を縦に。情報量が多いので、行間はやや詰めて
+     項目どうしの余白で読み分けさせる（1項目が間延びしないように） */
+  .info-row { grid-template-columns: 1fr; gap: 7px; padding: clamp(22px, 2.8vh, 30px) 2px; }
+  .info-row dt { font-size: 0.72rem; letter-spacing: 0.2em; line-height: 1.8; }
+  .info-row dd { line-height: 1.95; }
+  .info-list-inline { gap: 8px 22px; }
+  /* 送信ボタンはスマホでも塗りにしない。押しやすさは確保する */
+  .contact-form .btn { min-height: 46px; padding: 12px 28px; font-size: 0.78rem; }
+  .contact-form .btn-block { width: 100%; min-width: 0; }
+  /* スマホ: 縦に伸びすぎないよう、Statement と本文の余白を少し戻す。
+     1行あたりの文字数は max-width（em 指定）が効くので詰まりすぎない。 */
+  .message-sign { text-align: left; margin-top: clamp(34px, 4.6vh, 48px); }
+  .message-quote { font-size: clamp(1.2rem, 5.4vw, 1.5rem); line-height: 1.95; margin-bottom: clamp(38px, 5vh, 52px); }
+  .message-body p { line-height: 2.35; margin-bottom: clamp(26px, 3.2vh, 34px); }
+  .message-en { font-size: 0.74rem; letter-spacing: 0.18em; }
+  .section--brand { min-height: 118svh; }
+
+  /* スマホ: blur を伴う重い層を落とし、光だけ残す */
+  /* ---- Moving Light（スマホ版）----
+     光は見えているのに「動き」として読めなかったのは、光源が画面幅の 76〜88% と
+     大きすぎて、移動しても画面全体の色が一様に変わるだけだったため。
+     そこで強さではなく、形（小さく・中心を明確に）と経路（端から端へ一方向）を
+     作り直す。往復させると同じ場所を漂って見えるので、一方向に通過させて
+     両端でフェードさせる。blur を持つ層は光3枚のみ。 */
+  .field-lamps { transform: translate3d(0, calc(var(--sp, 0) * 10px), 0); }
+
+  /* Silver ― 主役。13秒で左外から右外まで通過する。
+     白い地の上では、純白を重ねても明るさは +7〜19 しか稼げない。
+     明るさだけでは動きが読めないので、2段構成にしている ――
+       1) 芯   … 地を必ず持ち上げる。純白に寄せないと白いセクションで沈む
+                （#F7F8FA より暗い色は、どれだけ重ねても明るくならない）
+       2) 反射差 … その外側に、ごく薄いシルバーグレー rgba(170,180,190)。
+                かつて影に見えていた層の 1/6 以下の濃度で、単独では影に
+                ならないが、芯との開き（12〜22）を作って面の輪郭を伝える。
+     不定形に見えるよう楕円の中心を少し左上へ寄せてある。 */
+  .field-lamp--c {
+    left: -58%; top: 20%; bottom: auto; width: 62%; height: 58%;
+    background: radial-gradient(ellipse 56% 52% at 45% 47%,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(247, 251, 255, 0.6) 22%,
+      rgba(214, 224, 234, 0.14) 40%,
+      rgba(170, 180, 190, 0.08) 60%,
+      rgba(170, 180, 190, 0.03) 76%,
+      rgba(170, 180, 190, 0) 92%);
+    filter: blur(34px);
+    animation: lampCsp 13s linear infinite;
+  }
+  @keyframes lampCsp {
+    0%   { transform: translate3d(0, 0, 0) scale(1);         opacity: 0; }
+    14%  { opacity: 0.96; }
+    50%  { transform: translate3d(120%, 16%, 0) scale(1.04); opacity: 1; }
+    86%  { opacity: 0.9; }
+    100% { transform: translate3d(244%, 2%, 0) scale(1);     opacity: 0; }
   }
 
-  .main-nav.is-open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
+  /* Warm White ― 補助光。18秒で右上から左下へ降りるが、役割は「暖かい空気を足す」だけ。
+     Silver より必ず弱くなるよう、中心濃度と opacity の上限を明確に下げてある。 */
+  .field-lamp--a {
+    left: auto; right: -46%; top: -18%; width: 58%; height: 48%;
+    background: radial-gradient(closest-side,
+      rgba(255, 249, 233, 0.82) 0%,
+      rgba(255, 249, 233, 0.56) 32%,
+      rgba(255, 249, 233, 0.2) 60%,
+      rgba(255, 249, 233, 0) 80%);
+    filter: blur(30px);
+    animation: lampAsp 18s linear infinite;
+  }
+  @keyframes lampAsp {
+    0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
+    16%  { opacity: 0.64; }
+    50%  { transform: translate3d(-96%, 96%, 0) scale(1.06);   opacity: 0.72; }
+    84%  { opacity: 0.6; }
+    100% { transform: translate3d(-186%, 176%, 0) scale(1);    opacity: 0; }
   }
 
-  .main-nav ul {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    padding: 24px 24px 40px;
+  /* Pale Blue ― いちばん控えめ。動きを見せるためではなく、奥行きと未来感のためだけに置く。
+     Silver の通過を邪魔しない濃度に抑えている。 */
+  .field-lamp--b {
+    display: block;
+    left: 14%; right: auto; top: auto; bottom: -34%; width: 54%; height: 44%;
+    background: radial-gradient(closest-side,
+      rgba(198, 223, 242, 0.42) 0%,
+      rgba(198, 223, 242, 0.26) 34%,
+      rgba(198, 223, 242, 0.1) 62%,
+      rgba(198, 223, 242, 0) 82%);
+    filter: blur(38px);
+    animation: lampBsp 23s linear infinite;
+  }
+  @keyframes lampBsp {
+    0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
+    18%  { opacity: 0.34; }
+    50%  { transform: translate3d(38%, -128%, 0) scale(1.05);  opacity: 0.4; }
+    84%  { opacity: 0.3; }
+    100% { transform: translate3d(72%, -252%, 0) scale(1);     opacity: 0; }
   }
 
-  .main-nav li { width: 100%; border-bottom: 1px solid var(--color-border); }
-
-  .nav-link {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    min-height: 56px;
-    padding: 0;
-    font-size: 1.05rem;
+  /* 反射 ― Silver が通ったあとに、かすかに追いかけて見える程度に留める。
+     主役の邪魔をしないよう濃度を落としてある。blur は使わない。 */
+  .field-pane {
+    display: block;
+    top: -14%; left: -34%; width: 30%; height: 128%;
+    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(238, 246, 252, 0.42) 48%, rgba(255,255,255,0) 90%);
+    filter: none;
+    animation: paneSp 21s linear infinite;
+  }
+  @keyframes paneSp {
+    0%   { transform: translateX(0) skewX(-5deg);    opacity: 0; }
+    20%  { opacity: 0.46; }
+    76%  { opacity: 0.46; }
+    100% { transform: translateX(520%) skewX(-5deg); opacity: 0; }
   }
 
-  .nav-cta {
-    display: flex;
-    width: 100%;
-    min-height: 56px;
-    border: none;
-    padding: 0;
-    color: var(--color-gold-light);
+  /* セクションが持つ光も、スマホでは移動量を倍にして周期を短くする
+     （::before は blur を持たないので、レイヤー数は増えない） */
+  #philosophy::before { animation: lightPhilSp 17s ease-in-out infinite; }
+  #business::before   { animation: lightBizSp  20s ease-in-out infinite; }
+  #message::before    { animation: lightMsgSp  15s ease-in-out infinite; }
+  #company::before    { animation: lightCompSp 19s ease-in-out infinite; }
+  #contact::before    { animation: lightContSp 22s ease-in-out infinite; }
+  @keyframes lightPhilSp { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(13%, 9%, 0); } }
+  @keyframes lightBizSp  { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-12%, 11%, 0); } }
+  @keyframes lightMsgSp  { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(14%, -7%, 0); } }
+  @keyframes lightCompSp { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-16%, 3%, 0); } }
+  @keyframes lightContSp { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(5%, 13%, 0); } }
+
+  .section--brand::after { filter: blur(42px); }
+  .field-daylight { animation: none; opacity: 0.95; }
+  .hero-sweep { display: none; }
+
+  /* ---- スクロールを軽くする（見た目は変えない） ----
+     常時まわっているアニメーションが20件以上あり、画面の外に出ても
+     回り続けていた。JS が「今そのあたりを見ているか」を .is-live で
+     知らせるので、見えていない間だけ止める。位置も見た目もそのまま。 */
+  .hero:not(.is-live) .hero-flow > span,
+  .hero:not(.is-live) .r-sign,
+  .hero:not(.is-live) .r-sheen,
+  .hero:not(.is-live) .scroll-cue-rail::after,
+  .hero:not(.is-live) .hero-atmos > span,
+  .section:not(.is-live)::before,
+  .section:not(.is-live) .sec-light,
+  .section--brand:not(.is-live)::after {
+    animation-play-state: paused;
   }
+  /* HERO を離れたら、いちばん重い層（大きな SVG のぼかし）は下ろす */
+  .hero:not(.is-live) .r-glow { display: none; }
 
-  .nav-cta:hover { background: none; }
+  /* will-change は必要な間だけ。常時つけたままにすると
+     iPhone では合成レイヤーが積み上がってスクロールが引っかかる。 */
+  .section::before, .section .sec-light,
+  .field-silk-band, .hero-sign { will-change: auto; }
+  .hero.is-live .hero-sign,
+  .section.is-live .sec-light { will-change: transform, opacity; }
 
-  .hamburger { display: flex; }
+  .hero-halo { animation: haloIn 2.2s var(--ease) 0.15s forwards; transform: translate(-12%, -50%); }
+  /* スマホ: 建築は曲面ガラスと床だけに絞り、blur の重い層は落とす */
+  .hero-main { max-width: 100%; }
 
-  .section { padding: 88px 22px; }
+  /* ---- スマホの Signature R ----
+     PC の縮小ではなく、スマホ用に位置と大きさを決め直している。
+     右上〜右中央を大きく使い、コピーへ向かう左下側だけを斜めに
+     透かす。ループと縦の筆筋（R と分かる部分）は全く弱めない。 */
+  .hero-sign {
+    /* HERO が日本語コピー2行ぶん短くなったので、R の実寸が変わらないよう
+       割合を上げ直している（35%→37%）。形・太さ・演出はそのまま。 */
+    right: 10%; top: 13%; height: 37%;
+    transform: translate3d(0, 0, 0);
+    /* スマホは中央やや右から書き始め、18vw ぶん右へ寄っていく */
+    animation: signSettleSp 3s cubic-bezier(0.18, 0.66, 0.3, 1) 1.8s forwards;
+    -webkit-mask-image: linear-gradient(158deg, #000 0%, #000 52%, rgba(0,0,0,0.36) 78%, transparent 100%);
+            mask-image: linear-gradient(158deg, #000 0%, #000 52%, rgba(0,0,0,0.36) 78%, transparent 100%);
+  }
+  @keyframes signSettleSp {
+    from { transform: translate3d(-18vw, 0, 0); }
+    to   { transform: translate3d(0, 0, 0); }
+  }
+  /* 画面が狭いぶん線は少し細く。ただし束の重なりと厚みは残す */
+  .loop-body, .stem-body, .leg-body { opacity: 0.38; }
+  .loop-mid,  .stem-mid,  .leg-mid  { opacity: 0.46; }
+  .loop-core, .stem-core, .leg-core { opacity: 0.68; }
+  .loop-body { stroke-width: 66; }
+  .loop-mid  { stroke-width: 39; }
+  .loop-core { stroke-width: 15; }
+  .stem-body { stroke-width: 60; }
+  .stem-mid  { stroke-width: 35; }
+  .stem-core { stroke-width: 14; }
+  .leg-body  { stroke-width: 54; }
+  .leg-mid   { stroke-width: 32; }
+  .leg-core  { stroke-width: 12.5; }
+  .hl-main { stroke-width: 5.2; }
+  .hl-stem { stroke-width: 4.8; }
+  .hair    { stroke-width: 6; }
+  .r-glow  { stroke-width: 74; filter: blur(18px); }
+  .r-sheen { stroke-width: 18; }
 
-  .section-lead { margin-bottom: 48px; line-height: 1.95; }
+  /* 右下の光 ― PC とほぼ同じ強さで残す。ここを弱めると
+     スマホでは何も起きていないように見えてしまう。 */
+  .hero-flow { width: 118%; height: 68%; }
+  .hero-flow-a {
+    background:
+      radial-gradient(58% 50% at 76% 82%, rgba(255, 255, 255, 0.92), rgba(255,255,255,0) 74%),
+      linear-gradient(30deg,
+        rgba(233, 224, 203, 0.5) 0%,
+        rgba(255, 255, 255, 0.68) 32%,
+        rgba(206, 221, 236, 0.36) 60%,
+        rgba(255, 255, 255, 0) 88%);
+  }
+  .hero-flow-b {
+    background: linear-gradient(34deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(241, 233, 214, 0.44) 24%,
+      rgba(255, 255, 255, 0.76) 43%,
+      rgba(200, 217, 234, 0.3) 62%,
+      rgba(255, 255, 255, 0) 84%);
+  }
+  .hero-flow-c {
+    background: linear-gradient(26deg,
+      rgba(255, 255, 255, 0) 6%,
+      rgba(255, 255, 255, 0.46) 40%,
+      rgba(226, 216, 194, 0.26) 58%,
+      rgba(255, 255, 255, 0) 82%);
+  }
+  .hero-rays { filter: blur(20px); animation: raysIn 2.4s var(--ease) 0.3s forwards; }
 
-  .hero { padding: 0 22px; min-height: 100svh; }
+  /* ---- スマホでもロード演出は残す ----
+     ロゴは出すが、結像時の大きさは PC の 3.2 倍に対して 2.2 倍に抑える。
+     収まったあとはヘッダーのロゴへ視線が引き継がれる。 */
+  .hero-logo-img { --logo-s: 2.2; --logo-dx: 6vw; --logo-dy: 9vh; }
+  /* 縦に間延びさせない。ヘッダー下の「間」は残しつつ、全体を締める。
+     下は Scroll のすぐ下までに切り詰め、次のセクションへ自然につなぐ。 */
+  .hero { padding-top: 148px; padding-bottom: 80px; min-height: auto; }
+  /* Scroll の下に残る余白を 38px → 12px に。縦線の長さ（＝デザイン）は変えない */
+  .scroll-cue--left { bottom: 12px; }
 
-  .hero-title { font-size: clamp(1.5rem, 6.5vw, 2rem); line-height: 1.6; }
+  /* 英語コピー: 大きさより余白を優先。右端まで使わず、各行が呼吸できる幅にする */
+  .hero-title {
+    font-size: clamp(2.5rem, 11.5vw, 3.6rem);
+    line-height: 1.18; letter-spacing: 0.015em;
+    padding-right: 10%;
+    margin-bottom: clamp(24px, 3.6vh, 34px);
+  }
+  .hero-line { white-space: normal; clip-path: inset(-0.3em -0.28em -0.05em -0.28em); }
 
-  .hero-lead { font-size: 1rem; letter-spacing: 0.03em; line-height: 1.95; margin-bottom: 44px; }
+  /* 文字の動きは残すが、量と重さを落とす（マウス追従なし・視差は最大10px・blurも軽く） */
+  .hero-line { --lx: 0px; }
+  .hero-line:nth-child(1) { --ly: -5px; }
+  .hero-line:nth-child(2) { --ly: -8px; }
+  .hero-line:nth-child(3) { --ly: -10px; }
+  .hero-line-in { filter: blur(7px); transform: translateY(22px); -webkit-text-stroke-width: 0.8px; }
 
-  .section-title { font-size: clamp(1.7rem, 6vw, 2.1rem); }
+  /* 光は残しつつ、blur を伴う層の枚数を減らす（iPhone のスクロール優先） */
+  .hero-silver { display: none; }
+  .r-glow { display: none; }                      /* blur を伴う層をひとつ減らす */
+  .logo::after { filter: blur(18px); animation: fadeIn 1.8s var(--ease) 0.9s forwards; }
+  .hero-warm { filter: blur(54px); }
+  .hero-tint { filter: blur(46px); animation-duration: 22s; }
 
-  .philosophy-title { font-size: clamp(1.6rem, 7vw, 2rem); }
-
-  .info-row { grid-template-columns: 1fr; row-gap: 6px; padding: 22px 2px; }
-  .info-row dt { padding-top: 0; font-size: 0.72rem; }
-  .info-row dd { font-size: 1.02rem; line-height: 1.9; }
-
-  .business-grid { grid-template-columns: 1fr; }
-
-  .business-card { padding: 34px 26px; }
-
-  .philosophy-body p { font-size: 1.02rem; line-height: 2.05; margin-bottom: 28px; }
-
-  .message-quote { font-size: 1.18rem; line-height: 1.85; }
-
-  .message-body p:not(.message-quote):not(.message-sign) { font-size: 1.02rem; line-height: 2.0; }
-
-  .contact-info-row { font-size: 0.95rem; word-break: break-word; }
-
-  .contact-form { gap: 22px; }
-
-  .footer-inner { flex-direction: column; gap: 28px; padding-bottom: 40px; }
-
-  .footer-nav { gap: 16px 24px; }
+  /* CTA: ボタンではなく導線。細いシャンパンゴールドの枠だけ残す */
+  .hero-cta {
+    align-self: flex-start;
+    min-width: 168px; min-height: 41px; padding: 10px 16px;
+    gap: 18px;
+    font-size: 0.72rem; letter-spacing: 0.12em;
+    border-color: rgba(170, 138, 86, 0.34);
+    background: transparent;
+    box-shadow: none;
+  }
+  .hero-cta:hover, .hero-cta:active {
+    background: rgba(246, 240, 230, 0.5);
+    border-color: rgba(170, 138, 86, 0.52);
+    box-shadow: none;
+  }
 }
 
-@media (max-width: 400px) {
-  .header-inner { padding: 0 16px; }
-  .logo { font-size: 0.82rem; letter-spacing: 0.08em; }
-  .logo-img { height: 38px; }
-  .hero-logo-img { width: min(210px, 66vw); }
-  .section { padding: 64px 16px; }
-  .hero { padding: 0 16px; }
-  .hero-title { font-size: clamp(1.35rem, 7.5vw, 1.7rem); }
-  .btn { width: 100%; padding-left: 24px; padding-right: 24px; }
-  .business-card { padding: 28px 20px; }
+@media (max-width: 480px) {
+  body { font-size: 1rem; }
+  /* 480px 以下も 768px 側の指定（ロゴ非表示・3行の文字サイズ・CTA）をそのまま使う。
+     ここでは上下の余白だけ、画面の高さに合わせて詰める。 */
+  /* 下は、Scroll の下から PHILOSOPHY までが 200〜250px の静かな余白になる値。
+     （PHILOSOPHY 側の padding-top は 120〜158px なので、ここは 76px） */
+  .hero { padding-top: 134px; padding-bottom: 80px; }
+  .hero-title { padding-right: 8%; }
+  .scroll-cue--left { bottom: 10px; }
+  .biz-row { grid-template-columns: 38px minmax(0, 1fr); gap: 14px; padding-left: 16px; padding-right: 16px; margin-left: -16px; }
+  /* 英語が1行増えるので、上下の間隔を締めて縦に伸びないようにする。
+     いちばん長い Recruitment & Human Resources でも1行に収まる字幅。 */
+  .biz-en   { margin-top: 7px; font-size: 0.72rem; letter-spacing: 0.11em; }
+  .biz-desc { margin-top: 9px; }
+  .philo-title { font-size: clamp(1.72rem, 8.4vw, 2.4rem); }
+  .philo-title .mask:nth-child(2) .mask-in,
+  .philo-title .mask:nth-child(3) .mask-in { padding-left: 0; }
+  .philo-accent { margin-left: 0; padding: 20px 22px; }
+  .brand-logo { height: clamp(100px, 27vw, 138px); }
+  .brand-origin { letter-spacing: 0.26em; font-size: 0.7rem; }
+  .footer-inner { flex-direction: column; gap: 36px; }
 }
 
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-
-  * {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
   }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
-
-  .section-title::after { width: 56px; }
+  .reveal { opacity: 1; transform: none; }
+  .mask-in { transform: none; }
+  .brand-logo.reveal { opacity: 1; transform: none; filter: none; }
+  .hero-logo-img, .hero-cta, .scroll-cue, .hero-halo { opacity: 1; }
+  .hero-line { transform: none; clip-path: none; }
+  .hero-line-in { opacity: 1; filter: none; transform: none; }
+  .logo-img, .main-nav li, .hamburger { opacity: 1; transform: none; }
+  /* サインは描く動きを止め、最初から描き終わった状態で見せる */
+  .r-ink { stroke-dasharray: var(--len) 2000; }
+  .hero-flow { opacity: 0.75; transform: none; }
+  .hero-flow-a, .hero-flow-b, .hero-flow-c { transform: none; }
+  .r-glow { opacity: 0.16; }
+  .r-sheen { display: none; }
+  .r-sign { transform: none; }
+  .hero-rays { opacity: 1; transform: none; }
+  .hero-logo-block::after { opacity: 1; }
+  .hero-sweep { display: none; }
 }

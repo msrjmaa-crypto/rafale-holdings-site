@@ -6,17 +6,17 @@
 <title>Rafale Holdings株式会社｜Driven by Joy. 飲食・エンタメ・コンサル等の統括会社</title>
 <meta name="description" content="Rafale Holdings株式会社の公式サイト。「楽しさを原動力に、人を育て、事業を育てる。」を理念に、飲食・エンターテインメント・コンサルティングなど8事業を展開するホールディングスカンパニーです。">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0a0a0a">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#F7F8FA">
+<meta name="color-scheme" content="light">
 
-<link rel="canonical" href="https://www.rafale-holdings.co.jp/">
+<link rel="canonical" href="https://rafale-hd.jp/">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Rafale Holdings株式会社">
 <meta property="og:title" content="Rafale Holdings株式会社 | Driven by Joy.">
 <meta property="og:description" content="楽しさを原動力に。人を育て、事業を育てる。飲食・エンターテインメント・コンサルティングなど8つの事業を展開するRafale Holdings株式会社の公式サイトです。">
-<meta property="og:url" content="https://www.rafale-holdings.co.jp/">
-<meta property="og:image" content="https://www.rafale-holdings.co.jp/img/ogp.jpg?v=2">
+<meta property="og:url" content="https://rafale-hd.jp/">
+<meta property="og:image" content="https://rafale-hd.jp/img/ogp.jpg?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/jpeg">
@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Rafale Holdings株式会社 | Driven by Joy.">
 <meta name="twitter:description" content="楽しさを原動力に。人を育て、事業を育てる。飲食・エンターテインメント・コンサルティングなど8つの事業を展開するRafale Holdings株式会社の公式サイトです。">
-<meta name="twitter:image" content="https://www.rafale-holdings.co.jp/img/ogp.jpg?v=2">
+<meta name="twitter:image" content="https://rafale-hd.jp/img/ogp.jpg?v=2">
 <meta name="twitter:image:alt" content="Rafale Holdings株式会社 - Driven by Joy. Growing People. Growing Businesses.">
 
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=2">
@@ -38,8 +38,10 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
+<!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
+<link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=53">
 
 <!--
   ============================================================
@@ -78,9 +80,9 @@
   "@type": "Organization",
   "name": "Rafale Holdings株式会社",
   "alternateName": "Rafale Holdings Co., Ltd.",
-  "url": "https://www.rafale-holdings.co.jp/",
-  "logo": "https://www.rafale-holdings.co.jp/img/icon-512.png",
-  "image": "https://www.rafale-holdings.co.jp/img/ogp.jpg?v=2",
+  "url": "https://rafale-hd.jp/",
+  "logo": "https://rafale-hd.jp/img/icon-512.png",
+  "image": "https://rafale-hd.jp/img/ogp.jpg?v=2",
   "email": "info@rafale-hd.jp",
   "foundingDate": "2026-03",
   "description": "楽しさを原動力に。人を育て、事業を育てる。飲食・エンターテインメント・コンサルティング・店舗プロデュース・マーケティング・人材サービス・不動産・リユース/ECの8事業を展開するホールディングスカンパニー。",
@@ -103,7 +105,7 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Rafale Holdings株式会社",
-  "url": "https://www.rafale-holdings.co.jp/",
+  "url": "https://rafale-hd.jp/",
   "inLanguage": "ja"
 }
 </script>
@@ -113,20 +115,56 @@
 <a href="#main-content" class="skip-link">本文へスキップ</a>
 <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
-<div class="bg-ambient" aria-hidden="true"></div>
+<!-- ============================================================
+     FIELD ― 白い未来建築のロビー（固定背景）
+     朝の自然光、ガラス越しの淡いブルーの反射、薄い影。
+     線・粒子・グリッドは使わず、光と空気だけで奥行きを作る。
+     ============================================================ -->
+<!-- ページ全体の地 ― HERO から CONTACT まで途切れない1枚のグラデーション。
+     区切りの位置は js/script.js が実測して --b1〜--b6 に入れるので、
+     セクションの高さが変わっても継ぎ目は出ない。 -->
+<div class="page-tone" aria-hidden="true"></div>
 
-<canvas class="sakura-canvas" id="sakura-canvas" aria-hidden="true"></canvas>
+<div class="field" aria-hidden="true">
+  <div class="field-sky"></div>
+  <div class="field-daylight"></div>
+  <!-- Moving Light ― 固定背景なので、スクロールしても同じ光が付いてくる。
+       周期を 24 / 31 / 37 秒（互いに素）にしてあるため、3つが同じ配置に
+       戻るのは約7.6時間後で、ループには気づかない。
+       .field-lamps はスクロール量に応じて最大16pxだけ位置がずれる。 -->
+  <div class="field-lamps">
+    <span class="field-lamp field-lamp--a"></span>
+    <span class="field-lamp field-lamp--b"></span>
+    <span class="field-lamp field-lamp--c"></span>
+    <span class="field-pane"></span>
+  </div>
+
+  <!-- Liquid Silk ― 光溜まりの手前を、白とシルバーの大きな面が流れていく層。
+       1枚ごとに山（白）と谷（シルバー）を持たせてあるので、平らな帯ではなく
+       絹の折り目として読める。ぼかしは使わずグラデーションの裾で柔らかくして
+       いるため、動かしているのは transform と opacity だけ。
+       周期 12 / 16.5 / 10.5 秒と、奥の光溜まり 24 / 31 / 37 秒がずれているので
+       全体が同じ並びに戻ることはない。 -->
+  <div class="field-silk">
+    <span class="field-silk-band field-silk-band--1"></span>
+    <span class="field-silk-band field-silk-band--2"></span>
+    <span class="field-silk-band field-silk-band--3"></span>
+  </div>
+
+  <div class="field-floor"></div>
+</div>
 
 <header class="site-header" id="site-header">
   <div class="header-inner">
 
     <a href="#top" class="logo" aria-label="Rafale Holdings 株式会社 トップへ">
-      <img src="img/logo.png?v=2" alt="Rafale Holdings" class="logo-img" width="736" height="575" decoding="async">
+      <img src="img/logo-light.png?v=1" alt="Rafale Holdings" class="logo-img" width="736" height="575" decoding="async">
     </a>
     <nav class="main-nav" id="main-nav" aria-label="メインナビゲーション">
       <ul>
         <li><a href="#philosophy" class="nav-link">フィロソフィー</a></li>
         <li><a href="#business" class="nav-link">事業内容</a></li>
+        <li><a href="#brands" class="nav-link">ブランド</a></li>
         <li><a href="#message" class="nav-link">代表メッセージ</a></li>
         <li><a href="#company" class="nav-link">会社概要</a></li>
         <li><a href="#contact" class="nav-link nav-cta">お問い合わせ</a></li>
@@ -140,210 +178,371 @@
 
 <main id="main-content">
 
+  <!-- ============================ HERO ============================
+       中央に積み上げず、左に大きな言葉・右に空間を残す非対称構成。 -->
   <section class="hero" id="top">
 
-    <div class="hero-bg" aria-hidden="true"></div>
-
+    <!-- 背景動画（未配置。assets/videos/rafale-opening.mp4 を置くとPCで自動再生） -->
     <video class="hero-video" id="hero-video" muted loop playsinline disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
 
-    <div class="hero-shade" aria-hidden="true"></div>
+    <!-- 空気 ― 白・淡いブルー・シルバー・ごく薄い暖色の4層。
+         周期をすべてずらしてあるので、繰り返しに気づかない。
+         光は均一にかけず、ロゴの周り／コピーの左奥／ガラス面に溜める。 -->
+    <div class="hero-atmos" aria-hidden="true">
+      <span class="hero-halo"></span>
+      <span class="hero-tint"></span>
+      <span class="hero-silver"></span>
+      <span class="hero-warm"></span>
+      <span class="hero-sweep"></span>
+      <span class="hero-rays"></span>
+    </div>
 
-    <div class="hero-movie" aria-hidden="true">
-      <div class="hero-movie-texture"></div>
-      <div class="hero-movie-wash"></div>
-      <div class="hero-movie-glow"></div>
+    <!-- 右下から流れる光 ― R を書く筆に連動して立ち上がる。
+         別々の装飾にせず、外側の器（.hero-flow）が R の進みに合わせて
+         明るさ・広がり・流れを増し、終筆でピークを迎える。
+         中の2枚は完成後もごくゆっくり呼吸し、背景の Liquid Silk へ馴染む。 -->
+    <div class="hero-flow" aria-hidden="true">
+      <span class="hero-flow-a"></span>
+      <span class="hero-flow-b"></span>
+      <span class="hero-flow-c"></span>
+    </div>
 
-      <div class="hero-movie-particles">
-        <span style="--px:-140px; --py:-90px; --delay:0s;"></span>
-        <span style="--px:120px; --py:-60px; --delay:0.6s;"></span>
-        <span style="--px:-80px; --py:70px; --delay:1.1s;"></span>
-        <span style="--px:160px; --py:50px; --delay:0.3s;"></span>
-        <span style="--px:-160px; --py:20px; --delay:1.6s;"></span>
-        <span style="--px:60px; --py:-110px; --delay:0.9s;"></span>
-      </div>
+    <!-- 右側 ― Rafale Signature R。
+         参考画像の構造に合わせ、線は次の3本で構成している。
+           r-main … 左下から入り、上部の巨大で横長なループを回り、
+                    ふところを閉じてから、そのまま右下へ長い脚として抜ける。
+                    ループと脚が1本で繋がっているのが参考画像の特徴。
+           r-stem … その上を横切る、中央の力強い縦のストローク。
+                    r-main のふところの戻りと交差して R の形になる。
+           r-hair … 脚に沿う細い補助の筆筋。
+         1本につき body / mid / core の3層＋細いハイライトを重ねる。
+         3層とも通る所は太く、core だけの所は細い ―― 筆圧差と、
+         筆筋が束になった厚みが同時に出る。
+         描画中は器（.hero-sign）が中央付近から右へゆっくり寄っていく。 -->
+    <div class="hero-sign" aria-hidden="true">
+      <svg class="r-sign" viewBox="0 0 540 730" fill="none" preserveAspectRatio="xMidYMid meet" role="presentation">
+        <defs>
+          <path id="r-main" pathLength="1000"
+                d="M 18 336
+                   C 24 300, 40 256, 68 214
+                   C 112 120, 190 40, 284 16
+                   C 374 -6, 458 38, 492 124
+                   C 520 194, 502 272, 448 322
+                   C 396 370, 300 398, 200 392
+                   C 268 428, 340 486, 396 552
+                   C 442 606, 492 664, 536 706"/>
+          <path id="r-stem" pathLength="1000"
+                d="M 250 180
+                   C 240 280, 226 380, 208 470
+                   C 192 552, 168 626, 140 678
+                   C 132 692, 126 700, 120 706"/>
+          <path id="r-hair" pathLength="1000"
+                d="M 214 410
+                   C 282 446, 352 502, 406 566
+                   C 450 618, 496 672, 538 714"/>
 
-      <div class="hero-movie-petals" id="hero-movie-petals"></div>
+          <!-- 太い層はシャンパン寄り、芯はウォームホワイト寄り。
+               層ごとに配合を変えて、1色のグレーにならないようにしている。 -->
+          <linearGradient id="ink-body" x1="0.08" y1="0" x2="0.92" y2="1">
+            <stop offset="0"    stop-color="#C9B994"/>
+            <stop offset="0.26" stop-color="#E8DCBE"/>
+            <stop offset="0.52" stop-color="#B8C7D8"/>
+            <stop offset="0.78" stop-color="#E3D5B4"/>
+            <stop offset="1"    stop-color="#C4B393"/>
+          </linearGradient>
+          <linearGradient id="ink-mid" x1="0.16" y1="0.06" x2="0.86" y2="0.96">
+            <stop offset="0"    stop-color="#F2E8D2"/>
+            <stop offset="0.28" stop-color="#BECDDD"/>
+            <stop offset="0.55" stop-color="#F5EDDB"/>
+            <stop offset="0.8"  stop-color="#C6D4E3"/>
+            <stop offset="1"    stop-color="#EFE4CC"/>
+          </linearGradient>
+          <linearGradient id="ink-core" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0"    stop-color="#FFFCF3"/>
+            <stop offset="0.3"  stop-color="#F8F0DC"/>
+            <stop offset="0.62" stop-color="#EDF4FA"/>
+            <stop offset="1"    stop-color="#FFFAEC"/>
+          </linearGradient>
+          <!-- 太い筆跡の中を走る、細い光 -->
+          <linearGradient id="ink-hl" x1="0.1" y1="0" x2="0.9" y2="1">
+            <stop offset="0"    stop-color="#FFFFFF"/>
+            <stop offset="0.34" stop-color="#FFF7E4"/>
+            <stop offset="0.68" stop-color="#F4FAFF"/>
+            <stop offset="1"    stop-color="#FFFDF4"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 線のまわりの空気。2本まとめて1回だけぼかす。発光にはしない -->
+        <g class="r-glow">
+          <use href="#r-main"/><use href="#r-stem"/>
+        </g>
+
+        <!-- 1本目の前半: 上部の巨大なループ -->
+        <use class="r-ink loop-body" href="#r-main"/>
+        <use class="r-ink loop-mid"  href="#r-main"/>
+        <use class="r-ink loop-core" href="#r-main"/>
+
+        <!-- 2本目: 中央の力強い縦ストローク -->
+        <use class="r-ink stem-body" href="#r-stem"/>
+        <use class="r-ink stem-mid"  href="#r-stem"/>
+        <use class="r-ink stem-core" href="#r-stem"/>
+
+        <!-- 1本目の後半: 右下へ伸びる大きな脚 -->
+        <use class="r-ink leg-body" href="#r-main"/>
+        <use class="r-ink leg-mid"  href="#r-main"/>
+        <use class="r-ink leg-core" href="#r-main"/>
+
+        <!-- 太い筆跡の中を走る細いハイライトと、脚に沿う補助の筆筋 -->
+        <use class="r-ink hl-main" href="#r-main"/>
+        <use class="r-ink hl-stem" href="#r-stem"/>
+        <use class="r-ink hair"    href="#r-hair"/>
+
+        <!-- 完成後、表面を反射が1回通る（以後20秒ごと） -->
+        <g class="r-sheen">
+          <use href="#r-main"/><use href="#r-stem"/>
+        </g>
+      </svg>
     </div>
 
     <div class="hero-inner">
-      <div class="hero-logo-block">
+      <div class="hero-main">
+        <div class="hero-logo-block">
+          <img src="img/logo-light.png?v=1" alt="Rafale Holdings" class="hero-logo-img" width="736" height="575" fetchpriority="high" decoding="async">
+        </div>
 
-        <img src="img/logo.png?v=2" alt="Rafale Holdings" class="hero-logo-img" width="736" height="575" fetchpriority="high" decoding="async">
+        <!-- 各行は「外＝マスク＋視差」「中＝出現アニメーション」の二重構造。
+             行ごとに速度と奥行きを変え、一塊に見えないようにしている。 -->
+        <h1 class="hero-title" lang="en">
+          <span class="hero-line"><span class="hero-line-in">Driven by Joy.</span></span>
+          <span class="hero-line"><span class="hero-line-in">Growing People.</span></span>
+          <span class="hero-line"><span class="hero-line-in">Growing Businesses.</span></span>
+        </h1>
+
+
+        <a href="#philosophy" class="btn hero-cta">私たちの理念を見る</a>
       </div>
-      <h1 class="hero-title"><span lang="en">Driven by Joy.<br>Growing People. Growing Businesses.</span></h1>
-      <p class="hero-lead">楽しさを原動力に。<br class="only-pc">人を育て、事業を育てる。</p>
-      <a href="#philosophy" class="btn btn-gold hero-cta reveal">私たちの理念を見る</a>
     </div>
-    <a href="#philosophy" class="scroll-cue" aria-hidden="true"><span></span>Scroll</a>
+
+    <a href="#philosophy" class="scroll-cue scroll-cue--left" aria-hidden="true"><span class="scroll-cue-rail"></span>Scroll</a>
   </section>
 
+  <!-- ============================ PHILOSOPHY ============================ -->
   <section class="section" id="philosophy">
-    <div class="section-inner philosophy-inner">
-      <p class="section-tag reveal">PHILOSOPHY</p>
-      <h2 class="section-title philosophy-title">
-        <span class="philosophy-line reveal" data-reveal-delay="0">楽しさを原動力に。</span>
-        <span class="philosophy-line reveal" data-reveal-delay="500">人を育て、事業を育てる。</span>
+    <div class="sec-light" aria-hidden="true"></div>
+    <div class="section-inner">
+      <header class="section-head">
+        <p class="section-tag reveal" lang="en">PHILOSOPHY</p>
+      </header>
+
+      <h2 class="philo-title">
+        <span class="mask reveal"><span class="mask-in">楽しさを原動力に。</span></span>
+        <span class="mask reveal" data-reveal-delay="220"><span class="mask-in">人を育て、</span></span>
+        <span class="mask reveal" data-reveal-delay="440"><span class="mask-in">事業を育てる。</span></span>
       </h2>
 
-      <div class="philosophy-body">
-        <p class="reveal">私たちは、<br>人の成長こそが、<br>企業の未来をつくる原動力だと考えています。</p>
-        <p class="reveal">事業とは、<br>人の想いと挑戦の積み重ねによって<br>育まれていくものです。</p>
-        <p class="reveal">一人ひとりの可能性を信じ、<br>挑戦を支え、<br>安心して力を発揮できる環境をつくること。</p>
-        <p class="reveal">それが、私たちの変わらない使命です。</p>
-        <p class="reveal">人が成長すると、<br>組織は強くなる。<br>組織が成長すると、<br>社会に新しい価値が生まれる。</p>
-        <p class="reveal">Rafale Holdingsは、<br>「楽しさを原動力に。」<br>人を育て、事業を育て、<br>その先にある豊かな未来を創造していきます。</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt" id="business">
-    <div class="section-inner">
-      <p class="section-tag reveal">BUSINESS</p>
-      <h2 class="section-title reveal">事業内容</h2>
-      <p class="section-lead reveal">飲食からエンターテインメント、コンサルティングまで。<br class="only-pc">私たちは8つの事業領域で、専門性と実行力を掛け合わせ、お客様と社会に持続的な価値を提供しています。</p>
-
-      <div class="business-grid">
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M14 6 H34 L30 20 A6 8 0 0 1 18 20 L14 6 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M24 20 V36 M16 42 H32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </div>
-          <h3>飲食事業</h3>
-          <p>飲食店・接待飲食店の企画から運営まで、上質な体験をお届けします。</p>
-        </article>
-
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M24 6 C14 16 8 24 8 30 A8 8 0 0 0 22 34 L20 42 H28 L26 34 A8 8 0 0 0 40 30 C40 24 34 16 24 6 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>エンターテインメント事業</h3>
-          <p>ポーカーラウンジ・アミューズメント施設の企画・運営を手掛けます。</p>
-        </article>
-
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="7" stroke="currentColor" stroke-width="2"/><path d="M10 40c0-8 6-13 14-13s14 5 14 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          </div>
-          <h3>コンサルティング事業</h3>
-          <p>経営コンサルティング・店舗開発・事業支援まで、伴走型でサポートします。</p>
-        </article>
-
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M8 18 L10 8 H38 L40 18 M9 18 H39 M12 18 V40 H36 V18" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 40 V28 H28 V40" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>店舗プロデュース事業</h3>
-          <p>店舗企画・内装設計から開業支援まで、トータルでプロデュースします。</p>
-        </article>
-
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M6 22 V30 L14 32 V20 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 20 L34 12 V40 L14 32" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M34 12 A11 14 0 0 1 34 40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 32 L18 42 H24 L21 33" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>マーケティング事業</h3>
-          <p>広告・ブランディング・販促・SNS運用まで、事業の魅力を届けます。</p>
-        </article>
-
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><circle cx="17" cy="16" r="6" stroke="currentColor" stroke-width="2"/><path d="M6 40c0-7 5-12 11-12s11 5 11 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="14" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M26 24c2-1.4 4.3-1.9 6-1.9 5 0 9 4.4 9 10.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </div>
-          <h3>人材サービス事業</h3>
-          <p>有料職業紹介・採用支援・人材育成を通じて、人と企業をつなぎます。</p>
-        </article>
-
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M8 42 V20 L24 8 L40 20 V42 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 42 V28 H28 V42" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>不動産事業</h3>
-          <p>不動産の売買・賃貸・仲介・管理まで、資産価値を最大化します。</p>
-        </article>
-
-        <article class="business-card reveal">
-          <div class="business-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" fill="none"><path d="M14 16 L16 8 H32 L34 16 M10 16 H38 L36 42 H12 L10 16 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 26a4 4 0 0 1 7-2.6M28 22v4h-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3>リユース・EC事業</h3>
-          <p>古物営業、商品の企画・販売・輸出入、EC事業を展開しています。</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="brands">
-    <div class="section-inner">
-      <p class="section-tag reveal">BRANDS</p>
-      <h2 class="section-title reveal">私たちが手掛けるブランド</h2>
-
-      <div class="brand-grid">
-        <!-- data-brand-href: カードのどこをクリックしてもブランドサイトへ（js/script.js）。
-             ボタン自体が本来のリンクなので、JSが無効でも遷移できます。 -->
-        <article class="brand-card" data-brand-href="https://sakura-poker.jp/">
-
-          <div class="brand-logo reveal">
-            <img src="img/brand-sakura-logo.png?v=3" alt="SAKURA Poker Lounge"
-                 width="1400" height="556" loading="lazy" decoding="async">
-          </div>
-          <h3 class="brand-name reveal" lang="en">SAKURA Poker Lounge</h3>
-          <p class="brand-tagline reveal">静かに、熱く。</p>
-          <p class="brand-desc reveal">初心者から経験者まで、<br>心地よく楽しめるポーカーラウンジ。</p>
-
-          <a href="https://sakura-poker.jp/" class="btn btn-gold brand-btn reveal"
-             target="_blank" rel="noopener noreferrer"
-             aria-label="SAKURA Poker Lounge のブランドサイトを見る（新しいタブで開きます）">ブランドサイトを見る</a>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt" id="message">
-    <div class="section-inner">
-      <p class="section-tag reveal">MESSAGE</p>
-      <h2 class="section-title reveal">代表メッセージ</h2>
-
-      <div class="message-layout">
-        <div class="message-body reveal">
-          <p class="message-quote">"会社にとって最も大切な財産は、「人」です。"</p>
-          <p>どれほど優れた仕組みや事業があっても、人が成長しなければ、企業は成長し続けることはできません。だから私たちは、人を大切にする経営を貫きます。</p>
-          <p>社員、お客様、取引先、そして地域社会。関わるすべての人との信頼を積み重ねながら、人が輝き、事業が育ち、新しい価値が生まれる企業を目指します。</p>
-          <p>楽しさを原動力に。人を育て、事業を育てる。この理念を胸に、未来へ挑戦し続けます。</p>
-          <p class="message-sign">代表取締役　富原 盛哉</p>
+      <div class="philo-body">
+        <div class="philo-col">
+          <p class="reveal">私たちは、<br>人の成長こそが、<br>企業の未来をつくる原動力だと考えています。</p>
+          <p class="reveal">事業とは、<br>人の想いと挑戦の積み重ねによって<br>育まれていくものです。</p>
+          <p class="reveal">一人ひとりの可能性を信じ、<br>挑戦を支え、<br>安心して力を発揮できる環境をつくること。</p>
+        </div>
+        <div class="philo-col">
+          <p class="reveal philo-accent">それが、私たちの変わらない使命です。</p>
+          <p class="reveal">人が成長すると、<br>組織は強くなる。<br>組織が成長すると、<br>社会に新しい価値が生まれる。</p>
+          <p class="reveal">Rafale Holdingsは、<br>「楽しさを原動力に。」<br>人を育て、事業を育て、<br>その先にある豊かな未来を創造していきます。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="company">
+  <!-- ============================ BUSINESS ============================ -->
+  <section class="section" id="business">
+    <div class="sec-light" aria-hidden="true"></div>
     <div class="section-inner">
-      <p class="section-tag reveal">COMPANY</p>
-      <h2 class="section-title reveal">会社概要</h2>
+      <header class="section-head">
+        <p class="section-tag reveal" lang="en">BUSINESS</p>
+      </header>
+      <h2 class="section-title reveal">事業内容</h2>
+      <p class="section-lead reveal">飲食からエンターテインメント、コンサルティングまで。<br class="only-pc">私たちは9つの事業領域で、専門性と実行力を掛け合わせ、お客様と社会に持続的な価値を提供しています。</p>
 
-      <dl class="info-list reveal">
-        <div class="info-row">
+      <ol class="biz-list">
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">01</span>
+          <div class="biz-body">
+            <h3 class="biz-name">飲食事業<span class="biz-en" lang="en">Food &amp; Hospitality</span></h3>
+            <p class="biz-desc">飲食店・接待飲食店の企画から運営まで、上質な体験をお届けします。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">02</span>
+          <div class="biz-body">
+            <h3 class="biz-name">エンターテインメント事業<span class="biz-en" lang="en">Entertainment</span></h3>
+            <p class="biz-desc">ポーカーラウンジ・アミューズメント施設の企画・運営を手掛けます。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">03</span>
+          <div class="biz-body">
+            <h3 class="biz-name">コンサルティング事業<span class="biz-en" lang="en">Business Consulting</span></h3>
+            <p class="biz-desc">経営コンサルティング・店舗開発・事業支援まで、伴走型でサポートします。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">04</span>
+          <div class="biz-body">
+            <h3 class="biz-name">店舗プロデュース事業<span class="biz-en" lang="en">Store Development</span></h3>
+            <p class="biz-desc">店舗企画・内装設計から開業支援まで、トータルでプロデュースします。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">05</span>
+          <div class="biz-body">
+            <h3 class="biz-name">マーケティング事業<span class="biz-en" lang="en">Marketing &amp; Branding</span></h3>
+            <p class="biz-desc">広告・ブランディング・販促・SNS運用まで、事業の魅力を届けます。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">06</span>
+          <div class="biz-body">
+            <h3 class="biz-name">Webサイト制作・運用支援<span class="biz-en" lang="en">Web Design &amp; Management</span></h3>
+            <p class="biz-desc">企業・店舗・ブランドのWebサイト制作から、公開後の更新・運用・改善まで一貫して支援します。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">07</span>
+          <div class="biz-body">
+            <h3 class="biz-name">人材サービス事業<span class="biz-en" lang="en">Recruitment &amp; Human Resources</span></h3>
+            <p class="biz-desc">有料職業紹介・採用支援・人材育成を通じて、人と企業をつなぎます。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">08</span>
+          <div class="biz-body">
+            <h3 class="biz-name">不動産事業<span class="biz-en" lang="en">Real Estate</span></h3>
+            <p class="biz-desc">不動産の売買・賃貸・仲介・管理まで、資産価値を最大化します。</p>
+          </div>
+        </li>
+
+        <li class="biz-row reveal">
+          <span class="biz-num" lang="en" aria-hidden="true">09</span>
+          <div class="biz-body">
+            <h3 class="biz-name">リユース・EC事業<span class="biz-en" lang="en">Reuse &amp; E-Commerce</span></h3>
+            <p class="biz-desc">古物営業、商品の企画・販売・輸出入、EC事業を展開しています。</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ BRANDS ============================
+       ここだけ空間が黒へ切り替わり、SAKURA の世界（黒×金）になる。
+       Rafale が生み出したブランド、という関係が見た目で伝わるようにする。 -->
+  <section class="section section--brand" id="brands">
+    <div class="brand-shift" aria-hidden="true"></div>
+
+    <div class="section-inner">
+      <header class="section-head">
+        <p class="section-tag reveal" lang="en">BRANDS</p>
+      </header>
+      <h2 class="section-title reveal">私たちが手掛けるブランド</h2>
+      <p class="section-lead reveal">Rafale Holdingsが生み出し、育てているブランドです。</p>
+
+      <!-- data-brand-href: カードのどこをクリックしてもブランドサイトへ（js/script.js）。
+           ボタン自体が本来のリンクなので、JSが無効でも遷移できます。 -->
+      <article class="brand" data-brand-href="https://sakura-poker.jp/">
+        <p class="brand-origin reveal" lang="en" aria-hidden="true">A BRAND BY RAFALE HOLDINGS</p>
+
+        <div class="brand-logo reveal">
+          <img src="img/brand-sakura-logo.png?v=3" alt="SAKURA Poker Lounge"
+               width="1400" height="556" loading="lazy" decoding="async">
+        </div>
+
+        <p class="brand-tagline reveal">静かに、熱く。</p>
+        <p class="brand-desc reveal">初心者から経験者まで、<br>心地よく楽しめるポーカーラウンジ。</p>
+
+        <a href="https://sakura-poker.jp/" class="brand-btn reveal"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="SAKURA Poker Lounge のブランドサイトを見る（新しいタブで開きます）">
+          <span>ブランドサイトを見る</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+            <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+        <h3 class="brand-name" lang="en">SAKURA Poker Lounge</h3>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================ MESSAGE ============================ -->
+  <section class="section" id="message">
+    <div class="sec-light" aria-hidden="true"></div>
+    <div class="section-inner">
+      <header class="section-head">
+        <p class="section-tag reveal" lang="en" data-reveal-delay="0">MESSAGE</p>
+      </header>
+
+      <!-- data-reveal-delay: ラベル → 見出し → 英語 → 冒頭の言葉 → 本文 の順に
+           0.11秒ずつ置いて現れる。表示は一度だけ（js/script.js の Observer）。 -->
+      <div class="message-layout">
+        <div class="message-head">
+          <h2 class="section-title reveal" data-reveal-delay="110">代表メッセージ</h2>
+          <p class="message-en reveal" lang="en" data-reveal-delay="220">Representative Message</p>
+        </div>
+
+        <div class="message-body">
+          <p class="message-quote reveal" data-reveal-delay="340">"会社にとって最も大切な財産は、「人」です。"</p>
+          <p class="reveal" data-reveal-delay="470">どれほど優れた仕組みや事業があっても、人が成長しなければ、企業は成長し続けることはできません。だから私たちは、人を大切にする経営を貫きます。</p>
+          <p class="reveal" data-reveal-delay="560">社員、お客様、取引先、そして地域社会。関わるすべての人との信頼を積み重ねながら、人が輝き、事業が育ち、新しい価値が生まれる企業を目指します。</p>
+          <p class="reveal" data-reveal-delay="650">楽しさを原動力に。人を育て、事業を育てる。この理念を胸に、未来へ挑戦し続けます。</p>
+          <p class="message-sign reveal" data-reveal-delay="760">代表取締役　富原 盛哉</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ COMPANY ============================ -->
+  <section class="section" id="company">
+    <div class="sec-light" aria-hidden="true"></div>
+    <div class="section-inner">
+      <header class="section-head">
+        <p class="section-tag reveal" lang="en" data-reveal-delay="0">COMPANY</p>
+      </header>
+      <h2 class="section-title reveal" data-reveal-delay="110">会社概要</h2>
+
+      <dl class="info-list">
+        <div class="info-row reveal" data-reveal-delay="210">
           <dt>会社名</dt>
           <dd>Rafale Holdings株式会社</dd>
         </div>
-        <div class="info-row">
+        <div class="info-row reveal" data-reveal-delay="290">
           <dt>代表者</dt>
           <dd>代表取締役　富原 盛哉</dd>
         </div>
-        <div class="info-row">
+        <div class="info-row reveal" data-reveal-delay="370">
           <dt>所在地</dt>
           <dd>〒166-0004　東京都杉並区阿佐谷南一丁目35番7号 6F</dd>
         </div>
-        <div class="info-row">
+        <div class="info-row reveal" data-reveal-delay="450">
           <dt>設立</dt>
           <dd>2026年3月</dd>
         </div>
-        <div class="info-row">
+        <div class="info-row reveal" data-reveal-delay="530">
           <dt>資本金</dt>
           <dd>999万円</dd>
         </div>
-        <div class="info-row">
+        <div class="info-row reveal" data-reveal-delay="610">
           <dt>法人番号</dt>
           <dd>1010901059174</dd>
         </div>
-        <div class="info-row">
+        <div class="info-row reveal" data-reveal-delay="690">
           <dt>事業内容</dt>
           <dd>
             <ul class="info-list-inline">
@@ -358,7 +557,7 @@
             </ul>
           </dd>
         </div>
-        <div class="info-row">
+        <div class="info-row reveal" data-reveal-delay="770">
           <dt>取引銀行</dt>
           <dd>三井住友銀行</dd>
         </div>
@@ -366,39 +565,33 @@
     </div>
   </section>
 
-  <section class="section section-alt" id="contact">
+  <!-- ============================ CONTACT ============================ -->
+  <section class="section" id="contact">
+    <div class="sec-light" aria-hidden="true"></div>
     <div class="section-inner">
-      <p class="section-tag reveal">CONTACT</p>
-      <h2 class="section-title reveal">お問い合わせ</h2>
-      <p class="section-lead reveal">お気軽にお問い合わせください。<br class="only-pc">内容を確認のうえ、担当者よりご連絡いたします。</p>
+      <header class="section-head">
+        <p class="section-tag reveal" lang="en" data-reveal-delay="0">CONTACT</p>
+      </header>
+      <h2 class="section-title reveal" data-reveal-delay="110">お問い合わせ</h2>
+      <p class="section-lead reveal" data-reveal-delay="220">お気軽にお問い合わせください。<br class="only-pc">内容を確認のうえ、担当者よりご連絡いたします。</p>
 
       <div class="contact-layout">
-        <div class="contact-info reveal">
-          <div class="contact-info-row">
-            <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
-            <div>
-              <span class="contact-label">所在地</span>
-              <span>〒166-0004　東京都杉並区阿佐谷南一丁目35番7号 6F</span>
-            </div>
+        <div class="contact-info">
+          <div class="contact-info-row reveal" data-reveal-delay="330">
+            <span class="contact-label" lang="en">Address</span>
+            <span>〒166-0004　東京都杉並区阿佐谷南一丁目35番7号 6F</span>
           </div>
-          <div class="contact-info-row">
-            <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5c0-.6.4-1 1-1h3l2 5-2 1.5a12 12 0 0 0 5.5 5.5L15 14l5 2v3c0 .6-.4 1-1 1C10.6 20 4 13.4 4 5Z"/></svg>
-            <div>
-              <span class="contact-label">電話番号</span>
-
-              <span>只今準備中です</span>
-            </div>
+          <div class="contact-info-row reveal" data-reveal-delay="410">
+            <span class="contact-label" lang="en">Tel</span>
+            <span>只今準備中です</span>
           </div>
-          <div class="contact-info-row">
-            <svg class="contact-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m4 6.5 8 6.5 8-6.5"/></svg>
-            <div>
-              <span class="contact-label">メール</span>
-              <span><a href="mailto:info@rafale-hd.jp">info@rafale-hd.jp</a></span>
-            </div>
+          <div class="contact-info-row reveal" data-reveal-delay="490">
+            <span class="contact-label" lang="en">Email</span>
+            <span><a href="mailto:info@rafale-hd.jp">info@rafale-hd.jp</a></span>
           </div>
         </div>
 
-        <form class="contact-form reveal" id="contact-form" novalidate>
+        <form class="contact-form reveal" id="contact-form" novalidate data-reveal-delay="400">
           <input type="text" name="hp_url" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
           <div class="form-row">
             <label for="name">お名前<span class="required">必須</span></label>
@@ -416,7 +609,7 @@
             <label for="inquiry">お問い合わせ内容<span class="required">必須</span></label>
             <textarea id="inquiry" name="message" rows="5" required></textarea>
           </div>
-          <button type="submit" class="btn btn-gold btn-block">送信する</button>
+          <button type="submit" class="btn btn-block">送信する</button>
           <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -428,12 +621,13 @@
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <img src="img/logo.png?v=2" alt="Rafale Holdings" class="footer-logo-img" width="736" height="575" loading="lazy" decoding="async">
+      <img src="img/logo-light.png?v=1" alt="Rafale Holdings" class="footer-logo-img" width="736" height="575" loading="lazy" decoding="async">
       <p lang="en">Driven by Joy.<br>Growing People. Growing Businesses.</p>
     </div>
     <nav class="footer-nav" aria-label="フッターナビゲーション">
       <a href="#philosophy">フィロソフィー</a>
       <a href="#business">事業内容</a>
+      <a href="#brands">ブランド</a>
       <a href="#message">代表メッセージ</a>
       <a href="#company">会社概要</a>
       <a href="#contact">お問い合わせ</a>
@@ -444,6 +638,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=2" defer></script>
+<script src="js/script.js?v=14" defer></script>
 </body>
 </html>

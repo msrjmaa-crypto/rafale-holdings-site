@@ -13,3 +13,9 @@ desktop.ini
 # ブランドムービーはリポジトリに含めず、Cloudflare側や別配信を使う場合はコメント解除
 # assets/videos/*.mp4
 # assets/videos/*.webm
+
+# ---- デザイン参考画像（サイトには載せない） ----
+reference/
+
+# ---- Wrangler のローカルキャッシュ（アカウントIDを含むため公開しない） ----
+.wrangler/
