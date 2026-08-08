@@ -1459,6 +1459,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   color: var(--ink-2); letter-spacing: 0.12em;
 }
 
+/* 直筆サイン ― 代表者名のすぐ下に、同じ右端で揃える。
+   箱の幅を .message-sign と同じ 34em にしてあるので、
+   本文が広くても名前とサインの右端がずれない。
+   出方はこのセクション共通のまま、動く距離だけ 10px に抑えている。 */
+.message-autograph {
+  max-width: 34em;
+  margin-top: clamp(14px, 2vh, 22px);
+  text-align: right;
+}
+.message-autograph img {
+  display: inline-block;
+  width: clamp(200px, 24vw, 272px);
+  max-width: 100%;
+  height: auto;
+}
+#message .message-autograph.reveal { transform: translateY(10px); }
+
 /* 出現 ― 12〜18px 持ち上げ、ごく弱い blur から。順番は data-reveal-delay で制御 */
 #message .reveal {
   transform: translateY(16px); filter: blur(4px);
