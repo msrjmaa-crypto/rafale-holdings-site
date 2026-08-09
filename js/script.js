@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     el.addEventListener('animationend', done);
   };
-  document.querySelectorAll('.hero-line-in, .wp-title-in, .hero-logo-img').forEach(releaseWillChange);
+  document.querySelectorAll('.hero-line-in, .bd-title-in, .hero-logo-img').forEach(releaseWillChange);
 
   /* ---------- マウスに対するごく弱い反応（PCのみ） ----------
      ポインタが精密なデバイスに限り、-1〜1 の値を2つ渡すだけ。
@@ -372,11 +372,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      /* source: どのページのフォームから送られたか。
+         フォーム内の hidden 項目から読むので、URLのクエリや
+         リファラに左右されず、ページを直接開いても必ず正しい値になる。
+         受け取り側（functions/api/contact.js）は決まった一覧と
+         照合してから件名を決めるので、値を書き換えられても
+         件名が自由な文字列になることはない。 */
       const payload = {
         name: document.getElementById('name').value,
         company: document.getElementById('company-name').value,
         email: document.getElementById('email').value,
         message: document.getElementById('inquiry').value,
+        source: (contactForm.querySelector('[name="source"]') || {}).value || '',
         hp_url: (contactForm.querySelector('[name="hp_url"]') || {}).value || ''
       };
 

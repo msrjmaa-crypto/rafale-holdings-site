@@ -6,6 +6,17 @@ const RECIPIENT = 'info@rafale-hd.jp';
 const SENDER = 'Rafale Holdings <website@contact.rafale-hd.jp>';
 const SUBJECT = '【Rafale Holdings】Webサイトからお問い合わせ';
 
+// どのページのフォームから送られたか。フォームの hidden 項目 source の値を、
+// 下の一覧と照合してから使う。一覧に無い値（書き換え・古いキャッシュ等）は
+// 既定の件名に落とすので、件名に任意の文字列が入ることはない。
+const SOURCES = {
+  'top':               { subject: SUBJECT,                                        page: 'TOP', path: '/' },
+  'web-production':    { subject: '【Rafale Holdings】Web制作についてのお問い合わせ',           page: 'WEB PRODUCTION（Webサイト制作・運用支援）', path: '/business/web-production' },
+  'marketing':         { subject: '【Rafale Holdings】マーケティングについてのお問い合わせ',     page: 'MARKETING（マーケティング事業）',           path: '/business/marketing' },
+  'store-development': { subject: '【Rafale Holdings】店舗プロデュースについてのお問い合わせ',   page: 'STORE DEVELOPMENT（店舗プロデュース事業）', path: '/business/store-development' },
+};
+const DEFAULT_SOURCE = { subject: SUBJECT, page: 'TOP', path: '/' };
+
 const LIMITS = { name: 100, company: 100, email: 254, message: 5000 };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -83,8 +94,12 @@ export async function onRequestPost(context) {
     return json(500, { ok: false, error: 'server_error' });
   }
 
+  // 一覧に載っている値だけを採用する（載っていなければ従来どおりの件名）
+  const src = Object.prototype.hasOwnProperty.call(SOURCES, data.source) ? SOURCES[data.source] : DEFAULT_SOURCE;
+
   const companyLine = company || '（未入力）';
   const text =
+    'お問い合わせ元：' + src.page + '（' + src.path + '）\n' +
     'お名前：' + name + '\n' +
     '会社名：' + companyLine + '\n' +
     'メールアドレス：' + email + '\n' +
@@ -92,6 +107,7 @@ export async function onRequestPost(context) {
 
   const html =
     '<div style="font-family:sans-serif;line-height:1.7">' +
+    '<p><strong>お問い合わせ元：</strong>' + escapeHtml(src.page) + '（' + escapeHtml(src.path) + '）</p>' +
     '<p><strong>お名前：</strong>' + escapeHtml(name) + '</p>' +
     '<p><strong>会社名：</strong>' + escapeHtml(companyLine) + '</p>' +
     '<p><strong>メールアドレス：</strong>' + escapeHtml(email) + '</p>' +
@@ -109,7 +125,7 @@ export async function onRequestPost(context) {
         from: SENDER,
         to: [RECIPIENT],
         reply_to: email,
-        subject: SUBJECT,
+        subject: src.subject,
         text: text,
         html: html,
       }),

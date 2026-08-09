@@ -62,6 +62,30 @@
   --sy: 0;
 }
 
+/* ============================================================
+   HERO の英語コピー用フォールバック
+   ------------------------------------------------------------
+   Qwigley は非常に細身で、実測すると同じ文章の幅が
+   Segoe Script の 48%、汎用 cursive の 56% しかない。
+   そのため読み込みが完了するまでの代替表示では文字が倍近く広がり、
+   スマートフォンでは3行のコピーが折り返して HERO 全体が高くなる。
+   Qwigley が届いた瞬間に元の高さへ戻るため、
+   ページ全体が上へずれる（実測 CLS 0.19）。
+   ここで代替フォント側を Qwigley の字幅に合わせて縮め、
+   読み込み前後で占める幅を揃える。
+   ・size-adjust は実測値のうち最も狭い 48% に合わせている
+   ・line-height は font-size に対する倍率で指定してあるので、
+     行の高さはフォントに関係なく一定（メトリクスの上書きは不要）
+   ・Qwigley 自体の見た目・字形は一切変えていない
+   ============================================================ */
+@font-face {
+  font-family: 'Qwigley Fallback';
+  src: local('Segoe Script'), local('Snell Roundhand'), local('Brush Script MT'),
+       local('Bradley Hand'), local('Apple Chancery'), local('Comic Sans MS');
+  size-adjust: 48%;
+  font-display: swap;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 /* 横スクロールを作らない。clip は「スクロール領域を作らずに切る」ので、
    clip はスクロール領域を作らないので、sticky や固定要素の挙動を変えない。
@@ -846,7 +870,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    Allura（太く直立寄り）、Italianno（大文字がクラシックなセリフ感）は不採用。
    代替候補: 'Arizonia'（やや丸い）／'Italianno'（傾斜が強い）― 差し替えは下1行。 */
 .hero-title {
-  font-family: 'Qwigley', 'Segoe Script', cursive;
+  font-family: 'Qwigley', 'Qwigley Fallback', 'Segoe Script', cursive;
   font-weight: 400;
   /* 参考画像の実測から逆算: 1行のインク高 145px / 1448px幅 → font-size 相当 111px
      ＝ 7.67vw。最長行の幅は約 6em なので、7.3vw なら 1440px で 634px となり
@@ -1903,7 +1927,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     padding-right: 10%;
     margin-bottom: clamp(24px, 3.6vh, 34px);
   }
-  .hero-line { white-space: normal; clip-path: inset(-0.3em -0.28em -0.05em -0.28em); }
+  /* PC と同じく折り返さない。Qwigley は3行とも 320px 幅でも1行に収まるので
+     見え方は変わらないが、代替フォントで表示している間に行が増えて
+     HERO の高さが変わることを、仕組みとして起こらなくしている。 */
+  .hero-line { white-space: nowrap; clip-path: inset(-0.3em -0.28em -0.05em -0.28em); }
 
   /* 文字の動きは残すが、量と重さを落とす（マウス追従なし・視差は最大10px・blurも軽く） */
   .hero-line { --lx: 0px; }

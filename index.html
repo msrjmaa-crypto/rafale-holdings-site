@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=56">
+<link rel="stylesheet" href="css/style.css?v=57">
 
 <!--
   ============================================================
@@ -390,24 +390,38 @@
           </div>
         </li>
 
-        <li class="biz-row reveal">
+        <!-- 04・05・06 は詳細ページを持つ。行の組み方・余白・文字は他の6行と同じままで、
+             リンクの当たり判定（.biz-link::after）を行全体へ広げている。 -->
+        <li class="biz-row biz-row--link reveal">
           <span class="biz-num" lang="en" aria-hidden="true">04</span>
           <div class="biz-body">
             <h3 class="biz-name">店舗プロデュース事業<span class="biz-en" lang="en">Store Development</span></h3>
             <p class="biz-desc">店舗企画・内装設計から開業支援まで、トータルでプロデュースします。</p>
+            <a href="/business/store-development" class="biz-link"
+               aria-label="店舗プロデュース事業の詳細を見る">
+              <span>サービス詳細を見る</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
           </div>
         </li>
 
-        <li class="biz-row reveal">
+        <li class="biz-row biz-row--link reveal">
           <span class="biz-num" lang="en" aria-hidden="true">05</span>
           <div class="biz-body">
             <h3 class="biz-name">マーケティング事業<span class="biz-en" lang="en">Marketing &amp; Branding</span></h3>
-            <p class="biz-desc">広告・ブランディング・販促・SNS運用まで、事業の魅力を届けます。</p>
+            <p class="biz-desc">Googleビジネスプロフィール運用・MEO対策・SNS運用・口コミ管理まで、店舗と企業の集客を支援します。</p>
+            <a href="/business/marketing" class="biz-link"
+               aria-label="マーケティング事業の詳細を見る">
+              <span>サービス詳細を見る</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
           </div>
         </li>
 
-        <!-- 06 だけ詳細ページを持つ。行の組み方・余白・文字は他の8行と同じままで、
-             リンクの当たり判定（.biz-link::after）を行全体へ広げている。 -->
         <li class="biz-row biz-row--link reveal">
           <span class="biz-num" lang="en" aria-hidden="true">06</span>
           <div class="biz-body">
@@ -609,6 +623,8 @@
         </div>
 
         <form class="contact-form reveal" id="contact-form" novalidate data-reveal-delay="400">
+          <!-- どのページからの問い合わせかを送るための項目（TOP）。表示はされません。 -->
+          <input type="hidden" name="source" value="top">
           <input type="text" name="hp_url" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
           <div class="form-row">
             <label for="name">お名前<span class="required">必須</span></label>
@@ -655,6 +671,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=15" defer></script>
+<script src="js/script.js?v=16" defer></script>
 </body>
 </html>

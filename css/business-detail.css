@@ -15,7 +15,7 @@
    このページには BRANDS（黒）が無いので、明るいまま静かに沈む
    1枚のグラデーションを固定で持たせる。
    ------------------------------------------------------------ */
-.wp-page .page-tone {
+.bd-page .page-tone {
   background: linear-gradient(180deg,
     #F5F1EB 0%,      /* HERO        ― Warm White */
     #F2F1EE 11%,     /* SERVICES    */
@@ -75,56 +75,56 @@
    .r-ink / .r-glow / .r-sheen をそのまま使っており、
    ここで変えているのは置き場所と大きさだけ。
    ============================================================ */
-.hero.wp-hero {
+.hero.bd-hero {
   min-height: auto;
   padding: clamp(140px, 18vh, 200px) 0 clamp(96px, 13vh, 148px);
   align-items: center;
 }
 
-.wp-hero-grid {
+.bd-hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) clamp(230px, 29vw, 390px);
   gap: clamp(28px, 4.5vw, 76px);
   align-items: center;
 }
-.wp-hero .hero-main { max-width: none; }
+.bd-hero .hero-main { max-width: none; }
 
 /* ---- 06 / BUSINESS ---- */
-.wp-eyebrow {
+.bd-eyebrow {
   display: flex; align-items: center; gap: clamp(12px, 1.4vw, 18px);
   font-family: var(--font-en); font-weight: 400;
   font-size: 0.78rem; letter-spacing: 0.3em; color: var(--label);
   opacity: 0;
   animation: fadeUp 0.9s var(--ease-out) 0.55s forwards;
 }
-.wp-eyebrow-num { color: #8A6A3C; letter-spacing: 0.16em; }
-.wp-eyebrow-rule { display: block; width: clamp(22px, 4vw, 44px); height: 1px; background: rgba(170, 138, 86, 0.4); }
-.wp-eyebrow-link {
+.bd-eyebrow-num { color: #8A6A3C; letter-spacing: 0.16em; }
+.bd-eyebrow-rule { display: block; width: clamp(22px, 4vw, 44px); height: 1px; background: rgba(170, 138, 86, 0.4); }
+.bd-eyebrow-link {
   border-bottom: 1px solid transparent;
   transition: color 0.5s var(--ease), border-color 0.5s var(--ease);
 }
-.wp-eyebrow-link:hover { color: var(--ink); border-bottom-color: rgba(30, 50, 70, 0.24); }
+.bd-eyebrow-link:hover { color: var(--ink); border-bottom-color: rgba(30, 50, 70, 0.24); }
 
 /* ---- WEB PRODUCTION ----
    TOPの英語コピー（サイン書体）とは役割が違うので、書体はサイト共通の
    Inter を細いウェイトで大きく組む。出方は TOP の3行と同じ lineRise。 */
-.wp-hero-title {
+.bd-hero-title {
   margin-top: clamp(24px, 3.4vh, 40px);
   font-family: var(--font-en); font-weight: 200;
   font-size: clamp(2.7rem, 6.4vw, 5.4rem);
   line-height: 1.06; letter-spacing: 0.015em; color: var(--ink);
 }
-.wp-title-line { display: block; }
-.wp-title-in {
+.bd-title-line { display: block; }
+.bd-title-in {
   display: block;
   opacity: 0; filter: blur(10px); transform: translateY(26px);
   animation: lineRise 0.9s var(--ease-out) forwards;
   will-change: opacity, transform, filter;
 }
-.wp-title-line:nth-child(1) .wp-title-in { animation-delay: 2.00s; }
-.wp-title-line:nth-child(2) .wp-title-in { animation-delay: 2.28s; }
+.bd-title-line:nth-child(1) .bd-title-in { animation-delay: 2.00s; }
+.bd-title-line:nth-child(2) .bd-title-in { animation-delay: 2.28s; }
 
-.wp-hero-sub {
+.bd-hero-sub {
   margin-top: clamp(18px, 2.6vh, 28px);
   font-family: var(--font-jp-title); font-weight: 500;
   font-feature-settings: "palt" 1;
@@ -134,7 +134,7 @@
   animation: fadeUp 0.9s var(--ease-out) 2.62s forwards;
 }
 
-.wp-hero-desc {
+.bd-hero-desc {
   margin-top: clamp(18px, 2.4vh, 28px);
   max-width: 34em;
   font-size: clamp(0.95rem, 1.6vw, 1.02rem);
@@ -144,12 +144,12 @@
 }
 
 /* CTA は TOP と同じ .hero-cta（枠だけの導線）。幅だけ文字数に合わせる */
-.wp-hero-cta { min-width: 210px; }
+.bd-hero-cta { min-width: 210px; }
 
 /* ---- R の置き場所と大きさ ----
    TOP では画面右に絶対配置しているが、このページでは右カラムの中に置く。
    線の太さ・色・描画のタイミングは一切変えていない。 */
-.wp-hero .hero-sign {
+.bd-hero .hero-sign {
   position: relative; right: auto; top: auto; left: auto;
   width: 100%; height: auto; aspect-ratio: 540 / 730;
   margin: 0 0 0 auto;
@@ -173,23 +173,23 @@
    文章より実物を見せる場所。PC とスマートフォンの枠だけ用意してあり、
    img/works/ に画像を置くとそのまま画面の中に入る（HTMLの修正は不要）。
    ============================================================ */
-.wp-works { display: grid; gap: clamp(64px, 9vh, 124px); }
+.bd-works { display: grid; gap: clamp(64px, 9vh, 124px); }
 
-.wp-work {
+.bd-work {
   display: grid;
   grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
   gap: clamp(28px, 4.4vw, 68px);
   align-items: center;
 }
 /* 2件目は左右を入れ替えて、同じ並びが続かないようにする */
-.wp-work:nth-child(even) .wp-work-visual { order: 2; }
+.bd-work:nth-child(even) .bd-work-visual { order: 2; }
 
-.wp-work-visual { padding-bottom: clamp(16px, 2.6vw, 32px); }
+.bd-work-visual { padding-bottom: clamp(16px, 2.6vw, 32px); }
 
 /* ---- 画面の枠 ---- */
-.wp-mock { position: relative; }
+.bd-mock { position: relative; }
 
-.wp-mock-pc {
+.bd-mock-pc {
   position: relative;
   border: 1px solid rgba(30, 50, 70, 0.12);
   border-radius: 7px; overflow: hidden;
@@ -197,24 +197,24 @@
   box-shadow: 0 34px 60px -48px rgba(30, 50, 70, 0.55);
 }
 /* ブラウザの上端。線と面だけで作り、アイコンは使わない */
-.wp-mock-pc::before {
+.bd-mock-pc::before {
   content: ""; display: block; height: clamp(18px, 2.4vw, 26px);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(246, 249, 251, 0.88));
   border-bottom: 1px solid rgba(30, 50, 70, 0.07);
 }
-.wp-mock-pc::after {
+.bd-mock-pc::after {
   content: ""; position: absolute; left: 12px;
   top: calc(clamp(18px, 2.4vw, 26px) / 2 - 3px);
   width: 6px; height: 6px; border-radius: 50%;
   background: rgba(30, 50, 70, 0.14);
   box-shadow: 11px 0 0 rgba(30, 50, 70, 0.10), 22px 0 0 rgba(30, 50, 70, 0.07);
 }
-.wp-mock-pc .wp-mock-screen { width: 100%; aspect-ratio: 16 / 10; }
+.bd-mock-pc .bd-mock-screen { width: 100%; aspect-ratio: 16 / 10; }
 
 /* スマホの枠は、PC画面の右端から半分ほどはみ出す位置に置く。
    ここを内側に寄せると、RAFALEのR／SAKURAのロゴという
    いちばん見せたい部分が隠れてしまう。 */
-.wp-mock-sp {
+.bd-mock-sp {
   position: absolute; right: -6%; bottom: -7%;
   width: 19%; min-width: 62px;
   padding: 5px;
@@ -223,12 +223,12 @@
   background: rgba(255, 255, 255, 0.88);
   box-shadow: 0 26px 44px -34px rgba(30, 50, 70, 0.6);
 }
-.wp-mock-sp .wp-mock-screen { width: 100%; aspect-ratio: 9 / 19; border-radius: 9px; }
+.bd-mock-sp .bd-mock-screen { width: 100%; aspect-ratio: 9 / 19; border-radius: 9px; }
 
 /* 画像（--shot）が置かれていればそれを表示し、無ければ静かな無地のまま。
    実在しないスクリーンショットは作っていないので、画像が入るまでは
    光を受けたガラス面のように見せている。 */
-.wp-mock-screen {
+.bd-mock-screen {
   display: block;
   background:
     var(--shot, none) center top / cover no-repeat,
@@ -236,37 +236,37 @@
 }
 
 /* ---- 実績のテキスト ---- */
-.wp-work-num {
+.bd-work-num {
   display: block; margin-bottom: clamp(12px, 1.6vh, 16px);
   font-family: var(--font-en); font-weight: 400;
   font-size: clamp(0.94rem, 1.5vw, 1.12rem);
   letter-spacing: 0.1em; color: var(--label); opacity: 0.72;
 }
-.wp-work-name {
+.bd-work-name {
   font-family: var(--font-en); font-weight: 300;
   font-size: clamp(1.24rem, 2.4vw, 1.78rem);
   line-height: 1.45; letter-spacing: 0.1em; color: var(--ink);
 }
-.wp-work-type {
+.bd-work-type {
   margin-top: clamp(8px, 1vh, 11px);
   font-family: var(--font-en); font-weight: 300;
   font-size: 0.8rem; letter-spacing: 0.16em; color: #7B8794;
 }
-.wp-tags {
+.bd-tags {
   display: flex; flex-wrap: wrap; align-items: center;
   margin-top: clamp(18px, 2.4vh, 26px);
   font-size: 0.76rem; letter-spacing: 0.1em; line-height: 2.1; color: var(--label);
 }
 /* 区切りは前の語の後ろに付ける。行が折り返しても、
    次の行が「/」から始まらない。 */
-.wp-tags li:not(:last-child)::after {
+.bd-tags li:not(:last-child)::after {
   content: "/"; margin: 0 9px; color: rgba(30, 50, 70, 0.22);
 }
-.wp-work-desc {
+.bd-work-desc {
   margin-top: clamp(16px, 2.2vh, 24px); max-width: 34em;
   font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.15; color: var(--sub);
 }
-.wp-work-link {
+.bd-work-link {
   display: inline-flex; align-items: center; gap: 11px;
   margin-top: clamp(24px, 3.2vh, 34px);
   padding: 13px 30px; border-radius: 2px;
@@ -278,8 +278,8 @@
   transition: background 0.7s var(--ease), border-color 0.7s var(--ease),
               color 0.6s var(--ease), gap 0.6s var(--ease);
 }
-.wp-work-link svg { transition: transform 0.6s var(--ease); }
-.wp-work-link:hover {
+.bd-work-link svg { transition: transform 0.6s var(--ease); }
+.bd-work-link:hover {
   background: rgba(255, 255, 255, 0.7);
   border-color: rgba(170, 138, 86, 0.42);
   color: var(--ink); gap: 15px;
@@ -288,63 +288,63 @@
 /* ============================================================
    PLAN ― STANDARD を中央・主軸に見せる（バッジは付けない）
    ============================================================ */
-.wp-plans {
+.bd-plans {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(16px, 2vw, 28px);
   align-items: stretch;
 }
-.wp-plan {
+.bd-plan {
   display: flex; flex-direction: column;
   padding: clamp(30px, 3.6vh, 44px) clamp(22px, 2.3vw, 34px);
   border: 1px solid rgba(30, 50, 70, 0.09); border-radius: 3px;
   background: linear-gradient(158deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.38));
 }
 /* 中央だけ、面をわずかに白く・枠をシャンパンゴールドにし、上下へ少し伸ばす */
-.wp-plan--main {
+.bd-plan--main {
   margin: -14px 0;
   border-color: rgba(170, 138, 86, 0.34);
   background: linear-gradient(158deg, rgba(255, 255, 255, 0.95), rgba(250, 247, 241, 0.6));
   box-shadow: 0 34px 62px -50px rgba(30, 50, 70, 0.5);
 }
 
-.wp-plan-name {
+.bd-plan-name {
   font-family: var(--font-en); font-weight: 300;
   font-size: 0.86rem; letter-spacing: 0.28em; color: var(--label);
 }
-.wp-plan--main .wp-plan-name { color: #8A6A3C; }
+.bd-plan--main .bd-plan-name { color: #8A6A3C; }
 
-.wp-plan-price {
+.bd-plan-price {
   display: flex; align-items: baseline; gap: 4px;
   margin-top: clamp(14px, 1.8vh, 20px);
   font-family: var(--font-en); font-weight: 200; color: var(--ink);
 }
-.wp-plan-price-num { font-size: clamp(1.66rem, 2.9vw, 2.24rem); letter-spacing: 0.01em; }
+.bd-plan-price-num { font-size: clamp(1.66rem, 2.9vw, 2.24rem); letter-spacing: 0.01em; }
 /* 「〜」は欧文書体だと細い波線になって浮くので、ここだけ和文書体で組む */
-.wp-plan-price-unit {
+.bd-plan-price-unit {
   font-family: var(--font-jp); font-weight: 300;
   font-size: 0.86rem; letter-spacing: 0.08em; color: var(--label);
 }
 
-.wp-plan-for {
+.bd-plan-for {
   margin-top: clamp(10px, 1.4vh, 14px);
   font-size: 0.86rem; line-height: 1.9; letter-spacing: 0.06em; color: var(--sub);
 }
 
-.wp-plan-items {
+.bd-plan-items {
   margin-top: clamp(22px, 2.8vh, 30px);
   padding-top: clamp(18px, 2.4vh, 26px);
   border-top: 1px solid rgba(30, 50, 70, 0.07);
 }
-.wp-plan-items li {
+.bd-plan-items li {
   position: relative; padding-left: 20px;
   font-size: 0.92rem; line-height: 2.05; color: var(--ink-2);
 }
-.wp-plan-items li::before {
+.bd-plan-items li::before {
   content: ""; position: absolute; left: 0; top: 1.02em;
   width: 9px; height: 1px; background: rgba(170, 138, 86, 0.5);
 }
 
-.wp-note {
+.bd-note {
   margin-top: clamp(28px, 4vh, 44px);
   font-size: 0.86rem; line-height: 2; letter-spacing: 0.04em; color: var(--label);
 }
@@ -352,7 +352,7 @@
 /* ============================================================
    MAINTENANCE
    ============================================================ */
-.wp-maint {
+.bd-maint {
   display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   gap: clamp(22px, 3.4vw, 56px); align-items: center;
   max-width: 900px;
@@ -360,11 +360,11 @@
   border: 1px solid rgba(30, 50, 70, 0.09); border-radius: 3px;
   background: linear-gradient(150deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.42));
 }
-.wp-maint-price {
+.bd-maint-price {
   display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap;
   font-family: var(--font-en); font-weight: 200; color: var(--ink);
 }
-.wp-maint-items {
+.bd-maint-items {
   margin-top: 0; padding-top: 0; border-top: none;
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 24px;
 }
@@ -372,26 +372,26 @@
 /* ============================================================
    PROCESS ― 番号・英語・日本語だけ。説明文は置かない
    ============================================================ */
-.wp-steps {
+.bd-steps {
   display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: clamp(10px, 1.4vw, 22px);
 }
-.wp-step {
+.bd-step {
   display: flex; flex-direction: column;
   padding-top: clamp(14px, 1.8vh, 18px);
   border-top: 1px solid rgba(30, 50, 70, 0.12);
 }
-.wp-step-num {
+.bd-step-num {
   font-family: var(--font-en); font-weight: 400;
   font-size: 0.8rem; letter-spacing: 0.16em; color: #8A6A3C; opacity: 0.85;
 }
-.wp-step-en {
+.bd-step-en {
   display: block; min-height: 3.2em;
   margin-top: clamp(14px, 2vh, 22px);
   font-family: var(--font-en); font-weight: 300;
   font-size: 0.78rem; line-height: 1.6; letter-spacing: 0.1em; color: var(--ink);
 }
-.wp-step-jp {
+.bd-step-jp {
   display: block; margin-top: 8px;
   font-size: 0.88rem; line-height: 1.8; letter-spacing: 0.06em; color: var(--sub);
 }
@@ -399,61 +399,61 @@
 /* ============================================================
    FAQ ― <details> の標準機能で開閉する（JavaScriptは使わない）
    ============================================================ */
-.wp-faq { max-width: 68em; border-top: 1px solid rgba(30, 50, 70, 0.08); }
-.wp-faq-item { border-bottom: 1px solid rgba(30, 50, 70, 0.08); }
+.bd-faq { max-width: 68em; border-top: 1px solid rgba(30, 50, 70, 0.08); }
+.bd-faq-item { border-bottom: 1px solid rgba(30, 50, 70, 0.08); }
 
-.wp-faq-q {
+.bd-faq-q {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
   gap: clamp(10px, 1.4vw, 16px); align-items: start;
   padding: clamp(20px, 2.6vh, 28px) 2px;
   cursor: pointer; list-style: none;
   -webkit-tap-highlight-color: transparent;
 }
-.wp-faq-q::-webkit-details-marker { display: none; }
-.wp-faq-q::marker { content: ""; }
+.bd-faq-q::-webkit-details-marker { display: none; }
+.bd-faq-q::marker { content: ""; }
 
-.wp-faq-mark {
+.bd-faq-mark {
   font-family: var(--font-en); font-weight: 400;
   font-size: 0.82rem; line-height: 2.1; letter-spacing: 0.08em; color: #8A6A3C;
 }
-.wp-faq-q .wp-faq-text {
+.bd-faq-q .bd-faq-text {
   font-family: var(--font-jp-title); font-weight: 500;
   font-feature-settings: "palt" 1;
   font-size: clamp(0.98rem, 1.8vw, 1.06rem);
   line-height: 1.95; letter-spacing: 0.05em; color: var(--ink);
   transition: color 0.5s var(--ease);
 }
-.wp-faq-item:hover .wp-faq-q .wp-faq-text { color: #46525F; }
+.bd-faq-item:hover .bd-faq-q .bd-faq-text { color: #46525F; }
 
-.wp-faq-icon { position: relative; width: 13px; height: 13px; margin-top: 0.62em; }
-.wp-faq-icon::before, .wp-faq-icon::after {
+.bd-faq-icon { position: relative; width: 13px; height: 13px; margin-top: 0.62em; }
+.bd-faq-icon::before, .bd-faq-icon::after {
   content: ""; position: absolute; background: rgba(30, 50, 70, 0.4);
   transition: transform 0.5s var(--ease), opacity 0.4s var(--ease);
 }
-.wp-faq-icon::before { left: 0; top: 6px; width: 13px; height: 1px; }
-.wp-faq-icon::after  { left: 6px; top: 0; width: 1px; height: 13px; }
-.wp-faq-item[open] .wp-faq-icon::after { transform: rotate(90deg); opacity: 0; }
+.bd-faq-icon::before { left: 0; top: 6px; width: 13px; height: 1px; }
+.bd-faq-icon::after  { left: 6px; top: 0; width: 1px; height: 13px; }
+.bd-faq-item[open] .bd-faq-icon::after { transform: rotate(90deg); opacity: 0; }
 
-.wp-faq-a {
+.bd-faq-a {
   display: grid; grid-template-columns: auto minmax(0, 1fr);
   gap: clamp(10px, 1.4vw, 16px);
   padding: 0 2px clamp(22px, 3vh, 30px);
 }
-.wp-faq-a .wp-faq-text {
+.bd-faq-a .bd-faq-text {
   font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.2; color: var(--sub);
 }
-.wp-faq-item[open] .wp-faq-a { animation: fadeUp 0.55s var(--ease-out); }
+.bd-faq-item[open] .bd-faq-a { animation: fadeUp 0.55s var(--ease-out); }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
-  .wp-hero-grid { grid-template-columns: minmax(0, 1fr) clamp(200px, 27vw, 300px); }
-  .wp-work { grid-template-columns: 1fr; gap: clamp(26px, 4vh, 40px); }
-  .wp-work:nth-child(even) .wp-work-visual { order: 0; }
-  .wp-work-visual { padding-bottom: clamp(26px, 5vw, 44px); }
-  .wp-maint { grid-template-columns: 1fr; gap: clamp(20px, 3vh, 30px); }
-  .wp-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 26px) clamp(14px, 2vw, 22px); }
+  .bd-hero-grid { grid-template-columns: minmax(0, 1fr) clamp(200px, 27vw, 300px); }
+  .bd-work { grid-template-columns: 1fr; gap: clamp(26px, 4vh, 40px); }
+  .bd-work:nth-child(even) .bd-work-visual { order: 0; }
+  .bd-work-visual { padding-bottom: clamp(26px, 5vw, 44px); }
+  .bd-maint { grid-template-columns: 1fr; gap: clamp(20px, 3vh, 30px); }
+  .bd-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 26px) clamp(14px, 2vw, 22px); }
 }
 
 @media (max-width: 768px) {
@@ -463,24 +463,24 @@
      の順に積み直す。R は文章の下に単独で置くので、重なりは起きない。 */
   /* 高さは「Rの大きさ」ではなく「Rのまわりと行間の余白」で詰めている。
      R の実寸（min(56vw, 220px)）と描画のアニメーションは変えていない。 */
-  .hero.wp-hero {
+  .hero.bd-hero {
     padding-top: 112px;
     padding-bottom: clamp(24px, 3.6vh, 34px);
     min-height: auto;
   }
-  .wp-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .bd-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
 
   /* いちばん長い PRODUCTION が、右に余白を残したまま1行で収まる大きさ
      （320px幅でも折り返さない） */
-  .wp-hero-title { margin-top: clamp(14px, 1.9vh, 20px); font-size: clamp(2rem, 10.4vw, 3.3rem); }
-  .wp-hero-sub   { margin-top: clamp(13px, 1.9vh, 18px); font-size: clamp(1rem, 4.4vw, 1.18rem); }
-  .wp-hero-desc  { margin-top: clamp(12px, 1.8vh, 17px); max-width: none; font-size: 0.95rem; line-height: 2.0; }
-  .wp-hero .wp-hero-cta { margin-top: clamp(22px, 3.3vh, 30px); min-width: 200px; }
+  .bd-hero-title { margin-top: clamp(14px, 1.9vh, 20px); font-size: clamp(2rem, 10.4vw, 3.3rem); }
+  .bd-hero-sub   { margin-top: clamp(13px, 1.9vh, 18px); font-size: clamp(1rem, 4.4vw, 1.18rem); }
+  .bd-hero-desc  { margin-top: clamp(12px, 1.8vh, 17px); max-width: none; font-size: 0.95rem; line-height: 2.0; }
+  .bd-hero .bd-hero-cta { margin-top: clamp(22px, 3.3vh, 30px); min-width: 200px; }
 
   /* R ― 文章の下へ。位置と大きさだけを変え、線・色・描画はそのまま。
      TOP のスマホ版で掛けている斜めのマスクは、ここでは
      文字と重ならないので外している。 */
-  .wp-hero .hero-sign {
+  .bd-hero .hero-sign {
     position: relative; right: auto; top: auto; left: auto;
     width: min(56vw, 220px); height: auto; aspect-ratio: 540 / 730;
     margin: clamp(10px, 1.6vh, 14px) auto 0;
@@ -493,22 +493,22 @@
   /* ---- SERVICES（スマホのみ）----
      組み方・文字サイズ・罫線・番号の位置はそのまま。
      行間と項目どうしの余白だけを1割ほど詰めて、縦の長さを抑える。
-     .wp-page で囲ってあるので、TOPページの BUSINESS には影響しない。
+     .bd-page で囲ってあるので、TOPページの BUSINESS には影響しない。
      4行ごとに余白を揺らすリズムも、小さくした値のまま残している。 */
-  .wp-page .biz-list { gap: 3px; }
-  .wp-page .biz-row {
+  .bd-page .biz-list { gap: 3px; }
+  .bd-page .biz-row {
     padding-top: clamp(18px, 2.2vh, 28px);
     padding-bottom: clamp(18px, 2.2vh, 28px);
   }
-  .wp-page .biz-row:nth-child(4n+1) { padding-top: calc(clamp(18px, 2.2vh, 28px) + 8px); }
-  .wp-page .biz-row:nth-child(4n+3) { padding-bottom: calc(clamp(18px, 2.2vh, 28px) + 7px); }
-  .wp-page .biz-row:nth-child(4n)   { padding-top: calc(clamp(18px, 2.2vh, 28px) - 4px); }
-  .wp-page .biz-en   { margin-top: 6px; }
-  .wp-page .biz-desc { margin-top: 8px; line-height: 1.95; }
+  .bd-page .biz-row:nth-child(4n+1) { padding-top: calc(clamp(18px, 2.2vh, 28px) + 8px); }
+  .bd-page .biz-row:nth-child(4n+3) { padding-bottom: calc(clamp(18px, 2.2vh, 28px) + 7px); }
+  .bd-page .biz-row:nth-child(4n)   { padding-top: calc(clamp(18px, 2.2vh, 28px) - 4px); }
+  .bd-page .biz-en   { margin-top: 6px; }
+  .bd-page .biz-desc { margin-top: 8px; line-height: 1.95; }
 
   /* ---- WORKS ---- */
-  .wp-mock-sp { width: 22%; right: -5%; bottom: -8%; }
-  .wp-work-visual { padding-bottom: clamp(28px, 8vw, 48px); }
+  .bd-mock-sp { width: 22%; right: -5%; bottom: -8%; }
+  .bd-work-visual { padding-bottom: clamp(28px, 8vw, 48px); }
 
   /* ---- SELECTED WORKS → PLAN のセクション間（スマホのみ）----
      実績の最後（VIEW WEBSITE）から PLAN の見出しまでが、スマホでは
@@ -519,42 +519,42 @@
   #plan  { padding-top:    clamp(100px, 14vh, 180px); }
 
   /* ---- PLAN ― 縦積み。中央の1枚を伸ばす指定は解除する ---- */
-  .wp-plans { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .wp-plan--main { margin: 0; }
+  .bd-plans { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .bd-plan--main { margin: 0; }
 
   /* ---- MAINTENANCE ---- */
-  .wp-maint-items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 16px; }
+  .bd-maint-items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 16px; }
 
   /* ---- PROCESS ― 2列×3段。英語が2行になっても読める ---- */
-  .wp-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 4vw, 26px) clamp(14px, 3vw, 20px); }
-  .wp-step-num { font-size: 0.76rem; }
-  .wp-step-en { font-size: 0.76rem; margin-top: 12px; }
-  .wp-step-jp { font-size: 0.9rem; }
+  .bd-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 4vw, 26px) clamp(14px, 3vw, 20px); }
+  .bd-step-num { font-size: 0.76rem; }
+  .bd-step-en { font-size: 0.76rem; margin-top: 12px; }
+  .bd-step-jp { font-size: 0.9rem; }
 
   /* ---- FAQ ― 指で押しやすい高さを確保する ---- */
-  .wp-faq-q { padding: 20px 2px; gap: 10px; }
-  .wp-faq-a { gap: 10px; padding-bottom: 22px; }
+  .bd-faq-q { padding: 20px 2px; gap: 10px; }
+  .bd-faq-a { gap: 10px; padding-bottom: 22px; }
 }
 
 @media (max-width: 480px) {
-  .hero.wp-hero { padding-top: 126px; }
-  .wp-hero-title { font-size: clamp(2.1rem, 12vw, 2.9rem); }
-  .wp-eyebrow { font-size: 0.72rem; letter-spacing: 0.24em; }
-  .wp-plan { padding: 28px 22px; }
-  .wp-plan-items li { font-size: 0.9rem; }
-  .wp-maint { padding: 28px 22px; }
-  .wp-maint-items { grid-template-columns: minmax(0, 1fr); }
-  .wp-work-link { width: 100%; justify-content: center; }
-  .wp-mock-sp { width: 24%; }
+  .hero.bd-hero { padding-top: 126px; }
+  .bd-hero-title { font-size: clamp(2.1rem, 12vw, 2.9rem); }
+  .bd-eyebrow { font-size: 0.72rem; letter-spacing: 0.24em; }
+  .bd-plan { padding: 28px 22px; }
+  .bd-plan-items li { font-size: 0.9rem; }
+  .bd-maint { padding: 28px 22px; }
+  .bd-maint-items { grid-template-columns: minmax(0, 1fr); }
+  .bd-work-link { width: 100%; justify-content: center; }
+  .bd-mock-sp { width: 24%; }
 }
 
 /* ============================================================
    REDUCED MOTION ― 動かさず、最初から見えている状態にする
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .wp-eyebrow, .wp-hero-sub, .wp-hero-desc, .wp-title-in {
+  .bd-eyebrow, .bd-hero-sub, .bd-hero-desc, .bd-title-in {
     opacity: 1; filter: none; transform: none;
   }
-  .wp-hero .hero-sign { transform: none; animation: none; }
-  .wp-faq-item[open] .wp-faq-a { animation: none; }
+  .bd-hero .hero-sign { transform: none; animation: none; }
+  .bd-faq-item[open] .bd-faq-a { animation: none; }
 }

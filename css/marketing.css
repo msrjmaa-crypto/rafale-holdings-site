@@ -1,0 +1,243 @@
+/* ============================================================
+   Rafale Holdings ― BUSINESS 05 / MARKETING
+   ------------------------------------------------------------
+   このファイルは
+     css/style.css → css/business-detail.css → css/marketing.css
+   の順で読み込まれる「差分だけ」のファイルです。
+
+   HEROの組み方、Rの置き方、料金カード、PROCESS、FAQ、CONTACT は
+   WEB PRODUCTION ページ（business-detail.css）のものをそのまま使うので、
+   2つの事業詳細ページのデザインは必ず揃います。
+   business-detail.css は書き換えていません。このページだけ違う部分は、
+   すべてここで .mk- を付けて足すか、.mk-page を付けて上書きしています。
+
+   スクロール性能について:
+   このページで新しく足しているのは、静的な余白・文字・罫線の指定だけです。
+   常時まわるアニメーション、filter / backdrop-filter、will-change、
+   JavaScript は1つも追加していません（js/script.js は共通のものを
+   そのまま読み込むだけ）。
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   セクションの光
+   このページで新しく増えるのは WEB PRODUCTION 連携セクションだけ。
+   （#services / #plan / #process / #faq / #contact の光は
+     business-detail.css と style.css のものがそのまま効きます）
+   動きは既存のキーフレームを使い回していて、新しい動きは足していない。
+   ------------------------------------------------------------ */
+#web-production::before {
+  background:
+    radial-gradient(50% 38% at 20% 20%, rgba(250, 246, 240, 0.66), rgba(250,246,240,0) 74%),
+    radial-gradient(44% 34% at 82% 60%, rgba(226, 238, 246, 0.46), rgba(226,238,246,0) 76%);
+  animation: lightComp 25s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------
+   HERO の説明文
+   サービスが増えて1行が長くなったため、この行が入りきる幅を確保する。
+   （共通の 34em のままだと「…構築・運用、」の最後の数文字だけが
+     次の行へ落ちて、不自然な改行になる）
+   改行位置は <br class="only-pc"> で指定しているので、
+   幅を広げても3行の組みは変わらない。スマホは元から幅の制限なし。
+   ------------------------------------------------------------ */
+.mk-page .bd-hero-desc { max-width: 40em; }
+
+/* 文節ごとに区切って、その中では折り返させない。
+   固定の <br> と違い、画面幅が変わっても文節の途中で切れない。 */
+.mk-clause > span { display: inline-block; }
+
+/* ------------------------------------------------------------
+   SERVICES ― サービスの範囲についての注記
+   組み方・文字・罫線は既存のまま。番号と本文の下に、
+   一段小さい文字で条件を置くだけ。出方も番号→事業名→説明と
+   同じ流れに乗せ、説明の次（0.28秒）に現れる。
+   ------------------------------------------------------------ */
+.mk-note {
+  max-width: 740px;
+  margin-top: clamp(12px, 1.6vh, 18px);
+  padding-left: 16px;
+  border-left: 1px solid rgba(170, 138, 86, 0.35);
+  font-size: clamp(0.85rem, 1.4vw, 0.92rem);
+  line-height: 2.0;
+  letter-spacing: 0.03em;
+  color: var(--label);
+}
+.biz-row .mk-note {
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition-property: opacity, transform, filter;
+  transition-duration: 0.85s, 0.85s, 0.85s;
+  transition-timing-function: var(--ease-out);
+}
+.biz-row.is-visible .mk-note {
+  opacity: 1; transform: none; filter: blur(0); transition-delay: 0.28s;
+}
+.biz-row:hover .mk-note { transform: translateX(6px); transition-delay: 0s; }
+
+/* ------------------------------------------------------------
+   PLAN ― カードの見た目は .bd-plan のまま、並びだけ4枚用に変える
+   （WEB PRODUCTION は3枚で3列、こちらは4枚なので2列×2段）
+   ------------------------------------------------------------ */
+@media (min-width: 769px) {
+  .mk-plans { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* プラン名（英語）の下に置く日本語。英語が主、日本語が従。 */
+.mk-plan-jp {
+  margin-top: clamp(8px, 1vh, 11px);
+  font-size: 0.9rem; line-height: 1.8; letter-spacing: 0.06em; color: var(--ink-2);
+}
+/* 料金の上の間隔は、日本語が入ったぶんだけ詰め直す */
+.mk-plans .bd-plan-price { margin-top: clamp(12px, 1.6vh, 18px); }
+
+/* カード内の注記。カードの高さが違っても下端で揃うように、
+   余った空間を上に寄せている。 */
+.mk-plan-note {
+  margin-top: auto;
+  padding-top: clamp(18px, 2.4vh, 24px);
+  font-size: 0.82rem; line-height: 1.95; letter-spacing: 0.03em; color: var(--label);
+}
+
+/* ------------------------------------------------------------
+   GOOGLE BUSINESS PROFILE セクション
+   既存の「番号・罫線・余白」の語彙だけで組んでいる。
+   Googleカラー（赤・青・緑・黄）や地図風の装飾は使わない。
+   ------------------------------------------------------------ */
+#gbp::before {
+  background:
+    radial-gradient(52% 40% at 76% 22%, rgba(228, 236, 244, 0.6), rgba(228,236,244,0) 74%),
+    radial-gradient(44% 34% at 16% 70%, rgba(250, 247, 242, 0.56), rgba(250,247,242,0) 76%);
+  animation: lightBiz 25s ease-in-out infinite;
+}
+#monthly::before {
+  background:
+    radial-gradient(48% 38% at 22% 20%, rgba(250, 246, 240, 0.62), rgba(250,246,240,0) 74%),
+    radial-gradient(44% 34% at 80% 62%, rgba(226, 238, 246, 0.44), rgba(226,238,246,0) 76%);
+  animation: lightMsg 23s ease-in-out infinite;
+}
+
+.mk-gbp-lead {
+  max-width: 860px;
+  margin-bottom: clamp(48px, 7vh, 84px);
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem);
+  line-height: 2.2; color: var(--sub);
+}
+
+.mk-gbp {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(30px, 3.4vw, 54px) clamp(24px, 3vw, 44px);
+  align-items: start;
+}
+.mk-gbp-item {
+  padding-top: clamp(18px, 2.4vh, 24px);
+  border-top: 1px solid rgba(30, 50, 70, 0.12);
+}
+.mk-gbp-num {
+  display: block;
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.8rem; letter-spacing: 0.16em; color: #8A6A3C; opacity: 0.85;
+}
+.mk-gbp-name {
+  margin-top: clamp(12px, 1.6vh, 16px);
+  font-family: var(--font-jp-title); font-weight: 500;
+  font-feature-settings: "palt" 1;
+  font-size: clamp(1.02rem, 1.8vw, 1.16rem);
+  line-height: 1.6; letter-spacing: 0.06em; color: var(--ink);
+}
+.mk-gbp-en {
+  display: block; margin-top: clamp(6px, 0.9vh, 9px);
+  font-family: var(--font-en); font-weight: 300;
+  font-size: 0.74rem; line-height: 1.5; letter-spacing: 0.14em; color: #7B8794;
+}
+.mk-gbp-list { margin-top: clamp(14px, 1.8vh, 20px); }
+.mk-gbp-list li {
+  position: relative; padding-left: 20px;
+  font-size: 0.92rem; line-height: 2.05; color: var(--ink-2);
+}
+.mk-gbp-list li::before {
+  content: ""; position: absolute; left: 0; top: 1.02em;
+  width: 9px; height: 1px; background: rgba(170, 138, 86, 0.5);
+}
+
+/* 注記をセクションの締めに単独で置くとき */
+.mk-note--block { max-width: 880px; margin-top: clamp(34px, 4.6vh, 52px); }
+
+/* ------------------------------------------------------------
+   PLAN のグループ見出し
+   料金がGoogleビジネスプロフィールとマーケティングの2群に分かれるので、
+   どちらの料金かが分かるラベルを置く。新しい装飾は足していない。
+   ------------------------------------------------------------ */
+.mk-plan-group {
+  display: flex; flex-direction: column; gap: 8px;
+  margin: clamp(10px, 1.4vh, 16px) 0 clamp(24px, 3.2vh, 34px);
+  padding-top: clamp(14px, 1.8vh, 20px);
+  border-top: 1px solid rgba(30, 50, 70, 0.10);
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem);
+  letter-spacing: 0.06em; color: var(--ink-2);
+}
+.mk-plan-group span {
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.78rem; letter-spacing: 0.28em; color: #8A6A3C;
+}
+/* 2群目の見出しは、1群目の注記から十分に離す */
+.bd-note + .mk-plan-group,
+.mk-note--block + .mk-plan-group { margin-top: clamp(56px, 8vh, 96px); }
+
+/* MONTHLY SUPPORT は2枚なので2列 */
+@media (min-width: 769px) {
+  .mk-monthly-plans { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 900px; }
+}
+
+/* ------------------------------------------------------------
+   WEB PRODUCTION 連携
+   ボタンは実績で使っているものと同じ .bd-work-link。
+   ------------------------------------------------------------ */
+.mk-cross-text {
+  max-width: 780px;
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem);
+  line-height: 2.2; color: var(--sub);
+}
+.mk-cross-link { margin-top: clamp(28px, 4vh, 40px); }
+
+/* FAQ の本文中から WEB PRODUCTION へ渡すリンク */
+.mk-inline-link {
+  color: #7A6136;
+  border-bottom: 1px solid rgba(170, 138, 86, 0.32);
+  transition: color 0.6s var(--ease), border-color 0.6s var(--ease);
+}
+.mk-inline-link:hover { color: #6B5430; border-bottom-color: rgba(170, 138, 86, 0.6); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  /* business-detail.css では SELECTED WORKS → PLAN の境目だけを
+     詰めているが、このページに SELECTED WORKS は無い。
+     セクション間の余白を、サイト共通の値へ戻しておく。 */
+  .mk-page #plan { padding-top: clamp(120px, 17vh, 220px); }
+
+
+  /* スマホは画面が狭い。文節を固定すると折り返しが増えて
+     HEROが1行ぶん高くなってしまうため、通常の折り返しに戻す。
+     （CLSへの効果も無いことを実測で確認済み） */
+  .mk-clause > span { display: inline; }
+
+  .mk-gbp { grid-template-columns: minmax(0, 1fr); gap: clamp(26px, 4vh, 36px); }
+  .mk-gbp-lead { font-size: 0.95rem; line-height: 2.15; margin-bottom: clamp(36px, 5vh, 52px); }
+  .mk-gbp-list li { font-size: 0.9rem; }
+  .mk-plan-group { font-size: 0.95rem; }
+
+  .mk-note { padding-left: 13px; font-size: 0.84rem; line-height: 1.95; }
+  .mk-plan-jp { font-size: 0.88rem; }
+  .mk-plan-note { font-size: 0.8rem; }
+  .mk-cross-text { font-size: 0.95rem; line-height: 2.15; }
+}
+
+/* タブレットだけ2列。max-width だけで書くとスマホ側の1列指定より
+   後ろに来てしまい、スマホでも2列になるため範囲を区切っている。 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mk-gbp { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .mk-cross-link { width: 100%; justify-content: center; }
+}

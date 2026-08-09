@@ -1,0 +1,236 @@
+/* ============================================================
+   Rafale Holdings ― BUSINESS 04 / STORE DEVELOPMENT
+   ------------------------------------------------------------
+   読み込み順は
+     css/style.css → css/business-detail.css → css/store-development.css
+   で、このファイルは「差分だけ」です。
+
+   HEROの組み方、Rの置き方、料金カード、FAQ、CONTACT は
+   WEB PRODUCTION / MARKETING と同じCSSをそのまま使うので、
+   3ページのデザインは必ず揃います。style.css と business-detail.css は
+   書き換えていません。
+
+   スクロール性能について:
+   ここで足しているのは静的な余白・文字・罫線の指定だけです。
+   常時まわるアニメーション、filter / backdrop-filter、will-change、
+   JavaScript は1つも追加していません。
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   セクションの光（このページで新しく増える2つだけ）
+   動きは既存のキーフレームを使い回している。
+   ------------------------------------------------------------ */
+#flow::before {
+  background:
+    radial-gradient(52% 40% at 74% 24%, rgba(228, 236, 244, 0.58), rgba(228,236,244,0) 74%),
+    radial-gradient(44% 34% at 16% 72%, rgba(250, 247, 242, 0.56), rgba(250,247,242,0) 76%);
+  animation: lightBiz 27s ease-in-out infinite;
+}
+#related::before {
+  background:
+    radial-gradient(50% 38% at 22% 22%, rgba(250, 246, 240, 0.62), rgba(250,246,240,0) 74%),
+    radial-gradient(44% 34% at 80% 62%, rgba(226, 238, 246, 0.44), rgba(226,238,246,0) 76%);
+  animation: lightComp 26s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------
+   HERO
+   見出しが2行（STORE / DEVELOPMENT）で、他の2ページより横に長い。
+   さらに施工についての但し書きが1行入るので、
+   文字側を広く・Rをやや小さくして釣り合いを取っている。
+   （Rのデザインそのものは変えていない）
+   ------------------------------------------------------------ */
+.sd-page .bd-hero-grid {
+  grid-template-columns: minmax(0, 1fr) clamp(200px, 25vw, 340px);
+  gap: clamp(28px, 4vw, 64px);
+}
+/* DEVELOPMENT は PRODUCTION より1文字長いぶん、上限をわずかに下げる */
+.sd-page .bd-hero-title { font-size: clamp(2.5rem, 5.9vw, 4.9rem); }
+
+/* 施工についての但し書き。説明文の一段下に、色を落として置く。 */
+.sd-hero-note {
+  margin-top: clamp(12px, 1.6vh, 18px);
+  padding-left: 15px;
+  border-left: 1px solid rgba(170, 138, 86, 0.4);
+  font-size: clamp(0.85rem, 1.4vw, 0.92rem);
+  line-height: 1.95; letter-spacing: 0.03em; color: var(--label);
+  opacity: 0;
+  animation: fadeUp 0.9s var(--ease-out) 3.05s forwards;
+}
+
+/* ------------------------------------------------------------
+   注記（SERVICES の中と、セクション末尾で使う）
+   ------------------------------------------------------------ */
+.sd-note {
+  max-width: 740px;
+  margin-top: clamp(12px, 1.6vh, 18px);
+  padding-left: 16px;
+  border-left: 1px solid rgba(170, 138, 86, 0.35);
+  font-size: clamp(0.85rem, 1.4vw, 0.92rem);
+  line-height: 2.0; letter-spacing: 0.03em; color: var(--label);
+}
+/* SERVICES の行の中では、番号→事業名→説明と同じ流れで現れる */
+.biz-row .sd-note {
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition-property: opacity, transform, filter;
+  transition-duration: 0.85s, 0.85s, 0.85s;
+  transition-timing-function: var(--ease-out);
+}
+.biz-row.is-visible .sd-note {
+  opacity: 1; transform: none; filter: blur(0); transition-delay: 0.28s;
+}
+.biz-row:hover .sd-note { transform: translateX(6px); transition-delay: 0s; }
+
+/* セクションの締めに単独で置くとき */
+.sd-note--block { margin-top: clamp(34px, 4.6vh, 52px); max-width: 820px; }
+
+/* ------------------------------------------------------------
+   PRODUCE FLOW
+   縦一本の細い罫線に、段階ごとの点を打つ。
+   図面や3Dは使わず、既存の「罫線と余白」だけで流れを見せる。
+   担当（Rafale / 提携施工会社）を右に置き、役割の境目が読めるようにする。
+   ------------------------------------------------------------ */
+.sd-flow { display: grid; }
+
+.sd-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(46px, 4.6vw, 66px) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: clamp(14px, 2vw, 30px);
+  padding: clamp(20px, 2.6vh, 28px) 0 clamp(20px, 2.6vh, 28px) clamp(20px, 2.6vw, 32px);
+}
+/* 縦の罫線。行ごとに引いているので、続けて並ぶと1本に見える */
+.sd-step::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 1px; background: rgba(30, 50, 70, 0.12);
+}
+.sd-step:first-child::before { top: 50%; }
+.sd-step:last-child::before  { bottom: 50%; }
+/* 段階の点 */
+.sd-step::after {
+  content: ""; position: absolute; left: -3px; top: calc(clamp(20px, 2.6vh, 28px) + 0.55em);
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #C3AA79;
+}
+/* 施工の段は、担当が変わることが分かるように点を白抜きにする */
+.sd-step--partner::after { background: var(--paper); box-shadow: inset 0 0 0 1px #A9906A; }
+
+.sd-step-num {
+  font-family: var(--font-en); font-weight: 400;
+  font-size: clamp(0.82rem, 1.3vw, 0.92rem);
+  letter-spacing: 0.16em; color: #8A6A3C; opacity: 0.85;
+}
+.sd-step-body { display: block; }
+.sd-step-en {
+  display: block;
+  font-family: var(--font-en); font-weight: 300;
+  font-size: clamp(0.8rem, 1.2vw, 0.88rem);
+  line-height: 1.6; letter-spacing: 0.12em; color: var(--ink);
+}
+.sd-step-jp {
+  display: block; margin-top: 7px;
+  font-size: clamp(0.92rem, 1.5vw, 1rem);
+  line-height: 1.8; letter-spacing: 0.05em; color: var(--sub);
+}
+.sd-step-role {
+  justify-self: end; text-align: right;
+  font-size: 0.78rem; line-height: 1.8; letter-spacing: 0.06em; color: var(--label);
+  white-space: nowrap;
+}
+.sd-step--partner .sd-step-role { color: #8A6A3C; }
+
+/* ------------------------------------------------------------
+   PLAN の注記（3行）
+   ------------------------------------------------------------ */
+.sd-plan-notes {
+  margin-top: clamp(28px, 4vh, 44px);
+  display: grid; gap: 6px;
+  font-size: 0.86rem; line-height: 2; letter-spacing: 0.04em; color: var(--label);
+}
+
+/* ------------------------------------------------------------
+   RELATED SERVICES
+   ------------------------------------------------------------ */
+.sd-related {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 48px);
+}
+.sd-related-item {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding-top: clamp(20px, 2.6vh, 28px);
+  border-top: 1px solid rgba(30, 50, 70, 0.12);
+}
+.sd-related-num {
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.8rem; letter-spacing: 0.16em; color: #8A6A3C; opacity: 0.85;
+}
+.sd-related-name {
+  margin-top: clamp(14px, 1.8vh, 20px);
+  font-family: var(--font-en); font-weight: 300;
+  font-size: clamp(1.06rem, 1.9vw, 1.32rem);
+  line-height: 1.5; letter-spacing: 0.12em; color: var(--ink);
+}
+.sd-related-desc {
+  margin-top: clamp(10px, 1.4vh, 14px); max-width: 26em;
+  font-size: clamp(0.94rem, 1.6vw, 1rem); line-height: 2.15; color: var(--sub);
+}
+.sd-related-link { margin-top: clamp(20px, 2.8vh, 30px); }
+
+/* FAQ の本文中から関連ページへ渡すリンク */
+.sd-inline-link {
+  color: #7A6136;
+  border-bottom: 1px solid rgba(170, 138, 86, 0.32);
+  transition: color 0.6s var(--ease), border-color 0.6s var(--ease);
+}
+.sd-inline-link:hover { color: #6B5430; border-bottom-color: rgba(170, 138, 86, 0.6); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .sd-page .bd-hero-grid { grid-template-columns: minmax(0, 1fr) clamp(180px, 24vw, 270px); }
+  .sd-related { gap: clamp(22px, 3vh, 34px); }
+}
+
+@media (max-width: 768px) {
+  /* business-detail.css は SELECTED WORKS → PLAN の境目だけを詰めているが、
+     このページに SELECTED WORKS は無い。共通の余白へ戻す。 */
+  .sd-page #plan { padding-top: clamp(120px, 17vh, 220px); }
+
+  /* HERO は他の事業詳細ページと同じく1カラムへ戻す。
+     （上の .sd-page .bd-hero-grid はPC・タブレット用の指定なので、
+       ここで打ち消さないとスマホでも2カラムのままになる） */
+  .sd-page .bd-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+
+  /* DEVELOPMENT が1行に収まり、右に余白が残る大きさ（320pxでも折り返さない） */
+  .sd-page .bd-hero-title { font-size: clamp(1.85rem, 9.2vw, 3rem); }
+  .sd-hero-note { padding-left: 13px; font-size: 0.84rem; }
+
+  /* PRODUCE FLOW ― 担当は行の下へ回す（横に並べると窮屈になるため） */
+  .sd-step {
+    grid-template-columns: clamp(38px, 10vw, 46px) minmax(0, 1fr);
+    gap: 10px 12px;
+    padding-left: 18px;
+  }
+  .sd-step-role {
+    grid-column: 2; justify-self: start; text-align: left;
+    white-space: normal; margin-top: 8px; font-size: 0.76rem;
+  }
+  .sd-step-jp { font-size: 0.94rem; }
+
+  .sd-related { grid-template-columns: minmax(0, 1fr); }
+  .sd-note { padding-left: 13px; font-size: 0.84rem; line-height: 1.95; }
+  .sd-plan-notes { font-size: 0.82rem; line-height: 1.95; }
+}
+
+@media (max-width: 480px) {
+  .sd-related-link { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .sd-hero-note { opacity: 1; animation: none; }
+}

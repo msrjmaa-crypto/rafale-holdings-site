@@ -41,9 +41,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- 共通のデザイン（色・文字・余白・罫線・ヘッダー・フッター・R の描画）は
      TOPページと同じ css/style.css をそのまま使う。
-     このページだけに必要な指定を web-production.css で後から足している。 -->
-<link rel="stylesheet" href="/css/style.css?v=56">
-<link rel="stylesheet" href="/css/web-production.css?v=1">
+     このページだけに必要な指定を business-detail.css で後から足している。 -->
+<link rel="stylesheet" href="/css/style.css?v=57">
+<link rel="stylesheet" href="/css/business-detail.css?v=1">
 
 <script type="application/ld+json">
 {
@@ -97,7 +97,7 @@
 }
 </script>
 </head>
-<body class="wp-page">
+<body class="bd-page">
 
 <a href="#main-content" class="skip-link">本文へスキップ</a>
 <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
@@ -152,7 +152,7 @@
        R の SVG・グラデーション・描画のCSSは TOP と同一のものを使い、
        このページでは置き場所と大きさだけを変えている。
        スマホでは1カラムになり、R は文章の下へ回る（重ならない）。 -->
-  <section class="hero wp-hero" id="top">
+  <section class="hero bd-hero" id="top">
 
     <!-- 空気 ― TOPと同じ6層 -->
     <div class="hero-atmos" aria-hidden="true">
@@ -172,33 +172,33 @@
     </div>
 
     <div class="hero-inner">
-      <div class="wp-hero-grid">
+      <div class="bd-hero-grid">
 
-        <div class="hero-main wp-hero-main">
-          <p class="wp-eyebrow">
-            <span class="wp-eyebrow-num" lang="en">06</span>
-            <span class="wp-eyebrow-rule" aria-hidden="true"></span>
-            <a href="/#business" class="wp-eyebrow-link" lang="en">BUSINESS</a>
+        <div class="hero-main bd-hero-main">
+          <p class="bd-eyebrow">
+            <span class="bd-eyebrow-num" lang="en">06</span>
+            <span class="bd-eyebrow-rule" aria-hidden="true"></span>
+            <a href="/#business" class="bd-eyebrow-link" lang="en">BUSINESS</a>
           </p>
 
-          <h1 class="wp-hero-title" lang="en">
-            <span class="wp-title-line"><span class="wp-title-in">WEB</span></span>
-            <span class="wp-title-line"><span class="wp-title-in">PRODUCTION</span></span>
+          <h1 class="bd-hero-title" lang="en">
+            <span class="bd-title-line"><span class="bd-title-in">WEB</span></span>
+            <span class="bd-title-line"><span class="bd-title-in">PRODUCTION</span></span>
           </h1>
 
-          <p class="wp-hero-sub">Webサイト制作・運用支援</p>
+          <p class="bd-hero-sub">Webサイト制作・運用支援</p>
 
-          <p class="wp-hero-desc">
+          <p class="bd-hero-desc">
             企業・店舗・ブランドのWebサイトを制作します。<br class="only-pc">
             企画・構成、デザイン、実装から公開後の更新・運用まで対応します。
           </p>
 
-          <a href="#contact" class="btn hero-cta wp-hero-cta">制作について相談する</a>
+          <a href="#contact" class="btn hero-cta bd-hero-cta">制作について相談する</a>
         </div>
 
         <!-- TOPページの「動きのある R」。SVGの中身・線の太さ・色・描画順は
              index.html と同一。位置と大きさだけをこのページ用にしている。 -->
-        <div class="hero-sign wp-hero-sign" aria-hidden="true">
+        <div class="hero-sign bd-hero-sign" aria-hidden="true">
           <svg class="r-sign" viewBox="0 0 540 730" fill="none" preserveAspectRatio="xMidYMid meet" role="presentation">
             <defs>
               <path id="r-main" pathLength="1000"
@@ -346,33 +346,33 @@
       </header>
       <h2 class="section-title reveal">制作実績</h2>
 
-      <ol class="wp-works">
-        <li class="wp-work reveal">
-          <div class="wp-work-visual">
+      <ol class="bd-works">
+        <li class="bd-work reveal">
+          <div class="bd-work-visual">
             <!-- 公開中の rafale-hd.jp を実際に表示して撮影したキャプチャ。
                  PC=1440×900（16:10）／スマホ=390px幅で撮影し2倍で保存（9:19）。
                  差し替えるときは同じファイル名で上書きし、末尾の ?v= を1つ上げる
                  （/img/* は1週間キャッシュされるため）。 -->
-            <div class="wp-mock" aria-hidden="true">
-              <div class="wp-mock-pc">
-                <span class="wp-mock-screen" style="--shot: url('/img/works/rafale-pc.jpg?v=1')"></span>
+            <div class="bd-mock" aria-hidden="true">
+              <div class="bd-mock-pc">
+                <span class="bd-mock-screen" style="--shot: url('/img/works/rafale-pc.jpg?v=1')"></span>
               </div>
-              <div class="wp-mock-sp">
-                <span class="wp-mock-screen" style="--shot: url('/img/works/rafale-sp.jpg?v=1')"></span>
+              <div class="bd-mock-sp">
+                <span class="bd-mock-screen" style="--shot: url('/img/works/rafale-sp.jpg?v=1')"></span>
               </div>
             </div>
           </div>
 
-          <div class="wp-work-body">
-            <span class="wp-work-num" lang="en" aria-hidden="true">01</span>
-            <h3 class="wp-work-name" lang="en">RAFALE HOLDINGS</h3>
-            <p class="wp-work-type" lang="en">Corporate Website</p>
-            <ul class="wp-tags">
+          <div class="bd-work-body">
+            <span class="bd-work-num" lang="en" aria-hidden="true">01</span>
+            <h3 class="bd-work-name" lang="en">RAFALE HOLDINGS</h3>
+            <p class="bd-work-type" lang="en">Corporate Website</p>
+            <ul class="bd-tags">
               <li>企画</li><li>構成</li><li lang="en">Design</li><li lang="en">Development</li>
               <li lang="en">Responsive</li><li lang="en">SEO</li><li lang="en">Deployment</li>
             </ul>
-            <p class="wp-work-desc">Rafale Holdingsのコーポレートサイト。企画・構成からデザイン、実装、公開まで制作。</p>
-            <a href="https://rafale-hd.jp/" class="wp-work-link" lang="en"
+            <p class="bd-work-desc">Rafale Holdingsのコーポレートサイト。企画・構成からデザイン、実装、公開まで制作。</p>
+            <a href="https://rafale-hd.jp/" class="bd-work-link" lang="en"
                target="_blank" rel="noopener noreferrer"
                aria-label="RAFALE HOLDINGS のサイトを見る（新しいタブで開きます）">
               <span>VIEW WEBSITE</span>
@@ -383,30 +383,30 @@
           </div>
         </li>
 
-        <li class="wp-work reveal">
-          <div class="wp-work-visual">
+        <li class="bd-work reveal">
+          <div class="bd-work-visual">
             <!-- 同上。公開中の sakura-poker.jp を実際に表示して撮影したキャプチャ。 -->
-            <div class="wp-mock" aria-hidden="true">
-              <div class="wp-mock-pc">
-                <span class="wp-mock-screen" style="--shot: url('/img/works/sakura-pc.jpg?v=1')"></span>
+            <div class="bd-mock" aria-hidden="true">
+              <div class="bd-mock-pc">
+                <span class="bd-mock-screen" style="--shot: url('/img/works/sakura-pc.jpg?v=1')"></span>
               </div>
-              <div class="wp-mock-sp">
-                <span class="wp-mock-screen" style="--shot: url('/img/works/sakura-sp.jpg?v=1')"></span>
+              <div class="bd-mock-sp">
+                <span class="bd-mock-screen" style="--shot: url('/img/works/sakura-sp.jpg?v=1')"></span>
               </div>
             </div>
           </div>
 
-          <div class="wp-work-body">
-            <span class="wp-work-num" lang="en" aria-hidden="true">02</span>
-            <h3 class="wp-work-name" lang="en">SAKURA POKER LOUNGE</h3>
-            <p class="wp-work-type" lang="en">Shop Website</p>
-            <ul class="wp-tags">
+          <div class="bd-work-body">
+            <span class="bd-work-num" lang="en" aria-hidden="true">02</span>
+            <h3 class="bd-work-name" lang="en">SAKURA POKER LOUNGE</h3>
+            <p class="bd-work-type" lang="en">Shop Website</p>
+            <ul class="bd-tags">
               <li>企画</li><li>構成</li><li lang="en">Design</li><li lang="en">Development</li>
               <li lang="en">Responsive</li><li lang="en">Access</li><li lang="en">Recruit</li>
               <li lang="en">SEO</li><li lang="en">Deployment</li>
             </ul>
-            <p class="wp-work-desc">SAKURA Poker Loungeの店舗サイト。店舗案内、フロア紹介、アクセス、採用情報などを掲載。</p>
-            <a href="https://sakura-poker.jp/" class="wp-work-link" lang="en"
+            <p class="bd-work-desc">SAKURA Poker Loungeの店舗サイト。店舗案内、フロア紹介、アクセス、採用情報などを掲載。</p>
+            <a href="https://sakura-poker.jp/" class="bd-work-link" lang="en"
                target="_blank" rel="noopener noreferrer"
                aria-label="SAKURA POKER LOUNGE のサイトを見る（新しいタブで開きます）">
               <span>VIEW WEBSITE</span>
@@ -428,12 +428,12 @@
       </header>
       <h2 class="section-title reveal">制作料金</h2>
 
-      <div class="wp-plans">
-        <article class="wp-plan reveal">
-          <h3 class="wp-plan-name" lang="en">LIGHT</h3>
-          <p class="wp-plan-price"><span class="wp-plan-price-num">¥49,800</span><span class="wp-plan-price-unit">〜</span></p>
-          <p class="wp-plan-for">小規模サイト向け</p>
-          <ul class="wp-plan-items">
+      <div class="bd-plans">
+        <article class="bd-plan reveal">
+          <h3 class="bd-plan-name" lang="en">LIGHT</h3>
+          <p class="bd-plan-price"><span class="bd-plan-price-num">¥49,800</span><span class="bd-plan-price-unit">〜</span></p>
+          <p class="bd-plan-for">小規模サイト向け</p>
+          <ul class="bd-plan-items">
             <li>1ページ構成</li>
             <li>オリジナルデザイン</li>
             <li>スマートフォン対応</li>
@@ -444,11 +444,11 @@
           </ul>
         </article>
 
-        <article class="wp-plan wp-plan--main reveal">
-          <h3 class="wp-plan-name" lang="en">STANDARD</h3>
-          <p class="wp-plan-price"><span class="wp-plan-price-num">¥98,000</span><span class="wp-plan-price-unit">〜</span></p>
-          <p class="wp-plan-for">企業・店舗サイト向け</p>
-          <ul class="wp-plan-items">
+        <article class="bd-plan bd-plan--main reveal">
+          <h3 class="bd-plan-name" lang="en">STANDARD</h3>
+          <p class="bd-plan-price"><span class="bd-plan-price-num">¥98,000</span><span class="bd-plan-price-unit">〜</span></p>
+          <p class="bd-plan-for">企業・店舗サイト向け</p>
+          <ul class="bd-plan-items">
             <li>最大5ページ</li>
             <li>オリジナルデザイン</li>
             <li>スマートフォン対応</li>
@@ -461,11 +461,11 @@
           </ul>
         </article>
 
-        <article class="wp-plan reveal">
-          <h3 class="wp-plan-name" lang="en">PREMIUM</h3>
-          <p class="wp-plan-price"><span class="wp-plan-price-num">¥198,000</span><span class="wp-plan-price-unit">〜</span></p>
-          <p class="wp-plan-for">デザイン・演出を重視したサイト向け</p>
-          <ul class="wp-plan-items">
+        <article class="bd-plan reveal">
+          <h3 class="bd-plan-name" lang="en">PREMIUM</h3>
+          <p class="bd-plan-price"><span class="bd-plan-price-num">¥198,000</span><span class="bd-plan-price-unit">〜</span></p>
+          <p class="bd-plan-for">デザイン・演出を重視したサイト向け</p>
+          <ul class="bd-plan-items">
             <li>ページ構成設計</li>
             <li>完全オリジナルデザイン</li>
             <li>コピー調整</li>
@@ -479,7 +479,7 @@
         </article>
       </div>
 
-      <p class="wp-note reveal">ページ数・機能・制作内容により料金は異なります。</p>
+      <p class="bd-note reveal">ページ数・機能・制作内容により料金は異なります。</p>
     </div>
   </section>
 
@@ -491,11 +491,11 @@
       </header>
       <h2 class="section-title reveal">保守・運用</h2>
 
-      <div class="wp-maint reveal">
-        <p class="wp-maint-price">
-          <span class="wp-plan-price-num">¥9,800</span><span class="wp-plan-price-unit">〜 / month</span>
+      <div class="bd-maint reveal">
+        <p class="bd-maint-price">
+          <span class="bd-plan-price-num">¥9,800</span><span class="bd-plan-price-unit">〜 / month</span>
         </p>
-        <ul class="wp-plan-items wp-maint-items">
+        <ul class="bd-plan-items bd-maint-items">
           <li>文章変更</li>
           <li>画像差し替え</li>
           <li>軽微な修正</li>
@@ -503,7 +503,7 @@
         </ul>
       </div>
 
-      <p class="wp-note reveal">更新頻度・対応内容により料金は異なります。</p>
+      <p class="bd-note reveal">更新頻度・対応内容により料金は異なります。</p>
     </div>
   </section>
 
@@ -515,36 +515,36 @@
       </header>
       <h2 class="section-title reveal">制作の流れ</h2>
 
-      <ol class="wp-steps">
-        <li class="wp-step reveal">
-          <span class="wp-step-num" lang="en" aria-hidden="true">01</span>
-          <span class="wp-step-en" lang="en">CONTACT</span>
-          <span class="wp-step-jp">お問い合わせ</span>
+      <ol class="bd-steps">
+        <li class="bd-step reveal">
+          <span class="bd-step-num" lang="en" aria-hidden="true">01</span>
+          <span class="bd-step-en" lang="en">CONTACT</span>
+          <span class="bd-step-jp">お問い合わせ</span>
         </li>
-        <li class="wp-step reveal">
-          <span class="wp-step-num" lang="en" aria-hidden="true">02</span>
-          <span class="wp-step-en" lang="en">HEARING</span>
-          <span class="wp-step-jp">ヒアリング</span>
+        <li class="bd-step reveal">
+          <span class="bd-step-num" lang="en" aria-hidden="true">02</span>
+          <span class="bd-step-en" lang="en">HEARING</span>
+          <span class="bd-step-jp">ヒアリング</span>
         </li>
-        <li class="wp-step reveal">
-          <span class="wp-step-num" lang="en" aria-hidden="true">03</span>
-          <span class="wp-step-en" lang="en">PLANNING</span>
-          <span class="wp-step-jp">構成確認</span>
+        <li class="bd-step reveal">
+          <span class="bd-step-num" lang="en" aria-hidden="true">03</span>
+          <span class="bd-step-en" lang="en">PLANNING</span>
+          <span class="bd-step-jp">構成確認</span>
         </li>
-        <li class="wp-step reveal">
-          <span class="wp-step-num" lang="en" aria-hidden="true">04</span>
-          <span class="wp-step-en" lang="en">DESIGN &amp; DEVELOPMENT</span>
-          <span class="wp-step-jp">デザイン・制作</span>
+        <li class="bd-step reveal">
+          <span class="bd-step-num" lang="en" aria-hidden="true">04</span>
+          <span class="bd-step-en" lang="en">DESIGN &amp; DEVELOPMENT</span>
+          <span class="bd-step-jp">デザイン・制作</span>
         </li>
-        <li class="wp-step reveal">
-          <span class="wp-step-num" lang="en" aria-hidden="true">05</span>
-          <span class="wp-step-en" lang="en">REVIEW</span>
-          <span class="wp-step-jp">確認・修正</span>
+        <li class="bd-step reveal">
+          <span class="bd-step-num" lang="en" aria-hidden="true">05</span>
+          <span class="bd-step-en" lang="en">REVIEW</span>
+          <span class="bd-step-jp">確認・修正</span>
         </li>
-        <li class="wp-step reveal">
-          <span class="wp-step-num" lang="en" aria-hidden="true">06</span>
-          <span class="wp-step-en" lang="en">LAUNCH</span>
-          <span class="wp-step-jp">公開</span>
+        <li class="bd-step reveal">
+          <span class="bd-step-num" lang="en" aria-hidden="true">06</span>
+          <span class="bd-step-en" lang="en">LAUNCH</span>
+          <span class="bd-step-jp">公開</span>
         </li>
       </ol>
     </div>
@@ -559,64 +559,64 @@
       </header>
       <h2 class="section-title reveal">よくあるご質問</h2>
 
-      <div class="wp-faq">
-        <details class="wp-faq-item reveal">
-          <summary class="wp-faq-q">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">Q.</span>
-            <span class="wp-faq-text">Webサイトについて詳しくなくても依頼できますか？</span>
-            <span class="wp-faq-icon" aria-hidden="true"></span>
+      <div class="bd-faq">
+        <details class="bd-faq-item reveal">
+          <summary class="bd-faq-q">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">Q.</span>
+            <span class="bd-faq-text">Webサイトについて詳しくなくても依頼できますか？</span>
+            <span class="bd-faq-icon" aria-hidden="true"></span>
           </summary>
-          <div class="wp-faq-a">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">A.</span>
-            <p class="wp-faq-text">はい。必要な内容を確認しながら進めますので、専門的な知識は必要ありません。</p>
+          <div class="bd-faq-a">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">A.</span>
+            <p class="bd-faq-text">はい。必要な内容を確認しながら進めますので、専門的な知識は必要ありません。</p>
           </div>
         </details>
 
-        <details class="wp-faq-item reveal">
-          <summary class="wp-faq-q">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">Q.</span>
-            <span class="wp-faq-text">写真や文章が揃っていなくても依頼できますか？</span>
-            <span class="wp-faq-icon" aria-hidden="true"></span>
+        <details class="bd-faq-item reveal">
+          <summary class="bd-faq-q">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">Q.</span>
+            <span class="bd-faq-text">写真や文章が揃っていなくても依頼できますか？</span>
+            <span class="bd-faq-icon" aria-hidden="true"></span>
           </summary>
-          <div class="wp-faq-a">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">A.</span>
-            <p class="wp-faq-text">はい。文章については制作内容に応じて対応可能です。写真や素材についてもご相談ください。</p>
+          <div class="bd-faq-a">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">A.</span>
+            <p class="bd-faq-text">はい。文章については制作内容に応じて対応可能です。写真や素材についてもご相談ください。</p>
           </div>
         </details>
 
-        <details class="wp-faq-item reveal">
-          <summary class="wp-faq-q">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">Q.</span>
-            <span class="wp-faq-text">独自ドメインの設定もお願いできますか？</span>
-            <span class="wp-faq-icon" aria-hidden="true"></span>
+        <details class="bd-faq-item reveal">
+          <summary class="bd-faq-q">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">Q.</span>
+            <span class="bd-faq-text">独自ドメインの設定もお願いできますか？</span>
+            <span class="bd-faq-icon" aria-hidden="true"></span>
           </summary>
-          <div class="wp-faq-a">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">A.</span>
-            <p class="wp-faq-text">はい。ドメイン設定、DNS設定、SSL対応、本番公開まで対応可能です。</p>
+          <div class="bd-faq-a">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">A.</span>
+            <p class="bd-faq-text">はい。ドメイン設定、DNS設定、SSL対応、本番公開まで対応可能です。</p>
           </div>
         </details>
 
-        <details class="wp-faq-item reveal">
-          <summary class="wp-faq-q">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">Q.</span>
-            <span class="wp-faq-text">スマートフォンにも対応していますか？</span>
-            <span class="wp-faq-icon" aria-hidden="true"></span>
+        <details class="bd-faq-item reveal">
+          <summary class="bd-faq-q">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">Q.</span>
+            <span class="bd-faq-text">スマートフォンにも対応していますか？</span>
+            <span class="bd-faq-icon" aria-hidden="true"></span>
           </summary>
-          <div class="wp-faq-a">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">A.</span>
-            <p class="wp-faq-text">はい。PC・タブレット・スマートフォンに対応したレスポンシブデザインで制作します。</p>
+          <div class="bd-faq-a">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">A.</span>
+            <p class="bd-faq-text">はい。PC・タブレット・スマートフォンに対応したレスポンシブデザインで制作します。</p>
           </div>
         </details>
 
-        <details class="wp-faq-item reveal">
-          <summary class="wp-faq-q">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">Q.</span>
-            <span class="wp-faq-text">公開後の修正もお願いできますか？</span>
-            <span class="wp-faq-icon" aria-hidden="true"></span>
+        <details class="bd-faq-item reveal">
+          <summary class="bd-faq-q">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">Q.</span>
+            <span class="bd-faq-text">公開後の修正もお願いできますか？</span>
+            <span class="bd-faq-icon" aria-hidden="true"></span>
           </summary>
-          <div class="wp-faq-a">
-            <span class="wp-faq-mark" lang="en" aria-hidden="true">A.</span>
-            <p class="wp-faq-text">はい。スポットでの修正、または保守・運用で対応します。</p>
+          <div class="bd-faq-a">
+            <span class="bd-faq-mark" lang="en" aria-hidden="true">A.</span>
+            <p class="bd-faq-text">はい。スポットでの修正、または保守・運用で対応します。</p>
           </div>
         </details>
       </div>
@@ -652,6 +652,8 @@
         </div>
 
         <form class="contact-form reveal" id="contact-form" novalidate data-reveal-delay="400">
+          <!-- どのページからの問い合わせかを送るための項目（WEB PRODUCTION）。表示はされません。 -->
+          <input type="hidden" name="source" value="web-production">
           <input type="text" name="hp_url" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
           <div class="form-row">
             <label for="name">お名前<span class="required">必須</span></label>
@@ -699,6 +701,6 @@
   </div>
 </footer>
 
-<script src="/js/script.js?v=15" defer></script>
+<script src="/js/script.js?v=16" defer></script>
 </body>
 </html>
