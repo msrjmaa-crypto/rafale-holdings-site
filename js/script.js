@@ -33,6 +33,25 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastDepth = -1;
   let lastProg = -1;
 
+  /* ---------- スクロール連動のCSS変数を書き込む先 ----------
+     以前は --sp / --sy を :root（<html>）へ書いていたが、:root の
+     カスタムプロパティは全要素へ継承されるため、1回書くたびに
+     「文書中のすべての要素」のスタイルを計算し直すことになる。
+     iPhone実機に近い条件（CPU 1/4）で計測したところ、スクロール中の
+     スタイル再計算だけで 2.3〜3.6 秒（1フレームあたり約15ms）を消費し、
+     これがスクロールの引っ掛かりの主因だった。
+     そこで、値を実際に使っている要素にだけ直接書き込むようにする。
+     計算式・値・書き込む頻度は従来とまったく同じなので、見た目は変わらない。
+       --sp … .field-lamps（照明の位置）／.field-silk（絹の濃さ）
+       --sy … .hero-halo（背後の光）／.hero-line（コピー3行の視差）
+       --mx / --my … 上記に加えて .hero-sign（R） */
+  const spTargets = document.querySelectorAll('.field-lamps, .field-silk');
+  const syTargets = document.querySelectorAll('.hero-halo, .hero-line');
+  const pointerTargets = document.querySelectorAll('.hero-halo, .hero-line, .hero-sign');
+  const setVar = (els, name, value) => {
+    for (let i = 0; i < els.length; i++) els[i].style.setProperty(name, value);
+  };
+
   /* セクションごとのスクロール連動。
      位置は先に控えておき、スクロール中は引き算だけで済ませる
      （毎フレーム要素の位置を測り直さないので、レイアウトは発生しない）。 */
@@ -106,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!prefersReducedMotion) {
       const sp = Math.round(prog * 100) / 100;
       if (sp !== lastProg) {
-        root.style.setProperty('--sp', String(sp));
+        setVar(spTargets, '--sp', String(sp));
         lastProg = sp;
       }
     }
@@ -131,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const raw = y / heroHeight;
       const depth = Math.round((raw < 0 ? 0 : raw > 1 ? 1 : raw) * 100) / 100;
       if (depth !== lastDepth) {
-        root.style.setProperty('--sy', String(depth));
+        setVar(syTargets, '--sy', String(depth));
         lastDepth = depth;
       }
     }
@@ -275,6 +294,20 @@ document.addEventListener('DOMContentLoaded', () => {
     window.setTimeout(startHeroSweep, 5200);
   }
 
+  /* ---------- 出終わった文字から will-change を外す ----------
+     登場時だけ必要な指定が付いたままだと、その要素の合成レイヤーが
+     ページを離れるまで残り続ける。動きが終わったものから順に外す。
+     （常時まわっている背景の光には付けたままにする ― そちらは必要な指定） */
+  const releaseWillChange = (el) => {
+    const done = () => {
+      if (el.getAnimations && el.getAnimations().some((a) => a.playState === 'running')) return;
+      el.style.willChange = 'auto';
+      el.removeEventListener('animationend', done);
+    };
+    el.addEventListener('animationend', done);
+  };
+  document.querySelectorAll('.hero-line-in, .wp-title-in, .hero-logo-img').forEach(releaseWillChange);
+
   /* ---------- マウスに対するごく弱い反応（PCのみ） ----------
      ポインタが精密なデバイスに限り、-1〜1 の値を2つ渡すだけ。
      実際に動かすのはCSS側（背景の transform）で、数十pxが上限。 */
@@ -282,9 +315,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (finePointer && !prefersReducedMotion) {
     let mx = 0, my = 0, queued = false;
 
+    /* マウス追従も同じ理由で :root には書かない。
+       動かすのは HERO の3要素だけなので、そこへ直接渡す。 */
     const apply = () => {
-      root.style.setProperty('--mx', mx.toFixed(3));
-      root.style.setProperty('--my', my.toFixed(3));
+      setVar(pointerTargets, '--mx', mx.toFixed(3));
+      setVar(pointerTargets, '--my', my.toFixed(3));
       queued = false;
     };
 

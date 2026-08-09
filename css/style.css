@@ -1333,6 +1333,35 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .biz-row:hover .biz-desc { transform: translateX(6px); transition-delay: 0s; }
 
+/* ---- 詳細ページを持つ行（現在は 06 のみ）----
+   行そのものの組み方・余白・文字・ホバーは他の8行とまったく同じ。
+   ここで足しているのは、説明の下に置く小さな導線と、
+   リンクの当たり判定を行全体へ広げるための透明な面だけ。
+   出方（opacity + 12px + 弱いblur）も番号・事業名・説明と同じ流れに乗せ、
+   説明の次（0.28秒）に現れるようにしてある。 */
+.biz-row--link { cursor: pointer; }
+.biz-link {
+  display: inline-flex; align-items: center; gap: 9px;
+  margin-top: clamp(14px, 1.8vh, 20px); padding-bottom: 5px;
+  font-family: var(--font-jp); font-weight: 400;
+  font-size: 0.8rem; letter-spacing: 0.12em; color: #7A6136;
+  border-bottom: 1px solid rgba(170, 138, 86, 0.32);
+  opacity: 0; transform: translateY(12px); filter: blur(4px);
+  transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out),
+              filter 0.85s var(--ease-out), color 0.6s var(--ease),
+              border-color 0.6s var(--ease), gap 0.6s var(--ease);
+}
+.biz-row.is-visible .biz-link {
+  opacity: 1; transform: none; filter: blur(0);
+  transition-delay: 0.28s, 0.28s, 0.28s, 0s, 0s, 0s;
+}
+.biz-link svg { transition: transform 0.6s var(--ease); }
+.biz-row--link:hover .biz-link { color: #6B5430; border-color: rgba(170, 138, 86, 0.6); gap: 13px; }
+.biz-row--link:hover .biz-link svg { transform: translateX(3px); }
+/* 行のどこを押しても詳細ページへ。リンクは本物の <a> のままなので、
+   新しいタブで開く・URLをコピーするといった操作もそのまま使える。 */
+.biz-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 3px; }
+
 /* ============================================================
    BRANDS ― 白 → グレー → グラファイト → 黒 → 白へ戻る
    ============================================================ */

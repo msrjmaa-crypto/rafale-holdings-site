@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=55">
+<link rel="stylesheet" href="css/style.css?v=56">
 
 <!--
   ============================================================
@@ -406,11 +406,20 @@
           </div>
         </li>
 
-        <li class="biz-row reveal">
+        <!-- 06 だけ詳細ページを持つ。行の組み方・余白・文字は他の8行と同じままで、
+             リンクの当たり判定（.biz-link::after）を行全体へ広げている。 -->
+        <li class="biz-row biz-row--link reveal">
           <span class="biz-num" lang="en" aria-hidden="true">06</span>
           <div class="biz-body">
             <h3 class="biz-name">Webサイト制作・運用支援<span class="biz-en" lang="en">Web Design &amp; Management</span></h3>
             <p class="biz-desc">企業・店舗・ブランドのWebサイト制作から、公開後の更新・運用・改善まで一貫して支援します。</p>
+            <a href="/business/web-production" class="biz-link"
+               aria-label="Webサイト制作・運用支援の詳細を見る">
+              <span>サービス詳細を見る</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
           </div>
         </li>
 
@@ -646,6 +655,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=14" defer></script>
+<script src="js/script.js?v=15" defer></script>
 </body>
 </html>
