@@ -11,11 +11,19 @@
 設置しない場合でも本番サイトに開発用の注意書きが残ることはありません。
 動画を設置すると、この案内は自動的に消えます）
 
-このフォルダに以下のファイル名で動画を置くと、自動的に実写の背景動画に
-切り替わります。
+このフォルダに以下のファイル名で動画を置き、index.html の <video> に
+data-hero-video を足すと、実写の背景動画に切り替わります。
 
   assets/videos/rafale-opening.mp4   … 必須
   assets/videos/rafale-opening.webm  … 任意（対応ブラウザで優先され、ファイルサイズを抑えられます）
+
+  index.html（HEROの中）:
+    <video class="hero-video" id="hero-video" data-hero-video muted loop playsinline ...>
+                                              ~~~~~~~~~~~~~~ これを足す
+
+  ※ 以前は目印なしで読み込みを試みていたため、動画が未設置のあいだ
+     PC表示のたびに 404 が2件出ていました。目印を付けたときだけ
+     読みに行くようにしてあります。
 
 動画は以下の状態で自動再生されます。
   ・音声なし（muted）

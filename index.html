@@ -182,7 +182,12 @@
        中央に積み上げず、左に大きな言葉・右に空間を残す非対称構成。 -->
   <section class="hero" id="top">
 
-    <!-- 背景動画（未配置。assets/videos/rafale-opening.mp4 を置くとPCで自動再生） -->
+    <!-- 背景動画（未配置）
+         assets/videos/rafale-opening.mp4（任意で .webm）を置いたうえで、
+         下の <video> に data-hero-video を足すと、PCでのみ自動再生されます。
+             <video class="hero-video" id="hero-video" data-hero-video ...>
+         この目印が無い間は読み込みを試みません。以前は目印なしで読みに
+         行っていたため、動画が無いPC表示では毎回 404 が2件出ていました。 -->
     <video class="hero-video" id="hero-video" muted loop playsinline disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
 
     <!-- 空気 ― 白・淡いブルー・シルバー・ごく薄い暖色の4層。
@@ -671,6 +676,6 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=17" defer></script>
+<script src="js/script.js?v=18" defer></script>
 </body>
 </html>

@@ -336,13 +336,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- ヒーロー背景動画（未配置なら何も起きない） ----------
-     assets/videos/rafale-opening.mp4（任意で .webm）を置くと、
-     PCかつ省データ・モーション低減でない場合だけ再生されます。 */
+     assets/videos/rafale-opening.mp4（任意で .webm）を置き、
+     index.html の <video> に data-hero-video を足したときだけ、
+     PCかつ省データ・モーション低減でない場合に再生されます。
+     目印で判定しているのは、動画が無い状態でも読みに行ってしまうと、
+     PC表示のたびに 404 が2件出てネットワークを無駄に使うためです。 */
   const heroVideo = document.getElementById('hero-video');
   const isDesktopViewport = () => window.matchMedia('(min-width: 769px)').matches;
   const saveDataEnabled = () => Boolean(navigator.connection && navigator.connection.saveData);
 
-  if (heroEl && heroVideo && isDesktopViewport() && !prefersReducedMotion && !saveDataEnabled()) {
+  if (heroEl && heroVideo && heroVideo.hasAttribute('data-hero-video') &&
+      isDesktopViewport() && !prefersReducedMotion && !saveDataEnabled()) {
     [
       { src: 'assets/videos/rafale-opening.webm', type: 'video/webm' },
       { src: 'assets/videos/rafale-opening.mp4', type: 'video/mp4' },
