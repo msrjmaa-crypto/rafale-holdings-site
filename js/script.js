@@ -63,6 +63,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const toneIds = ['#philosophy', '#business', '#brands', '#message', '#company', '#contact'];
   const toneVars = ['--b1', '--b2', '--b3', '--b4', '--b5', '--b6'];
   const toneEls = toneIds.map((s) => document.querySelector(s));
+  const toneEl = document.querySelector('.page-tone');
+
+  /* 地の色（css の .page-tone と同じ並び）。
+     位置は上の実測値を使い、最初と最後だけ固定。 */
+  const TONE_COLORS = ['#F5F1EB', '#F2F1EE', '#EDF1F6', '#E7ECF2', '#DDE3EA',
+                       '#E2E7ED', '#F1F0EC', '#ECEFF3', '#E7EAEE'];
+
+  /* 地は「ページの高さぶんのグラデーション」なので、CSSのままだと
+     スクロールで新しく見えた場所を毎回グラデーション計算で塗り直すことになる。
+     iPhone想定の計測では、これがスクロール中の描画時間のおよそ1/4を占めていた。
+     色も位置もそのままに、1度だけ細長い絵を作って貼る方式へ変える。
+     絵にすると塗りは単純な引き伸ばしになり、計算が要らない。
+     canvas が使えない環境では、CSSのグラデーションがそのまま残る。 */
+  const paintTone = (at) => {
+    if (!toneEl || !window.HTMLCanvasElement) return;
+    try {
+      const stops = [0, at[0], at[1], at[1] + (at[2] - at[1]) * 0.55, at[2], at[3], at[4], at[5], 100];
+      const c = document.createElement('canvas');
+      c.width = 2; c.height = 1024;
+      const g = c.getContext('2d');
+      if (!g) return;
+      const lg = g.createLinearGradient(0, 0, 0, 1024);
+      for (let i = 0; i < TONE_COLORS.length; i++) {
+        const p = Math.min(1, Math.max(0, stops[i] / 100));
+        lg.addColorStop(p, TONE_COLORS[i]);
+      }
+      g.fillStyle = lg;
+      g.fillRect(0, 0, 2, 1024);
+      toneEl.style.backgroundImage = 'url(' + c.toDataURL('image/png') + ')';
+      toneEl.style.backgroundSize = '100% 100%';
+      toneEl.style.backgroundRepeat = 'no-repeat';
+    } catch (e) { /* 作れなければCSSのグラデーションのまま */ }
+  };
+
   const measureTone = () => {
     const H = document.documentElement.scrollHeight;
     if (!H) return;
@@ -72,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (at[1] !== null && at[2] !== null) {
       root.style.setProperty('--b2b', (at[1] + (at[2] - at[1]) * 0.55).toFixed(1) + '%');
     }
+    if (at.every((v) => v !== null)) paintTone(at);
   };
   let secGeom = [];
   const measureSections = () => {
