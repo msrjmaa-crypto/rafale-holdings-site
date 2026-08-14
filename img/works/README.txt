@@ -10,21 +10,34 @@
   sakura-pc.jpg   1440 x 900   … https://sakura-poker.jp/ PC（1440px幅で撮影）
   sakura-sp.jpg    780 x 1648  … https://sakura-poker.jp/ スマートフォン（390px幅で撮影・2倍保存）
 
+  guleum-pc.jpg   1440 x 900   … https://guleum-nail.jp/ PC（1440px幅で撮影）
+  guleum-sp.jpg    780 x 1648  … https://guleum-nail.jp/ スマートフォン（390px幅で撮影・2倍保存）
+
 撮影位置
   RAFALE  … TOPのファーストビュー（右の「動きのあるR」が描き終わった状態）
   SAKURA  … TOPのファーストビュー（ロゴ・キャッチコピー・店内写真が入る位置）
+  GULEUM  … TOPのファーストビュー（ロゴ・ナビ・キャッチコピーと施術風景が入る位置）
+            ヒーローは複数枚が切り替わるスライドショーなので、切り替わりの
+            ぼけを避け、写真が静止している瞬間を選んで撮影している。
   どちらもページ最上部（スクロール量0）。アドレスバーや開発者ツールは写っていません。
 
 枠との関係
   PC枠   … 16:10（画像も 1440x900 なので、切り取られずそのまま収まります）
   スマホ枠 … 9:19（画像も 780x1648 なので、ほぼ切り取られません）
   表示は business/web-production.html の
-    style="--shot: url('/img/works/rafale-pc.jpg?v=1')"
-  で指定しています。
+    <img src="/img/works/rafale-pc.jpg?v=1" alt="" width="1440" height="900"
+         loading="lazy" decoding="async">
+  です。背景画像ではなく <img> にしてあるのは、遅延読み込み（lazy）と
+  非同期デコード（async）を効かせて、実績まで下りてきた時に
+  スクロールが引っかからないようにするためです。
+
+  PC画像を 1440x900 より大きくしないでください。枠の実表示は最大
+  552px（PCで2倍表示しても1104px）なので、それ以上は画質に出ないまま
+  読み込みと展開だけが重くなります。
 
 差し替えるとき
   1. 同じファイル名・同じ縦横比で上書きする
-  2. business/web-production.html の url(...) 末尾の ?v=1 を ?v=2 のように上げる
+  2. business/web-production.html の src 末尾の ?v=1 を ?v=2 のように上げる
      （/img/* は _headers で1週間キャッシュされるため、番号を上げないと
        古い画像が表示され続けます）
 

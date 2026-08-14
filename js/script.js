@@ -274,6 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, { rootMargin: '25% 0px 25% 0px' });
     liveTargets.forEach((el) => liveObserver.observe(el));
+  } else {
+    /* IntersectionObserver が無い環境では判定できないので、全部を「見えている」
+       扱いにする。CSS 側は .is-live が付いていない間だけ光を止めるので、
+       ここで付けておかないと光が動かないままになる。 */
+    liveTargets.forEach((el) => el.classList.add('is-live'));
   }
 
   /* HERO の3行は、既存の表示アニメーション(lineRise)が終わってから

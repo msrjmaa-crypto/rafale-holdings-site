@@ -415,6 +415,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .site-header.is-scrolled { background: rgba(250, 249, 247, 0.985); }
 }
+/* 指で触る端末（スマートフォン・タブレット）では backdrop-filter を使わない。
+   ヘッダーは画面上端に固定されているため、backdrop-filter があると
+   スクロール中ずっと「背後の本文をぼかし直す」処理が毎フレーム走り、
+   iPhone Safari では慣性スクロールがそこで引っかかる。
+   代わりに、上の @supports と同じ不透明度（0.985）で遮蔽する。
+   0.95 との差は白い地の上ではほぼ見分けが付かず、
+   罫線・影・余白・文字はそのまま。 */
+@media (hover: none) and (pointer: coarse) {
+  .site-header.is-scrolled {
+    background: rgba(250, 249, 247, 0.985);
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+  }
+}
 .header-inner {
   width: var(--shell); margin: 0 auto; padding: 0 var(--gutter);
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
@@ -1004,6 +1018,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    端に隙間が出ないよう、あらかじめ外へ 6% 広げてある。 */
 .section::before { content: ""; position: absolute; inset: -6%; z-index: 0; pointer-events: none; }
 
+/* 画面の外にあるセクションの光は、アニメーションそのものを外す。
+   止める（paused）だけだと合成レイヤーが確保されたまま残り、
+   ページ全体では十数枚（1枚 390×2000px 前後）積み上がる。
+   JS が入ってくる25%手前で .is-live を付け直すので、
+   動き出しの瞬間が見えることはなく、見た目は変わらない。 */
+.section:not(.is-live)::before,
+.section--brand:not(.is-live)::after { animation-name: none; }
+
 #philosophy::before { animation: lightPhil 21s ease-in-out infinite; }  /* 左上 → 中央 */
 #business::before   { animation: lightBiz  26s ease-in-out infinite; }  /* 右上 → 左下 */
 #message::before    { animation: lightMsg  19s ease-in-out infinite; }  /* 中央奥 → 右 */
@@ -1069,18 +1091,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
      COMPANY    … 冷たいシルバーが横へ大きくパンする
      CONTACT    … 光が下から立ち上がって閉じる
    動かすのは transform と opacity だけ。ぼかしは掛けていない。 */
+/* ここの transform は、あえて translate3d ではなく2Dの translate で書いている。
+   translate3d を使うと、画面の外にあるセクションの光まで合成レイヤーとして
+   ずっと確保されてしまう（1枚あたり 390×2000px 前後）。iPhone では
+   これが十数枚たまってスクロールが引っかかる原因になっていた。
+   2Dで書くと、下の .section.is-live 側で指定している間だけレイヤーになる。
+   描画結果は translate3d と同じなので、見た目と動きは変わらない。 */
 #philosophy .sec-light,
 #business .sec-light,
 #message .sec-light,
 #company .sec-light,
 #contact .sec-light {
   content: ""; position: absolute; inset: -4% -12%; z-index: 0;
-  pointer-events: none; will-change: transform, opacity;
+  pointer-events: none;
 }
+/* 画面に入っているセクションの光だけ、合成をGPUに任せる */
+.section.is-live .sec-light { will-change: transform, opacity; }
 
 #philosophy .sec-light {
   background: radial-gradient(58% 44% at 26% 30%, rgba(206, 226, 240, 0.55), rgba(206,226,240,0) 72%);
-  transform: translate3d(calc(-14% + var(--p, 0) * 20%), calc(-8% + var(--p, 0) * 14%), 0)
+  transform: translate(calc(-14% + var(--p, 0) * 20%), calc(-8% + var(--p, 0) * 14%))
              scale(calc(0.92 + var(--e, 0) * 0.16));
   opacity: calc(0.18 + var(--e, 0) * 0.82);
 }
@@ -1091,14 +1121,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     rgba(210, 219, 228, 0) 0%,
     rgba(198, 209, 221, 0.5) 42%,
     rgba(210, 219, 228, 0) 100%);
-  transform: translate3d(0, calc(var(--p, 0) * 190% - 26%), 0);
+  transform: translate(0, calc(var(--p, 0) * 190% - 26%));
   opacity: calc(0.2 + var(--e, 0) * 0.8);
 }
 
 #message .sec-light {
   background: radial-gradient(46% 40% at 50% 44%, rgba(252, 246, 236, 0.62), rgba(252,246,236,0) 74%);
   transform: scale(calc(0.7 + var(--e, 0) * 0.5))
-             translate3d(0, calc(6% - var(--p, 0) * 12%), 0);
+             translate(0, calc(6% - var(--p, 0) * 12%));
   opacity: calc(var(--e, 0) * 0.95);
 }
 
@@ -1108,7 +1138,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     rgba(224, 233, 241, 0) 0%,
     rgba(206, 219, 231, 0.5) 46%,
     rgba(224, 233, 241, 0) 100%);
-  transform: translate3d(calc(var(--p, 0) * 196%), 0, 0);
+  transform: translate(calc(var(--p, 0) * 196%), 0);
   opacity: calc(0.15 + var(--e, 0) * 0.85);
 }
 
@@ -1117,7 +1147,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     rgba(232, 240, 246, 0.55) 0%,
     rgba(232, 240, 246, 0.18) 40%,
     rgba(232, 240, 246, 0) 78%);
-  transform: translate3d(0, calc(40% - var(--p, 0) * 52%), 0);
+  transform: translate(0, calc(40% - var(--p, 0) * 52%));
   opacity: calc(0.2 + var(--e, 0) * 0.8);
 }
 
@@ -1734,12 +1764,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     filter: blur(34px);
     animation: lampCsp 13s linear infinite;
   }
+  /* 大きさ（scale）は動かさず、移動と濃さだけで見せる。
+     ぼかしを持つ層の大きさが変わると、iPhone ではフレームごとに
+     ぼかし直しが発生する。移動と透明度だけならGPUがそのまま動かせる。
+     元の変化量は 4〜6% で、止めても動きの印象は変わらない。 */
   @keyframes lampCsp {
-    0%   { transform: translate3d(0, 0, 0) scale(1);         opacity: 0; }
+    0%   { transform: translate3d(0, 0, 0);         opacity: 0; }
     14%  { opacity: 0.96; }
-    50%  { transform: translate3d(120%, 16%, 0) scale(1.04); opacity: 1; }
+    50%  { transform: translate3d(120%, 16%, 0);    opacity: 1; }
     86%  { opacity: 0.9; }
-    100% { transform: translate3d(244%, 2%, 0) scale(1);     opacity: 0; }
+    100% { transform: translate3d(244%, 2%, 0);     opacity: 0; }
   }
 
   /* Warm White ― 補助光。18秒で右上から左下へ降りるが、役割は「暖かい空気を足す」だけ。
@@ -1755,11 +1789,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     animation: lampAsp 18s linear infinite;
   }
   @keyframes lampAsp {
-    0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
+    0%   { transform: translate3d(0, 0, 0);           opacity: 0; }
     16%  { opacity: 0.64; }
-    50%  { transform: translate3d(-96%, 96%, 0) scale(1.06);   opacity: 0.72; }
+    50%  { transform: translate3d(-96%, 96%, 0);      opacity: 0.72; }
     84%  { opacity: 0.6; }
-    100% { transform: translate3d(-186%, 176%, 0) scale(1);    opacity: 0; }
+    100% { transform: translate3d(-186%, 176%, 0);    opacity: 0; }
   }
 
   /* Pale Blue ― いちばん控えめ。動きを見せるためではなく、奥行きと未来感のためだけに置く。
@@ -1776,11 +1810,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     animation: lampBsp 23s linear infinite;
   }
   @keyframes lampBsp {
-    0%   { transform: translate3d(0, 0, 0) scale(1);           opacity: 0; }
+    0%   { transform: translate3d(0, 0, 0);           opacity: 0; }
     18%  { opacity: 0.34; }
-    50%  { transform: translate3d(38%, -128%, 0) scale(1.05);  opacity: 0.4; }
+    50%  { transform: translate3d(38%, -128%, 0);     opacity: 0.4; }
     84%  { opacity: 0.3; }
-    100% { transform: translate3d(72%, -252%, 0) scale(1);     opacity: 0; }
+    100% { transform: translate3d(72%, -252%, 0);     opacity: 0; }
   }
 
   /* 反射 ― Silver が通ったあとに、かすかに追いかけて見える程度に留める。
