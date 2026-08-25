@@ -1,0 +1,55 @@
+/* ============================================================
+   Rafale Holdings ― 法務系ページ（特定商取引法に基づく表記 など）
+   ------------------------------------------------------------
+   style.css は書き換えていません。
+   このページに足りない分（HERO が無いぶんの上余白・下書きの注意書き・
+   未記入項目の目印）だけを、ここで追加しています。
+   表の見た目は COMPANY と同じ .info-list / .info-row をそのまま使います。
+   ============================================================ */
+
+/* HERO を持たないページなので、固定ヘッダーのぶんだけ上を空ける */
+.legal-page .legal-section { padding-top: clamp(150px, 20vh, 220px); }
+
+.legal-lead {
+  font-size: clamp(0.96rem, 1.7vw, 1.02rem);
+  line-height: 2.2; color: var(--sub); max-width: 62em;
+  margin-bottom: clamp(34px, 4.5vh, 56px);
+}
+
+/* ------------------------------------------------------------
+   下書きの注意書き
+   ------------------------------------------------------------
+   記載内容がすべて確定したら、HTML 側のこのブロックごと削除してください。
+   （公開前の一時的な表示です） */
+.legal-draft {
+  max-width: 62em;
+  margin-bottom: clamp(40px, 5vh, 64px);
+  padding: clamp(18px, 2.4vh, 24px) clamp(18px, 3vw, 28px);
+  border-left: 2px solid rgba(30, 50, 70, 0.18);
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem; line-height: 2; color: var(--ink-2);
+}
+.legal-draft strong { font-weight: 500; color: var(--ink); }
+
+/* 未記入の項目。「要確認」の札を付けて、記入漏れが一目で分かるようにする */
+.legal-todo { color: var(--label); }
+.legal-todo::before {
+  content: "要確認";
+  display: inline-block; margin-right: 12px; padding: 3px 11px;
+  font-family: var(--font-jp); font-size: 0.68rem; letter-spacing: 0.16em;
+  color: var(--label); border: 1px solid rgba(30, 50, 70, 0.16);
+}
+
+.legal-note {
+  max-width: 62em; margin-top: clamp(40px, 5vh, 60px);
+  font-size: 0.86rem; line-height: 2.1; color: var(--sub);
+}
+
+@media (max-width: 768px) {
+  .legal-page .legal-section { padding-top: clamp(126px, 17vh, 160px); }
+  .legal-lead  { line-height: 2.05; }
+  .legal-draft { font-size: 0.86rem; line-height: 1.95; }
+  /* 札と本文が横に並ぶと窮屈なので、スマホでは札を上の行に置く */
+  .legal-todo::before { display: block; width: fit-content; margin: 0 0 8px; }
+  .legal-note  { font-size: 0.82rem; line-height: 1.95; }
+}

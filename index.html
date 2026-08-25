@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=59">
+<link rel="stylesheet" href="css/style.css?v=61">
 
 <!--
   ============================================================
@@ -601,6 +601,42 @@
     </div>
   </section>
 
+  <!-- ============================ PAYMENT ============================
+       請求書・見積書をお持ちの方が、そのままお支払いへ進めるようにする。
+       COMPANY と同じ「囲わない・細い罫線と余白だけ」の作りに揃えてある。
+
+       決済リンクのURLは js/site-config.js の SQUARE_PAYMENT_LINK_URL だけで
+       管理していて、ここには書かない。未設定・仮URLのままの間は
+       js/script.js がこのセクションを hidden のままにするので、
+       公開画面には一切出ない（フッターのリンクも同様）。 -->
+  <section class="section" id="payment" data-payment-section hidden>
+    <div class="sec-light" aria-hidden="true"></div>
+    <div class="section-inner">
+      <header class="section-head">
+        <p class="section-tag reveal" lang="en" data-reveal-delay="0">PAYMENT</p>
+      </header>
+      <h2 class="section-title reveal" data-reveal-delay="110">オンライン決済</h2>
+      <p class="section-lead reveal" data-reveal-delay="220">請求書・お見積書に記載された税込合計金額をご入力ください。</p>
+
+      <div class="pay-block reveal" data-reveal-delay="330">
+        <p class="pay-label" lang="en">Secure Payment</p>
+        <p class="pay-desc">お支払い手続きは、決済サービス Square（スクエア）のページで行います。</p>
+
+        <!-- href は js/script.js が site-config.js の値を確認してから入れる。
+             target / rel はここでも明示しておく（JSが入れ直しても同じ値）。 -->
+        <a class="btn pay-btn" data-payment-link target="_blank" rel="noopener noreferrer"
+           aria-label="各種サービス料金を支払う（Squareの決済ページを新しいタブで開きます）">
+          <span>各種サービス料金を支払う</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+            <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+        <p class="pay-note">Squareの決済ページが新しいタブで開きます。<br>金額や内容にご不明な点がある場合は、お手数ですが下記よりお問い合わせください。</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================ CONTACT ============================ -->
   <section class="section" id="contact">
     <div class="sec-light" aria-hidden="true"></div>
@@ -668,7 +704,10 @@
       <a href="#brands">ブランド</a>
       <a href="#message">代表メッセージ</a>
       <a href="#company">会社概要</a>
+      <!-- 決済リンクが設定されている時だけ js/script.js が hidden を外す -->
+      <a href="#payment" data-payment-nav hidden>オンライン決済</a>
       <a href="#contact">お問い合わせ</a>
+      <a href="/legal/tokushoho">特定商取引法に基づく表記</a>
     </nav>
   </div>
   <div class="footer-bottom">
@@ -676,6 +715,9 @@
   </div>
 </footer>
 
-<script src="js/script.js?v=19" defer></script>
+<!-- サイト設定（外部サービスのURLなど）。script.js より先に読み込む。
+     Square の決済リンクを差し替えるのは site-config.js の1行だけです。 -->
+<script src="js/site-config.js?v=3" defer></script>
+<script src="js/script.js?v=20" defer></script>
 </body>
 </html>

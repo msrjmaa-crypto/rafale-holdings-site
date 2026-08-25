@@ -22,6 +22,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  /* ---------- オンライン決済（Square）----------
+     URLは js/site-config.js の SQUARE_PAYMENT_LINK_URL だけで管理する。
+     ここでは値が使えるかを確かめるだけで、URLそのものは書かない。
+       ・空欄 / 文字列でない
+       ・URLとして読めない、https でない
+       ・Square 以外のドメイン
+       ・仮の値（REPLACE_ME などの差し込み用の目印が残っている）
+     のいずれかなら、セクションは hidden のまま・フッターのリンクも出さない。
+     リンク切れの決済ボタンを公開画面に出さないための判定。
+     この処理は下の measure() や reveal の Observer より先に置いてある
+     （表示を決めてから測る／観測する、という順番を崩さないため）。 */
+  const paySection = document.querySelector('[data-payment-section]');
+  if (paySection) {
+    const siteConfig = window.SITE_CONFIG || {};
+    const rawPayUrl = typeof siteConfig.SQUARE_PAYMENT_LINK_URL === 'string'
+      ? siteConfig.SQUARE_PAYMENT_LINK_URL.trim()
+      : '';
+    // Square の決済リンクで使われるドメイン（サブドメインも許可する）
+    const SQUARE_HOSTS = ['square.link', 'squareup.com', 'square.site'];
+    let payUrl = '';
+
+    if (rawPayUrl && !/REPLACE_ME|XXXX|例|ここに/i.test(rawPayUrl)) {
+      try {
+        const u = new URL(rawPayUrl);
+        const host = u.hostname.toLowerCase();
+        const isSquare = SQUARE_HOSTS.some((h) => host === h || host.endsWith('.' + h));
+        if (u.protocol === 'https:' && isSquare) payUrl = u.href;
+      } catch (e) { /* URLとして読めない → 表示しない */ }
+    }
+
+    if (payUrl) {
+      document.querySelectorAll('[data-payment-link]').forEach((link) => {
+        link.setAttribute('href', payUrl);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      });
+      paySection.removeAttribute('hidden');
+      document.querySelectorAll('[data-payment-nav]').forEach((el) => el.removeAttribute('hidden'));
+    }
+  }
+
   /* ---------- scroll: ヘッダー状態 / 進捗バー / ヒーローの奥行き ---------- */
   let ticking = false;
   let docHeight = 0;
@@ -55,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* セクションごとのスクロール連動。
      位置は先に控えておき、スクロール中は引き算だけで済ませる
      （毎フレーム要素の位置を測り直さないので、レイアウトは発生しない）。 */
-  const motionSections = document.querySelectorAll('#philosophy, #business, #message, #company, #contact');
+  const motionSections = document.querySelectorAll('#philosophy, #business, #message, #company, #payment, #contact');
 
   /* ページ全体の地（.page-tone）の区切り位置。
      セクションの実際の位置から割り出して1回だけ書き込む。

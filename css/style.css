@@ -1622,6 +1622,96 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .info-list-inline li { color: var(--ink-2); }
 
 /* ============================================================
+   PAYMENT ― オンライン決済（Square）
+   ------------------------------------------------------------
+   請求書をお持ちの方が、そのまま支払いへ進むためだけの面。
+   COMPANY と同じ「囲わない・細い罫線と余白だけ」の作りに揃え、
+   新しい色・新しい形は足していない。
+   決済リンクのURLは js/site-config.js の1か所だけで管理し、
+   未設定のあいだは js/script.js がセクションごと隠す（hidden）。
+   ============================================================ */
+/* hidden を確実に効かせる。決済リンク未設定のときに、セクションも
+   フッターのリンクも公開画面へ出さないための最後の砦。 */
+.section[hidden],
+.footer-nav a[hidden] { display: none !important; }
+
+/* 他のセクションと同じ、スクロールに連動する光を1枚だけ。
+   CONTACT の手前なので、光は右から左へ静かに引いていく。 */
+#payment .sec-light {
+  position: absolute; inset: -4% -12%; z-index: 0; pointer-events: none;
+  background: radial-gradient(50% 38% at 68% 38%, rgba(232, 240, 246, 0.5), rgba(232,240,246,0) 76%);
+  transform: translate(calc(10% - var(--p, 0) * 24%), 0)
+             scale(calc(0.9 + var(--e, 0) * 0.14));
+  opacity: calc(0.16 + var(--e, 0) * 0.84);
+}
+@media (prefers-reduced-motion: reduce) {
+  #payment .sec-light { transform: none; opacity: 0.4; }
+}
+
+/* 囲いは作らない。上下の細い罫線だけで区切る（COMPANY の .info-row と同じ濃さ）。 */
+.pay-block {
+  max-width: 62em;
+  padding: clamp(30px, 4vh, 46px) 2px;
+  border-top: 1px solid rgba(30, 50, 70, 0.055);
+  border-bottom: 1px solid rgba(30, 50, 70, 0.055);
+}
+.pay-label {
+  font-family: var(--font-en); font-weight: 400;
+  font-size: 0.78rem; letter-spacing: 0.22em; color: var(--label);
+  margin-bottom: 15px;
+}
+.pay-desc {
+  font-size: clamp(0.98rem, 1.7vw, 1.06rem); line-height: 2.1;
+  color: var(--ink); font-weight: 400; letter-spacing: 0.05em;
+  margin-bottom: clamp(28px, 3.6vh, 40px);
+}
+/* ボタンは塗らない。CONTACT の送信ボタンと同じ静かさに合わせる。
+   .btn は英字用の書体なので、日本語のラベル用に本文書体へ戻す。 */
+.pay-btn {
+  min-height: 54px; padding: 15px 38px;
+  border: 1px solid rgba(30, 50, 70, 0.18);
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--ink-2);
+  font-family: var(--font-jp);
+  font-size: 0.9rem; letter-spacing: 0.12em;
+  box-shadow: none;
+}
+.pay-btn:hover {
+  background: rgba(236, 239, 242, 0.75);
+  border-color: rgba(30, 50, 70, 0.28);
+  color: var(--ink);
+  box-shadow: none;
+  gap: 15px;
+}
+.pay-btn svg { flex: none; }
+.pay-note {
+  margin-top: clamp(20px, 2.6vh, 28px);
+  font-size: 0.86rem; line-height: 2; color: var(--sub);
+}
+
+@media (max-width: 768px) {
+  /* スマホ優先。押しやすさを最優先にして、ボタンは画面幅いっぱい・高さ54px。
+     文字が2行に折り返さないよう、字間だけ少し詰めてある。 */
+  .pay-block { padding: clamp(26px, 3.4vh, 34px) 2px; }
+  .pay-desc  { font-size: 0.98rem; line-height: 1.95; }
+  .pay-btn   {
+    width: 100%; min-height: 54px; padding: 15px 20px;
+    font-size: 0.9rem; letter-spacing: 0.06em;
+  }
+  .pay-note  { font-size: 0.82rem; line-height: 1.95; }
+}
+
+/* iPhone SE 幅（実測 305px）ではラベルがぎりぎり収まらず2行になる。
+   文言は変えず、字間と左右の余白だけ詰めて1行に戻す。
+   高さ・全幅・タップ領域はそのまま。 */
+@media (max-width: 360px) {
+  .pay-btn {
+    padding-left: 12px; padding-right: 12px;
+    font-size: 0.86rem; letter-spacing: 0.02em;
+  }
+}
+
+/* ============================================================
    CONTACT
    ============================================================ */
 .contact-layout {
@@ -2073,4 +2163,54 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-rays { opacity: 1; transform: none; }
   .hero-logo-block::after { opacity: 1; }
   .hero-sweep { display: none; }
+}
+
+/* ============================================================
+   SCROLL PERFORMANCE ― 追記（見た目とレイアウトは変えない）
+   ------------------------------------------------------------
+   既存の指定は1行も書き換えていません。ここで足したのは次の2点だけです。
+     1) ページ内リンクの着地点に、固定ヘッダーぶんの余白を持たせる
+     2) 画面の外に出た層から、アニメーションと合成レイヤーの予約を下ろす
+   どちらも位置・色・大きさは変わらず、動かすのは従来どおり
+   transform と opacity だけです。
+   ============================================================ */
+
+/* ---- 1) scroll-margin-top ----
+   固定ヘッダーはスクロール中 63px（padding 14px×2 + ロゴ35px）。
+   各セクションは 120px 以上の上余白を持っているので見出しが隠れることは
+   ありませんが、着地点がヘッダーの真下に寄りすぎないよう余白を持たせる。 */
+.hero, .section, #main-content { scroll-margin-top: 64px; }
+@media (max-width: 768px) {
+  .hero, .section, #main-content { scroll-margin-top: 56px; }
+}
+
+/* ---- 2-a) 画面外のアニメーションを止める（全幅へ拡張）----
+   同じ指定が 768px 以下のブロックに既にあり、そこでは効果が確認済み。
+   ここでは幅の条件だけを外して、タブレット・PCでも同じ扱いにする。
+   .is-live は「画面に入る25%手前」で JS が付け直すので、
+   動き出す瞬間が見えることはなく、見た目は変わらない。 */
+.hero:not(.is-live) .hero-flow > span,
+.hero:not(.is-live) .r-sign,
+.hero:not(.is-live) .r-sheen,
+.hero:not(.is-live) .scroll-cue-rail::after,
+.hero:not(.is-live) .hero-atmos > span,
+.section:not(.is-live) .sec-light,
+.section--brand:not(.is-live)::after {
+  animation-play-state: paused;
+}
+
+/* ---- 2-b) HERO を通り過ぎたら、HERO 専用の層の will-change を下ろす ----
+   .hero-halo / .hero-tint / .hero-silver / .hero-warm / .hero-rays /
+   .hero-sweep / .hero-flow / .hero-line / .hero-sign / .hero-logo-img は
+   これまでどの画面幅でも will-change が付いたままで、HERO を離れても
+   画面いっぱいの合成レイヤーが9枚ぶん確保され続けていた。
+   見えていない間だけ下ろす（戻ってくる25%手前で付け直される）。 */
+.hero:not(.is-live) .hero-atmos > span,
+.hero:not(.is-live) .hero-flow,
+.hero:not(.is-live) .hero-line,
+.hero:not(.is-live) .hero-line-in,
+.hero:not(.is-live) .hero-logo-img,
+.hero:not(.is-live) .hero-sign,
+.section--brand:not(.is-live)::after {
+  will-change: auto;
 }
