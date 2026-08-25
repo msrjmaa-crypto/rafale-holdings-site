@@ -29,12 +29,18 @@ document.addEventListener('DOMContentLoaded', () => {
        ・URLとして読めない、https でない
        ・Square 以外のドメイン
        ・仮の値（REPLACE_ME などの差し込み用の目印が残っている）
-     のいずれかなら、セクションは hidden のまま・フッターのリンクも出さない。
-     リンク切れの決済ボタンを公開画面に出さないための判定。
+     のいずれかなら、セクションは hidden のまま・ヘッダーとフッターの
+     リンクも出さない。リンク切れの決済ボタンを公開画面に出さないための判定。
      この処理は下の measure() や reveal の Observer より先に置いてある
-     （表示を決めてから測る／観測する、という順番を崩さないため）。 */
+     （表示を決めてから測る／観測する、という順番を崩さないため）。
+
+     決済セクションが無いページ（事業詳細・特商法）にもヘッダーの
+     「オンライン決済」項目があるので、判定はセクションの有無ではなく
+     「決済リンクか決済メニュー項目があるか」で始める。 */
   const paySection = document.querySelector('[data-payment-section]');
-  if (paySection) {
+  const payLinks = document.querySelectorAll('[data-payment-link]');
+  const payNavs = document.querySelectorAll('[data-payment-nav]');
+  if (paySection || payLinks.length || payNavs.length) {
     const siteConfig = window.SITE_CONFIG || {};
     const rawPayUrl = typeof siteConfig.SQUARE_PAYMENT_LINK_URL === 'string'
       ? siteConfig.SQUARE_PAYMENT_LINK_URL.trim()
@@ -53,13 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (payUrl) {
-      document.querySelectorAll('[data-payment-link]').forEach((link) => {
+      payLinks.forEach((link) => {
         link.setAttribute('href', payUrl);
         link.setAttribute('target', '_blank');
         link.setAttribute('rel', 'noopener noreferrer');
       });
-      paySection.removeAttribute('hidden');
-      document.querySelectorAll('[data-payment-nav]').forEach((el) => el.removeAttribute('hidden'));
+      if (paySection) paySection.removeAttribute('hidden');
+      payNavs.forEach((el) => el.removeAttribute('hidden'));
     }
   }
 

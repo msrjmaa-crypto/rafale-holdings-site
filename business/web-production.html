@@ -42,7 +42,7 @@
 <!-- 共通のデザイン（色・文字・余白・罫線・ヘッダー・フッター・R の描画）は
      TOPページと同じ css/style.css をそのまま使う。
      このページだけに必要な指定を business-detail.css で後から足している。 -->
-<link rel="stylesheet" href="/css/style.css?v=61">
+<link rel="stylesheet" href="/css/style.css?v=63">
 <link rel="stylesheet" href="/css/business-detail.css?v=4">
 
 <script type="application/ld+json">
@@ -144,6 +144,12 @@
         <li><a href="/#brands" class="nav-link">ブランド</a></li>
         <li><a href="/#message" class="nav-link">代表メッセージ</a></li>
         <li><a href="/#company" class="nav-link">会社概要</a></li>
+        <!-- オンライン決済 ― Squareの決済ページへ直接飛ぶ外部リンク。
+             URLは js/site-config.js の SQUARE_PAYMENT_LINK_URL だけで管理していて、
+             ここには書かない（決済セクションのボタンと同じ値を共有する）。
+             未設定・仮URL・Square以外のURLのときは js/script.js が hidden を
+             外さないので、この項目自体がメニューに出ない。 -->
+        <li data-payment-nav hidden><a class="nav-link" data-payment-link target="_blank" rel="noopener noreferrer">オンライン決済</a></li>
         <li><a href="#contact" class="nav-link nav-cta">お問い合わせ</a></li>
       </ul>
     </nav>
@@ -1048,6 +1054,9 @@
   </div>
 </footer>
 
-<script src="/js/script.js?v=19" defer></script>
+<!-- サイト設定（外部サービスのURLなど）。script.js より先に読み込む。
+     Square の決済リンクを差し替えるのは site-config.js の1行だけです。 -->
+<script src="/js/site-config.js?v=3" defer></script>
+<script src="/js/script.js?v=21" defer></script>
 </body>
 </html>

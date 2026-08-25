@@ -1631,9 +1631,31 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
    未設定のあいだは js/script.js がセクションごと隠す（hidden）。
    ============================================================ */
 /* hidden を確実に効かせる。決済リンク未設定のときに、セクションも
-   フッターのリンクも公開画面へ出さないための最後の砦。 */
+   ヘッダー／フッターのリンクも公開画面へ出さないための最後の砦。 */
 .section[hidden],
+.main-nav li[hidden],
 .footer-nav a[hidden] { display: none !important; }
+
+/* ヘッダーのメニューが7項目になるので、1項目ずつ現れる並び
+   （.main-nav li:nth-child）の続きを足しておく。刻みは既存と同じ0.06秒。 */
+.main-nav li:nth-child(7) { animation-delay: 0.98s; }
+
+/* ---- 横並びメニューが狭くなる帯だけ、文字と間隔を詰める ----
+   ハンバーガーに切り替わるのは 768px 以下。その少し上（769〜1060px）は
+   横並びのまま幅が足りず、項目が縮んで文字が2行に折り返していた。
+   実測（iframeで実寸を作って計測）:
+     770px … 6項目でも既に全項目が2行（決済項目を足す前から折り返していた）
+     985px … 6項目なら1行、7項目にすると全項目が2行
+   この帯だけ字送りと間隔を詰めて、7項目を1行に収める。
+   1061px 以上は従来のままで、見た目は変わらない。 */
+@media (min-width: 769px) and (max-width: 1060px) {
+  .main-nav ul { gap: 10px; }
+  .nav-link {
+    font-size: 0.76rem; letter-spacing: 0.04em;
+    white-space: nowrap;              /* 縮んでも文字を折り返させない */
+  }
+  .nav-cta { padding: 10px 16px; }
+}
 
 /* 他のセクションと同じ、スクロールに連動する光を1枚だけ。
    CONTACT の手前なので、光は右から左へ静かに引いていく。 */

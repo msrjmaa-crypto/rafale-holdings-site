@@ -41,7 +41,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
 <!-- HERO の英語コピー用のサイン書体。1ウェイトのみで軽量。 -->
 <link href="https://fonts.googleapis.com/css2?family=Qwigley&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=61">
+<link rel="stylesheet" href="css/style.css?v=63">
 
 <!--
   ============================================================
@@ -167,6 +167,12 @@
         <li><a href="#brands" class="nav-link">ブランド</a></li>
         <li><a href="#message" class="nav-link">代表メッセージ</a></li>
         <li><a href="#company" class="nav-link">会社概要</a></li>
+        <!-- オンライン決済 ― Squareの決済ページへ直接飛ぶ外部リンク。
+             URLは js/site-config.js の SQUARE_PAYMENT_LINK_URL だけで管理していて、
+             ここには書かない（決済セクションのボタンと同じ値を共有する）。
+             未設定・仮URL・Square以外のURLのときは js/script.js が hidden を
+             外さないので、この項目自体がメニューに出ない。 -->
+        <li data-payment-nav hidden><a class="nav-link" data-payment-link target="_blank" rel="noopener noreferrer">オンライン決済</a></li>
         <li><a href="#contact" class="nav-link nav-cta">お問い合わせ</a></li>
       </ul>
     </nav>
@@ -718,6 +724,6 @@
 <!-- サイト設定（外部サービスのURLなど）。script.js より先に読み込む。
      Square の決済リンクを差し替えるのは site-config.js の1行だけです。 -->
 <script src="js/site-config.js?v=3" defer></script>
-<script src="js/script.js?v=20" defer></script>
+<script src="js/script.js?v=21" defer></script>
 </body>
 </html>
