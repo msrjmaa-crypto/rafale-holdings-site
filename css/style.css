@@ -105,6 +105,21 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+/* body を「スクロールできる箱」にしない。
+   html が overflow-x: clip のとき、body の overflow-x: hidden は画面全体へは
+   引き継がれず body 自身に掛かる。すると縦は自動的に auto 扱いになり、
+   body がページとは別のスクロール領域になる。そこへ最下部の光
+   （#contact .sec-light ― 下へ 40% ずらしてある）が 200〜300px はみ出すため、
+   body の中に「隠れた縦スクロール」ができていた。ホイールや指の操作は
+   まずそちらに吸われ、使い切ったところで止まる ―― これがトップから下へ
+   スクロールしたときに必ず起きる引っかかりの原因だった。
+   clip は切るだけでスクロール領域を作らないので、見た目はそのままに
+   スクロールするのはページ本体だけになる。
+   clip 非対応の環境では html 側の clip も無効で、上の hidden が従来どおり
+   画面全体に引き継がれるため、この問題自体が起きない。 */
+@supports (overflow: clip) {
+  body { overflow: clip; }
+}
 
 img, svg, video { display: block; max-width: 100%; }
 img, video { height: auto; }
