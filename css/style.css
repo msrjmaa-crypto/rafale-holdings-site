@@ -1633,6 +1633,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   font-size: clamp(0.98rem, 1.7vw, 1.06rem); line-height: 2.1;
   color: var(--ink); font-weight: 400; letter-spacing: 0.05em;
 }
+/* 電話番号などのリンクは CONTACT（.contact-info-row a）と同じ細い下線で示す */
+.info-row dd a { border-bottom: 1px solid rgba(30, 50, 70, 0.2); transition: border-color 0.5s var(--ease), color 0.5s var(--ease); }
+.info-row dd a:hover { color: #4E7FA4; border-color: #4E7FA4; }
 .info-list-inline { display: flex; flex-wrap: wrap; gap: 10px 30px; }
 .info-list-inline li { color: var(--ink-2); }
 
